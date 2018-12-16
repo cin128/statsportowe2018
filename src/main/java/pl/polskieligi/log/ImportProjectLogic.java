@@ -37,7 +37,7 @@ import pl.polskieligi.model.Team;
 import pl.polskieligi.model.TeamLeague;
 
 @Component
-@Transactional(isolation = Isolation.READ_UNCOMMITTED)
+@Transactional
 public class ImportProjectLogic {
 	private static final String TEAM_ID = "id_klub=";
 	private static final String AMP = "&amp;";
@@ -98,7 +98,7 @@ public class ImportProjectLogic {
 	// }
 	@SuppressWarnings("deprecation")
 	public String doImport(Integer projectMinutId) {
-		log.info("Importing project "+ projectMinutId);
+		log.info("Importing project"+projectMinutId);
 		java.util.Date startDate = new java.util.Date();
 		StringBuilder report = new StringBuilder();
 		Long projectId = null;
@@ -110,13 +110,15 @@ public class ImportProjectLogic {
 			int rounds_count = 0;
 			int teams_count = 0;
 			Project oldProject = projectDAO.retrieveProjectByMinut(projectMinutId);
-/*			if (oldProject != null
+			if (oldProject != null
 					&& (oldProject.getArchive() && oldProject.getPublished() || oldProject
 							.getType() == Project.OTHER)) {
+				log.info("Project alerady loaded "+projectMinutId);		
 				report.append("<br/>Project id = " + oldProject.getId());
 				report.append("<br/>Project archive");
-			} else */
+			} else
 			{
+				log.info("Start parsing... "+projectMinutId);
 				Document doc = Jsoup.connect(
 						"http://www.90minut.pl/liga/0/liga" + projectMinutId
 								+ ".html").get();
@@ -138,10 +140,12 @@ public class ImportProjectLogic {
 						report.append("<br/>" + leagueName + " - " + sezon);
 						League league = new League();
 						league.setName(leagueName);
-						leagueDAO.saveUpdate(league);
+						league = leagueDAO.saveUpdate(league);
+						log.info("League " + leagueName + " saved " + league.getId());
 						Season season = new Season();
 						season.setName(sezon);
-						seasonDAO.saveUpdate(season);
+						season = seasonDAO.saveUpdate(season);
+						log.info("Season " + sezon   + " saved " + season.getId());
 						leagueProject.setLeague(league);
 						leagueProject.setSeason(season);
 						GregorianCalendar cal = new GregorianCalendar(year, 6,
@@ -161,7 +165,9 @@ public class ImportProjectLogic {
 						}
 						leagueProject.setArchive(archive);
 					}
-					projectId = projectDAO.saveUpdate(leagueProject);
+					leagueProject = projectDAO.saveUpdate(leagueProject);
+					projectId = leagueProject.getId();
+					log.info("Project  saved " + projectId);
 				}
 				if (projectId == null) {
 					throw new IllegalStateException("projecId==null!!!");
@@ -179,15 +185,15 @@ public class ImportProjectLogic {
 					Team t = new Team();
 					t.setName(druzyna.text());
 					t.setMinut_id(Integer.parseInt(teamId));
-					Long t_id = teamDAO.saveUpdate(t);
-					leagueTeams.put(t.getName(), t_id);
+					t = teamDAO.saveUpdate(t);
+					log.info("Team "+druzyna.text()+"  saved " + t.getId());
+					leagueTeams.put(t.getName(), t.getId());
 					TeamLeague tl = new TeamLeague();
 					tl.setProject(leagueProject);
 					tl.setTeam(t);
-					Long id = teamLeagueDAO.saveUpdate(tl);
-					if (id != null) {
-						teams_count++;
-					}
+					tl = teamLeagueDAO.saveUpdate(tl);
+					log.info("TeamLeague saved " + tl.getId());
+					teams_count++;					
 				}
 				Project persProject = projectDAO.retrieveProjectByMinut(projectMinutId);
 				if (leagueTeams.size() == 0) {
@@ -326,10 +332,8 @@ public class ImportProjectLogic {
 								round.setName(roundName.trim());
 								round.setMatchcode(round_matchcode);
 								round.setProject_id(projectId);
-								round_id = roundDAO.saveUpdate(round);
-								if (round_id != null) {
-									rounds_count++;
-								}
+								round = roundDAO.saveUpdate(round);
+								rounds_count++;
 							}
 						}
 					}

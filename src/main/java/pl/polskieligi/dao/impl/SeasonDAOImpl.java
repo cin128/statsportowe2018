@@ -1,7 +1,5 @@
 package pl.polskieligi.dao.impl;
 
-import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -16,22 +14,12 @@ public class SeasonDAOImpl extends AbstractDAOImpl<Season> implements SeasonDAO 
 	public SeasonDAOImpl() {
 		super(Season.class);
 	}
-
-	public Long saveUpdate(Season season) {
-		Long result = null;
+	
+@Override
+	protected Query getRetrieveQuery(Season season) {
 		Session session = getCurrentSession();
 		Query query = session.createQuery("from Season where name = :name");
 		query.setParameter("name", season.getName());
-		Season oldSeason = null;
-		@SuppressWarnings("unchecked")
-		List<Season> leagues = query.list();
-		for (Season s : leagues) {
-			oldSeason = s;
-			result = s.getId();
-		}
-		if (oldSeason == null) {
-			result = (Long) session.save(season);
-		}
-		return result;
+		return query;
 	}
 }

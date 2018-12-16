@@ -19,26 +19,16 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	public TeamLeagueDAOImpl() {
 		super(TeamLeague.class);
 	}
-	public Long saveUpdate(TeamLeague teamLeague) {		
-		Long result = null;
+	
+	@Override
+	protected Query getRetrieveQuery(TeamLeague teamLeague) {
 		Session session = getCurrentSession();
-			Query query = session
-					.createQuery("select tl from TeamLeague tl join tl.team t join tl.project p "
-							+ "where t.id = :team_id and p.id = :project_id");
-			query.setParameter("project_id", teamLeague.getProject().getId());
-			query.setParameter("team_id", teamLeague.getTeam().getId());
-			TeamLeague oldTeamLeague = null;
-			@SuppressWarnings("unchecked")
-			List<TeamLeague> leagues = query.list();
-			for (TeamLeague tl : leagues) {
-				oldTeamLeague = tl;
-				result = tl.getId();
-			}
-			if (oldTeamLeague == null) {
-				result = (Long) session.save(teamLeague);
-			}
-			
-		return result;
+		Query query = session
+				.createQuery("select tl from TeamLeague tl join tl.team t join tl.project p "
+						+ "where t.id = :team_id and p.id = :project_id");
+		query.setParameter("project_id", teamLeague.getProject().getId());
+		query.setParameter("team_id", teamLeague.getTeam().getId());
+		return query;
 	}
 
 	public void updateTeams(Long projectId,

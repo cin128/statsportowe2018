@@ -19,29 +19,18 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 		super(Team.class);
 	}
 
-	public Long saveUpdate(Team team) {
-		Long result = null;
+	@Override
+	protected Query getRetrieveQuery(Team team) {
 		Session session = getCurrentSession();
 		Query query = session.createQuery("from Team where minut_id = :minut_id");
 		query.setParameter("minut_id", team.getMinut_id());
-		Team oldTeam = null;
-		@SuppressWarnings("unchecked")
-		List<Team> teams = query.list();
-		for (Team t : teams) {
-			oldTeam = t;
-			if (team.getName() != null && !team.getName().isEmpty()) {
-				oldTeam.setName(team.getName());
-			}
-			session.update(oldTeam);
-			result = t.getId();
+		return query;
+	}
+	@Override
+	protected void updateData(Team source, Team target) {
+		if (source.getName() != null && !source.getName().isEmpty()) {
+			target.setName(source.getName());
 		}
-		if (oldTeam == null) {
-			result = (Long) session.save(team);
-		}
-		team.setId(result);
-		session.flush();
-		return result;
-
 	}
 
 	@SuppressWarnings("unchecked")

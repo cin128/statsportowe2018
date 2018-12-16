@@ -1,5 +1,8 @@
 package pl.polskieligi.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +29,28 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 		Session session = getCurrentSession();
 		return (T)session.get(clazz, id);		
 	}
+	
+	public T saveUpdate(T obj) {
+		Session session = getCurrentSession();
+		Query query = getRetrieveQuery(obj);			
+		T oldObj = null;
+		@SuppressWarnings("unchecked")
+		List<T> objs = query.list();
+		for (T t : objs) {
+			oldObj = t;
+			updateData(obj, oldObj);			
+			session.update(oldObj);
+			obj = oldObj;
+		}
+		if (oldObj == null) {
+			session.persist(obj);
+		}
+		session.flush();
+		return obj;
+	}
+	
+	protected abstract Query getRetrieveQuery(T obj);
+	
+	protected void updateData(T source, T target) {}
+	
 }

@@ -102,5 +102,5 @@ public class Team {
 
 	public void setChecked_out_time(Timestamp checked_out_time) {
 		this.checked_out_time = checked_out_time;
-	}
+	}	
 }

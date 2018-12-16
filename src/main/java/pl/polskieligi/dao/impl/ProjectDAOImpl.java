@@ -35,8 +35,8 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 		return result;
 	}
 
-	public Long saveUpdate(Project leagueProject) {
-		Long result = null;
+	@Override
+	protected Query getRetrieveQuery(Project leagueProject) {
 		Session session = getCurrentSession();
 		Query query = session.createQuery(
 				"from Project where minut_id = :minut_id");// or (league_id = :league_id and season_id = :season_id)
@@ -44,39 +44,30 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 		
 //		query.setParameter("league_id", leagueProject.getLeague().getId());
 //		query.setParameter("season_id", leagueProject.getSeason().getId());
-		Project oldProject = null;
-		@SuppressWarnings("unchecked")
-		List<Project> leagues = query.list();
-		for (Project l : leagues) {
-			oldProject = l;
-			if (leagueProject.getMinut_id() > 0) {
-				oldProject.setMinut_id(leagueProject.getMinut_id());
-			}
-			if (leagueProject.getLeague()!=null) {
-				oldProject.setLeague(leagueProject.getLeague());
-			}
-			if (leagueProject.getSeason() !=null) {
-				oldProject.setSeason(leagueProject.getSeason());
-			}
-			if (leagueProject.getName() != null && !leagueProject.getName().isEmpty()) {
-				oldProject.setName(leagueProject.getName());
-			}
-			if (leagueProject.getStart_date() != null && !leagueProject.getStart_date().equals(new Date(0))) {
-				oldProject.setStart_date(leagueProject.getStart_date());
-			}
-			oldProject.setArchive(leagueProject.getArchive());
-			if (leagueProject.getType() > 0) {
-				oldProject.setType(leagueProject.getType());
-			}
-
-			session.update(oldProject);
-			result = oldProject.getId();
+		return query;
+	}
+	
+	@Override
+	protected void updateData(Project leagueProject, Project oldProject) {
+		if (leagueProject.getMinut_id() > 0) {
+			oldProject.setMinut_id(leagueProject.getMinut_id());
 		}
-		if (oldProject == null) {
-			result = (Long) session.save(leagueProject);
+		if (leagueProject.getLeague()!=null) {
+			oldProject.setLeague(leagueProject.getLeague());
 		}
-		leagueProject.setId(result);
-		return result;
+		if (leagueProject.getSeason() !=null) {
+			oldProject.setSeason(leagueProject.getSeason());
+		}
+		if (leagueProject.getName() != null && !leagueProject.getName().isEmpty()) {
+			oldProject.setName(leagueProject.getName());
+		}
+		if (leagueProject.getStart_date() != null && !leagueProject.getStart_date().equals(new Date(0))) {
+			oldProject.setStart_date(leagueProject.getStart_date());
+		}
+		oldProject.setArchive(leagueProject.getArchive());
+		if (leagueProject.getType() > 0) {
+			oldProject.setType(leagueProject.getType());
+		}
 	}
 
 	public Project getLastProjectForTeam(Integer teamId) {

@@ -18,10 +18,15 @@ public class MatchDAOImpl extends AbstractDAOImpl<Match> implements MatchDAO {
 	public MatchDAOImpl() {
 		super(Match.class);
 	}
-	public Long saveUpdate(Match obj) {
+	public Match saveUpdate(Match obj) {
 		return null;//TODO
 	}
 	
+	@Override
+	protected Query getRetrieveQuery(Match obj) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public int saveUpdate(List<Match> roundMatches) {
 		int result = 0;
 		Session session = getCurrentSession();
