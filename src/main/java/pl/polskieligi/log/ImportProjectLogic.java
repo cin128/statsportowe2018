@@ -27,6 +27,7 @@ import pl.polskieligi.dao.RoundDAO;
 import pl.polskieligi.dao.SeasonDAO;
 import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
+import pl.polskieligi.dto.ProjectInfo;
 import pl.polskieligi.model.League;
 import pl.polskieligi.model.Match;
 import pl.polskieligi.model.Project;
@@ -40,6 +41,7 @@ import pl.polskieligi.model.TeamLeague;
 public class ImportProjectLogic {
 	private static final String TEAM_ID = "id_klub=";
 	private static final String AMP = "&amp;";
+	private static final String MINUT_URL = "http://www.90minut.pl";
 	private static final Map<String, Integer> months;
 	static {
 		Map<String, Integer> aMap = new HashMap<String, Integer>();
@@ -96,10 +98,10 @@ public class ImportProjectLogic {
 	// System.out.println(getRoundEnd(2012, "30 listopada-1 grudnia"));
 	// }
 	@SuppressWarnings("deprecation")
-	public String doImport(Integer projectMinutId) {
+	public ProjectInfo doImport(Integer projectMinutId) {
 		log.info("Importing project"+projectMinutId);
+		ProjectInfo pi = new ProjectInfo();
 		java.util.Date startDate = new java.util.Date();
-		StringBuilder report = new StringBuilder();
 		Long projectId = null;
 		Integer year = null;
 		Map<String, Long> leagueTeams = new HashMap<String, Long>();
@@ -112,15 +114,12 @@ public class ImportProjectLogic {
 			if (oldProject != null
 					&& (oldProject.getArchive() && oldProject.getPublished() || oldProject
 							.getType() == Project.OTHER)) {
-				log.info("Project alerady loaded "+projectMinutId);		
-				report.append("<br/>Project id = " + oldProject.getId());
-				report.append("<br/>Project archive");
-			} else
-			{
+				log.info("Project alerady loaded "+projectMinutId);
+				pi.setProject(oldProject);
+				pi.setSkipped(true);
+			} else {
 				log.info("Start parsing... "+projectMinutId);
-				Document doc = Jsoup.connect(
-						"http://www.90minut.pl/liga/0/liga" + projectMinutId
-								+ ".html").get();
+				Document doc = Jsoup.connect(get90minutLink(projectMinutId)).get();
 
 				Elements titles = doc.select("title");
 				Project leagueProject = null;
@@ -131,12 +130,11 @@ public class ImportProjectLogic {
 					leagueProject.setName(tmp);
 					int index = tmp.indexOf("/");
 					if (index < 5 || tmp.length() < 12) {
-						report.append("<br/>Wrong title: " + tmp);
+						pi.addMessage("Wrong title: " + tmp);
 					} else {
 						String sezon = tmp.substring(index - 4, index + 5);
 						year = Integer.parseInt(sezon.split("/")[0]);
 						String leagueName = tmp.replaceAll(" " + sezon, "");
-						report.append("<br/>" + leagueName + " - " + sezon);
 						League league = new League();
 						league.setName(leagueName);
 						league = leagueDAO.saveUpdate(league);
@@ -167,6 +165,7 @@ public class ImportProjectLogic {
 					leagueProject = projectDAO.saveUpdate(leagueProject);
 					projectId = leagueProject.getId();
 					log.info("Project  saved " + projectId);
+					pi.setProject(leagueProject);
 				}
 				if (projectId == null) {
 					throw new IllegalStateException("projecId==null!!!");
@@ -340,32 +339,26 @@ public class ImportProjectLogic {
 							&& matches_count == teams_count * teams_count
 									- teams_count) {
 						persProject.setPublished(true);
-					} else {
-						report.append("<br/> Ilo�� dru�yn/mecz�w jest niepoprawna = ");
 					}
 					teamLeagueDAO.updateTeams(projectId,
 							leagueTeams.values());
 				}
-				projectDAO.saveUpdate(persProject);
-				report.append("<br/>Project id = " + projectId);
-				report.append("<br/> liczba dru�yn = " + teams_count);
-				report.append("<br/> liczba mecz�w = " + matches_count);
-				report.append("<br/> liczba kolejek = " + rounds_count);
+				persProject = projectDAO.saveUpdate(persProject);
+				pi.setProject(persProject);
 			}
 			java.util.Date endDate = new java.util.Date();
 			long diff = endDate.getTime() - startDate.getTime();
-			report.append("<br/> czas trwania = " + diff / 1000 + " sec");
-
+			pi.setProcessingTime(diff);
 		} catch ( org.jsoup.HttpStatusException e){
-			report.append(e.getMessage()+" "+e.getUrl());
+			pi.addMessage(e.getMessage()+" "+e.getUrl());
 		} catch (Exception e) {
-			report.append(e.getMessage());
-			e.printStackTrace();
+			pi.addMessage(e.getMessage());
+			log.error(e.getMessage(), e);
 		} finally {
 			session.flush();
 			session.close();
 		}
-		return report.toString();
+		return pi;
 	}
 
 	/*
@@ -461,5 +454,13 @@ public class ImportProjectLogic {
 		GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
 				: year + 1, month, day);
 		return new Date(cal.getTimeInMillis());
+	}
+
+	private String get90minutLink(Integer projectMinutId){
+		String index = "0";
+		if(projectMinutId>=10000){
+			index = "1";
+		}
+		return MINUT_URL+"/liga/"+index+"/liga" + projectMinutId + ".html";
 	}
 }

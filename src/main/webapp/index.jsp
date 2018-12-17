@@ -5,14 +5,20 @@ pageEncoding="ISO-8859-1"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Spring 4 MVC - HelloWorld Index Page</title>
+<title>Menu</title>
 </head>
 <body>
  
 	<center>
-		<h2>Hello World2</h2>
+		<h2>Menu</h2>
 		<h3>
-			<a href="updateProject?name=Eric">Click Here</a>
+			<a href="importProject?projectId=10244">Import project</a>
+		</h3>
+		<h3>
+			<a href="importProjectsBatch">Start projects import</a>
+		</h3>
+		<h3>
+			<a href="updateProject">Project update status</a>
 		</h3>
 		<h3>
 			<a href="table?projectId=1">Show Table</a>

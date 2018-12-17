@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.StepExecution;
@@ -14,16 +15,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import pl.polskieligi.dto.ProjectImportJob;
 
 @Controller
 public class ProjectUpdateController {
-	String message = "Welcome to Spring MVC!";
+
+	final static Logger log = Logger.getLogger(ProjectUpdateController.class);
 
 	@Autowired
 	JobExplorer jobExplorer;
 
 	@RequestMapping("/updateProject")
 	public ModelAndView showUpdateInfo() {
+		log.info("updateProject start");
 		List<ProjectImportJob> rows = new ArrayList<ProjectImportJob>();
 		for (String jobName : jobExplorer.getJobNames()) {
 

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
@@ -20,10 +21,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import pl.polskieligi.dto.ProjectImportJob;
 
 @Controller
 public class ImportProjectsBatchController {
-	
+
+	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);
+
 	@Autowired
 	@Qualifier("pojectImportJobLauncher")
 	private JobLauncher launcher;
@@ -34,6 +38,7 @@ public class ImportProjectsBatchController {
 	
 	@RequestMapping("/importProjectsBatch")
 	public ModelAndView importProjectsBatch() {
+		log.info("importProjectsBatch start");
 		List<ProjectImportJob> rows = new ArrayList<ProjectImportJob>();
 		JobParameter jp = new JobParameter(new Date());
 		Map<String, JobParameter> map = new HashMap<String, JobParameter>();

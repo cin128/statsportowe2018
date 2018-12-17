@@ -3,6 +3,7 @@ package pl.polskieligi.batch;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
@@ -16,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 public class ProjectUpdateScheduler {
+
+	final static Logger log = Logger.getLogger(ProjectUpdateScheduler.class);
+
 	@Autowired
 	@Qualifier("pojectUpdateJobLauncher")
 	private JobLauncher launcher;
@@ -27,6 +31,7 @@ public class ProjectUpdateScheduler {
 	private JobExecution execution;	
 
 	public void run() {
+		log.info("Run");
 		try {
 			Map<String,JobParameter> parameters = new HashMap<String,JobParameter>();
 			parameters.put("time",new JobParameter(System.currentTimeMillis()));

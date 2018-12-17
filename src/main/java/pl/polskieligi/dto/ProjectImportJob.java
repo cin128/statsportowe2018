@@ -1,4 +1,4 @@
-package pl.polskieligi.controller;
+package pl.polskieligi.dto;
 
 import org.springframework.batch.core.JobExecution;
 

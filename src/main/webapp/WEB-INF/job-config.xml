@@ -25,10 +25,12 @@
 		<property name="databaseType" value="POSTGRES" />
 	</bean>
 
-	<bean id="pojectUpdateJobLauncher"
-		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-		<property name="jobRepository" ref="jobRepository" />
+	<bean id="jobExplorer"
+		  class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
 	</bean>
+
+	<!--Import JOB-->
 
 	<bean id="pojectImportJobLauncher"
 		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
@@ -38,7 +40,34 @@
 
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
 
-<!-- 	<job id="projectUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+	<job id="projectImportJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<step id="projectImportStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="projectImportReader" processor="projectProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
+
+	<bean id="projectImportReader" class="pl.polskieligi.batch.ProjectImportReader" />
+
+	<!--Update JOB-->
+
+<!--	<bean id="projectUpdateScheduler" class="pl.polskieligi.batch.ProjectUpdateScheduler" />
+
+	<task:scheduled-tasks>
+		<task:scheduled ref="projectUpdateScheduler" method="run"
+			cron="*/30 * * * * *" />
+	</task:scheduled-tasks> -->
+
+
+	<bean id="pojectUpdateJobLauncher"
+		  class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+
+	<job id="projectUpdateJob" xmlns="http://www.springframework.org/schema/batch"
 		restartable="true">
 		<listeners>
 			<listener ref="projectUpdateJobExecutionListener" />
@@ -49,54 +78,31 @@
 					writer="emptyWriter" commit-interval="1" />
 			</tasklet>
 		</step>
-	</job> -->
-
-	<job id="projectImportJob" xmlns="http://www.springframework.org/schema/batch"
-		restartable="true">
-		<step id="projectImportStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="projectImportReader" processor="projectProcessor"
-					writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
 	</job>
 
-	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.ProjectUpdateJobExecutionListener" />
-
-	<bean id="projectProcessor" class="pl.polskieligi.batch.ProjectProcessor" />
-
-	<bean id="emptyWriter" class="pl.polskieligi.batch.EmptyWriter" />
-
-	<bean id="projectImportReader" class="pl.polskieligi.batch.ProjectImportReader" />
-
 	<bean id="projectUpdateReader"
-		class="org.springframework.batch.item.database.HibernateCursorItemReader">
+		  class="org.springframework.batch.item.database.HibernateCursorItemReader">
 		<property name="sessionFactory" ref="sessionFactory" />
 		<property name="queryString">
-			<!-- Why CDATA? because < etc. is not allowed for xml values when you 
-				use &lt; xml parser will work, but now the sql won't because of the & spring 
+			<!-- Why CDATA? because < etc. is not allowed for xml values when you
+				use &lt; xml parser will work, but now the sql won't because of the & spring
 				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
 			<value>
-                <![CDATA[
+				<![CDATA[
                     FROM Project
                 ]]>
 			</value>
 		</property>
 	</bean>
 
+	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.ProjectUpdateJobExecutionListener" />
+
+	<!--Utils-->
+
+	<bean id="projectProcessor" class="pl.polskieligi.batch.ProjectProcessor" />
+
+	<bean id="emptyWriter" class="pl.polskieligi.batch.EmptyWriter" />
+
 	<!--<bean id="myTasklet" class="pl.polskieligi.batch.LigaTasklet"/> -->
 
-<!-- 	<bean id="projectUpdateScheduler" class="pl.polskieligi.batch.ProjectUpdateScheduler" />
-	this is where we are scheduling the job to run using our scheduler 
-		every 5 secs, note how the method of the scheduler and the cron expression 
-		to be used are being specified
-	<task:scheduled-tasks>
-		<task:scheduled ref="projectUpdateScheduler" method="run"
-			cron="*/30 * * * * *" />
-	</task:scheduled-tasks> -->
-
-	<bean id="jobExplorer"
-		class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
 </beans>
