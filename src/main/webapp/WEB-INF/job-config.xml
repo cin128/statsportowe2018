@@ -22,7 +22,7 @@
 		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
-		<property name="databaseType" value="POSTGRES" />
+		<property name="databaseType" value="${batch.databaseType}" />
 	</bean>
 
 	<bean id="jobExplorer"
@@ -91,7 +91,7 @@
 				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
 			<value>
 				<![CDATA[
-                    FROM Project
+                    FROM Project where type = 1 AND (published = FALSE OR archive = FALSE)
                 ]]>
 			</value>
 		</property>

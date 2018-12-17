@@ -16,14 +16,6 @@
 	<!-- <context:property-placeholder location="classpath:persistence-postgresql.properties" 
 		/> -->
 
-	<context:property-placeholder
-		properties-ref="deployProperties" />
-
-
-	<bean id="deployProperties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean"
-		p:location="/WEB-INF/persistence-postgresql.properties" />
-
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
