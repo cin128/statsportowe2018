@@ -99,7 +99,7 @@ public class ImportProjectLogic {
 	// }
 	@SuppressWarnings("deprecation")
 	public ProjectInfo doImport(Integer projectMinutId) {
-		log.info("Importing project"+projectMinutId);
+		log.info("Importing project id = "+projectMinutId);
 		ProjectInfo pi = new ProjectInfo();
 		java.util.Date startDate = new java.util.Date();
 		Long projectId = null;
@@ -114,11 +114,11 @@ public class ImportProjectLogic {
 			if (oldProject != null
 					&& (oldProject.getArchive() && oldProject.getPublished() || oldProject
 							.getType() == Project.OTHER)) {
-				log.info("Project alerady loaded "+projectMinutId);
+				log.info("Project alerady loaded id = "+projectMinutId);
 				pi.setProject(oldProject);
 				pi.setSkipped(true);
 			} else {
-				log.info("Start parsing... "+projectMinutId);
+				log.debug("Start parsing... id = "+projectMinutId);
 				Document doc = Jsoup.connect(get90minutLink(projectMinutId)).get();
 
 				Elements titles = doc.select("title");
@@ -138,11 +138,11 @@ public class ImportProjectLogic {
 						League league = new League();
 						league.setName(leagueName);
 						league = leagueDAO.saveUpdate(league);
-						log.info("League " + leagueName + " saved " + league.getId());
+						log.info("League " + leagueName + " saved id = " + league.getId());
 						Season season = new Season();
 						season.setName(sezon);
 						season = seasonDAO.saveUpdate(season);
-						log.info("Season " + sezon   + " saved " + season.getId());
+						log.info("Season " + sezon   + " saved id = " + season.getId());
 						leagueProject.setLeague(league);
 						leagueProject.setSeason(season);
 						GregorianCalendar cal = new GregorianCalendar(year, 6,
@@ -164,7 +164,7 @@ public class ImportProjectLogic {
 					}
 					leagueProject = projectDAO.saveUpdate(leagueProject);
 					projectId = leagueProject.getId();
-					log.info("Project  saved " + projectId);
+					log.info("Project saved " + projectId);
 					pi.setProject(leagueProject);
 				}
 				if (projectId == null) {
@@ -184,13 +184,13 @@ public class ImportProjectLogic {
 					t.setName(druzyna.text());
 					t.setMinut_id(Integer.parseInt(teamId));
 					t = teamDAO.saveUpdate(t);
-					log.info("Team "+druzyna.text()+"  saved " + t.getId());
+					log.debug("Team "+druzyna.text()+"  saved " + t.getId());
 					leagueTeams.put(t.getName(), t.getId());
 					TeamLeague tl = new TeamLeague();
 					tl.setProject(leagueProject);
 					tl.setTeam(t);
 					tl = teamLeagueDAO.saveUpdate(tl);
-					log.info("TeamLeague saved " + tl.getId());
+					log.debug("TeamLeague saved " + tl.getId());
 					teams_count++;					
 				}
 				Project persProject = projectDAO.retrieveProjectByMinut(projectMinutId);
@@ -292,6 +292,7 @@ public class ImportProjectLogic {
 											}
 										}
 										roundMatches.add(roundMatch);
+										log.debug("Match: " + roundMatch.getMatchpart1() + " " + roundMatch.getMatchpart2());
 									}
 									Elements info = match
 											.select("td[colspan=4]");
@@ -345,10 +346,14 @@ public class ImportProjectLogic {
 				}
 				persProject = projectDAO.saveUpdate(persProject);
 				pi.setProject(persProject);
+				pi.setMatches_count(matches_count);
+				pi.setRounds_count(rounds_count);
+				pi.setTeams_count(teams_count);
 			}
 			java.util.Date endDate = new java.util.Date();
 			long diff = endDate.getTime() - startDate.getTime();
 			pi.setProcessingTime(diff);
+			log.info("End processing id = " + projectMinutId + " time = "+diff);
 		} catch ( org.jsoup.HttpStatusException e){
 			pi.addMessage(e.getMessage()+" "+e.getUrl());
 		} catch (Exception e) {

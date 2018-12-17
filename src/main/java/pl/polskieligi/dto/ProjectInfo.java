@@ -98,7 +98,7 @@ public class ProjectInfo {
 			if(rounds_count >= (teams_count - 1) * 2
 					&& matches_count == teams_count * teams_count
 					- teams_count) {
-				report.append("Ilo�� dru�yn/mecz�w jest niepoprawna");
+				report.append(nl + "Ilo�� dru�yn/mecz�w jest niepoprawna");
 			}
 			report.append(nl + "czas trwania = " + processingTime / 1000 + " sec");
 		}

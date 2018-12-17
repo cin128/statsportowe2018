@@ -15,13 +15,13 @@ public class ProjectUpdateJobExecutionListener implements JobExecutionListener {
 	ProjectDAO projectDAO;
 	
 	public void beforeJob(JobExecution jobExecution) {
-		log.info("beforeJob: "+jobExecution);
+		log.debug("beforeJob: "+jobExecution);
 		Double total = projectDAO.getOpenProjectsCount().doubleValue();
-		jobExecution.getExecutionContext().put("jobComplete", total);
+		jobExecution.getExecutionContext().put("jobComplete", total);		
 	}
 
 	public void afterJob(JobExecution jobExecution) {
-		log.info("afterJob: "+jobExecution);
+		log.debug("afterJob: "+jobExecution);
 	}
 
 }

@@ -17,7 +17,7 @@ public class ProjectImportReader implements ItemReader<Project> {
 	private Integer index = START;
 	@Override
 	public Project read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-		log.info("Read: "+index);
+		log.debug("Read: "+index);
 		if(index<=END) {
 			Project result = new Project();
 			result.setMinut_id(index++);

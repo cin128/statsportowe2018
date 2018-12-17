@@ -18,7 +18,6 @@ public class ProjectProcessor implements ItemProcessor<Project, Object> {
 	public Object process(Project p) throws Exception {
 		log.info("Process: "+p.getMinut_id());
 		ProjectInfo result = importProjectLogic.doImport(p.getMinut_id());
-		log.info("Result: "+result);
-		return null;
+		return result;
 	}
 }
