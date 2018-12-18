@@ -54,14 +54,14 @@
 
 	<!--Update JOB-->
 
-	<bean id="projectUpdateScheduler" class="pl.polskieligi.batch.ProjectUpdateScheduler" />
+<!-- 	<bean id="projectUpdateScheduler" class="pl.polskieligi.batch.ProjectUpdateScheduler" />
 
 	<task:scheduled-tasks>
 		<task:scheduled ref="projectUpdateScheduler" method="run"
 			cron="*/30 * * * * *" />
-		<!-- <task:scheduled ref="projectUpdateScheduler" method="run"
-			cron="* * 1 * * *" /> -->
-	</task:scheduled-tasks>
+		<task:scheduled ref="projectUpdateScheduler" method="run"
+			cron="* * 1 * * *" />
+	</task:scheduled-tasks> -->
 
 
 	<bean id="pojectUpdateJobLauncher"

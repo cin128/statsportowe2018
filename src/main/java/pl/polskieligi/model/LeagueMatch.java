@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Match {
+public class LeagueMatch {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long match_id;
@@ -48,7 +48,7 @@ public class Match {
 	private String formation1;
 	private String formation2;
 
-	public Match() {
+	public LeagueMatch() {
 		match_number = 0;
 		playground_id = 0;
 		match_date = new Timestamp(0);

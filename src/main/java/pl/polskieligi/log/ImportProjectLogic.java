@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.LeagueDAO;
-import pl.polskieligi.dao.MatchDAO;
+import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dao.RoundDAO;
 import pl.polskieligi.dao.SeasonDAO;
@@ -29,7 +29,7 @@ import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.ProjectInfo;
 import pl.polskieligi.model.League;
-import pl.polskieligi.model.Match;
+import pl.polskieligi.model.LeagueMatch;
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Round;
 import pl.polskieligi.model.Season;
@@ -81,7 +81,7 @@ public class ImportProjectLogic {
 	TeamLeagueDAO teamLeagueDAO;
 	
 	@Autowired
-	MatchDAO matchDAO;
+	LeagueMatchDAO matchDAO;
 	
 	@Autowired
 	RoundDAO roundDAO;
@@ -210,7 +210,7 @@ public class ImportProjectLogic {
 								.getStart_date().getTime());
 						Elements matches = kolejka.select("tr[align=left]");
 						if (matches.size() > 0) {
-							List<Match> roundMatches = new ArrayList<Match>();
+							List<LeagueMatch> roundMatches = new ArrayList<LeagueMatch>();
 							for (Element match : matches) {
 								Elements teams = match
 										.select("td[nowrap][valign=top][width=180]");
@@ -225,7 +225,7 @@ public class ImportProjectLogic {
 											&& leagueTeams.containsKey(t2)) {
 										String resultValue = result.get(0)
 												.text();
-										Match roundMatch = new Match();
+										LeagueMatch roundMatch = new LeagueMatch();
 										roundMatch.setProject_id(projectId);
 										roundMatch.setRound_id(round_id);
 										roundMatch.setMatch_date(matchDate);

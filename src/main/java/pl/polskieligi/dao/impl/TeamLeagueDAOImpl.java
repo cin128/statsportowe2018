@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.TeamLeagueDAO;
-import pl.polskieligi.model.Match;
+import pl.polskieligi.model.LeagueMatch;
 import pl.polskieligi.model.Team;
 import pl.polskieligi.model.TeamLeague;
 
@@ -51,8 +51,8 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 				query.setParameter("matchpart2", tl.getTeam().getId());
 
 				@SuppressWarnings("unchecked")
-				List<Match> matchesToDelete = query.list();
-				for (Match m : matchesToDelete) {
+				List<LeagueMatch> matchesToDelete = query.list();
+				for (LeagueMatch m : matchesToDelete) {
 					session.delete(m);
 				}
 				session.delete(tl);

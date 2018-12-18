@@ -41,7 +41,7 @@
 	<jdbc:initialize-database data-source="dataSource" ignore-failures="ALL">
 		<!-- <jdbc:script
 			location="classpath:org/springframework/batch/core/schema-drop-postgresql.sql" /> --> 
-		<jdbc:script location="classpath:org/springframework/batch/core/schema-postgresql.sql" />
+		<jdbc:script location="${db.init.script.location}" />
 	</jdbc:initialize-database>
 
 	<bean id="transactionManager"
