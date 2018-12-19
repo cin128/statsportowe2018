@@ -2,14 +2,10 @@ package pl.polskieligi.model;
 
 import java.sql.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
+@Table(indexes = { @Index(name = "IDX_PR_MINUT_ID", columnList = "minut_id", unique = false) })
 public class Project {
 	public final static Integer REGULAR_LEAGUE = 1;
 	public final static Integer OTHER = 2;

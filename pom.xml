@@ -5,7 +5,7 @@
 	<artifactId>polskieligi</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>polskieligi Maven Webapp</name>
+	<name>Polskie ligi</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- Spring dependencies -->
@@ -142,9 +142,9 @@
 	</dependency>
 
 	</dependencies>
-	<!-- <build>
+	<build>
 		<finalName>polskieligi</finalName>
-		<plugins>
+<!--		<plugins>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
@@ -152,6 +152,6 @@
               <target>1.8</target>
             </configuration>
         </plugin>
-  </plugins>
-	</build> -->
+  </plugins>-->
+	</build>
 </project>

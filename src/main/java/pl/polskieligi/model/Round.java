@@ -3,12 +3,10 @@ package pl.polskieligi.model;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(indexes = { @Index(name = "IDX_RO_PR_MA", columnList = "project_id,matchcode", unique = false) })
 public class Round {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

@@ -42,23 +42,7 @@ public class ImportProjectLogic {
 	private static final String TEAM_ID = "id_klub=";
 	private static final String AMP = "&amp;";
 	private static final String MINUT_URL = "http://www.90minut.pl";
-	private static final Map<String, Integer> months;
-	static {
-		Map<String, Integer> aMap = new HashMap<String, Integer>();
-		aMap.put("stycznia", 0);
-		aMap.put("lutego", 1);
-		aMap.put("marca", 2);
-		aMap.put("kwietnia", 3);
-		aMap.put("maja", 4);
-		aMap.put("czerwca", 5);
-		aMap.put("lipca", 6);
-		aMap.put("sierpnia", 7);
-		aMap.put("września", 8);
-		aMap.put("października", 9);
-		aMap.put("listopada", 10);
-		aMap.put("grudnia", 11);
-		months = Collections.unmodifiableMap(aMap);
-	}
+
 
 	final static Logger log = Logger.getLogger(ImportProjectLogic.class);
 	
@@ -85,18 +69,7 @@ public class ImportProjectLogic {
 	
 	@Autowired
 	RoundDAO roundDAO;
-	
-	
-	// public static void main(String[] args) {
-	// System.out.println(parseTimestamp(2012, "21 lipca, 18:00"));
-	// System.out.println(parseTimestamp(2012, "16 lutego, 15:30"));
-	// System.out.println(Integer.parseInt("22 187".replace(" ", "")));
-	// System.out.println("22 187".split("-")[0]);
-	// System.out.println(getRoundStart(2012, "22-23 marca"));
-	// System.out.println(getRoundEnd(2012, "22-23 marca"));
-	// System.out.println(getRoundStart(2012, "30 listopada-1 grudnia"));
-	// System.out.println(getRoundEnd(2012, "30 listopada-1 grudnia"));
-	// }
+
 	@SuppressWarnings("deprecation")
 	public ProjectInfo doImport(Integer projectMinutId) {
 		log.info("Importing project id = "+projectMinutId);
@@ -267,7 +240,7 @@ public class ImportProjectLogic {
 																			" ",
 																			""));
 												} else if (index > 0) {
-													ts = parseTimestamp(year,
+													ts = TimestampParser.parseTimestamp(year,
 															tmp.substring(0,
 																	index - 1));
 													crowd = Integer
@@ -279,7 +252,7 @@ public class ImportProjectLogic {
 																			" ",
 																			""));
 												} else {
-													ts = parseTimestamp(year,
+													ts = TimestampParser.parseTimestamp(year,
 															tmp);
 												}
 												if (ts != null) {
@@ -318,14 +291,14 @@ public class ImportProjectLogic {
 								String roundName = tmp;
 								if (i > 0 && tmp.length() - i > 2) {
 									roundName = tmp.substring(0, i - 1);
-									Date roundStart = getRoundStart(year,
+									Date roundStart = TimestampParser.getRoundStart(year,
 											tmp.substring(i + 2));
 									if (roundStart != null) {
 										matchDate = new Timestamp(
 												roundStart.getTime());
 									}
 									round.setRound_date_first(roundStart);
-									round.setRound_date_last(getRoundEnd(year,
+									round.setRound_date_last(TimestampParser.getRoundEnd(year,
 											tmp.substring(i + 2)));
 								}
 								round.setName(roundName.trim());
@@ -353,7 +326,7 @@ public class ImportProjectLogic {
 			java.util.Date endDate = new java.util.Date();
 			long diff = endDate.getTime() - startDate.getTime();
 			pi.setProcessingTime(diff);
-			log.info("End processing id = " + projectMinutId + " time = "+diff);
+			log.info("End processing id = " + projectMinutId + " time = "+ (diff/1000) +" sec");
 		} catch ( org.jsoup.HttpStatusException e){
 			pi.addMessage(e.getMessage()+" "+e.getUrl());
 		} catch (Exception e) {
@@ -364,101 +337,6 @@ public class ImportProjectLogic {
 			session.close();
 		}
 		return pi;
-	}
-
-	/*
-	 * "21 lipca, 18:00"
-	 */
-	private static Timestamp parseTimestamp(Integer year, String substring) {
-		if(year==null || substring==null){
-			return null;
-		}
-		if (substring.trim().isEmpty()) {
-			return null;
-		}
-		String[] tmp = substring.split(" ");
-
-		Integer day = 0;
-		if (tmp[0].contains("-")) {
-			String[] tmp2 = tmp[0].split("-");
-			day = Integer.parseInt(tmp2[0]);
-		} else {
-			day = Integer.parseInt(tmp[0]);
-		}
-
-		GregorianCalendar cal = null;
-		if(tmp.length==2){
-			Integer month = months.get(tmp[1]);
-			cal = new GregorianCalendar(month > 5 ? year : year + 1, month, day);
-		} else if (tmp.length == 3 && tmp[2].contains(":")) {
-			Integer month = months
-					.get(tmp[1].substring(0, tmp[1].length() - 1));
-			String[] time = tmp[2].split(":");
-			Integer hour = Integer.parseInt(time[0]);
-			Integer minute = Integer.parseInt(time[1]);
-			cal = new GregorianCalendar(month > 5 ? year : year + 1, month,
-					day, hour, minute);
-		} else if(tmp.length == 3&& tmp[1].contains("-")){
-			String[] tmp2 = tmp[1].split("-");
-			Integer month = months.get(tmp2[0]);
-			cal = new GregorianCalendar(month > 5 ? year : year + 1, month, day);
-		} else {
-			return null;
-		}
-		return new Timestamp(cal.getTimeInMillis());
-	}
-
-	/*
-	 * "22-23 marca" "30 listopada-1 grudnia"
-	 */
-	private static Date getRoundEnd(Integer year, String substring) {
-		if(year==null || substring==null){
-			return null;
-		}
-		int i = substring.indexOf("-");
-		int day = -1;
-		int month = -1;
-		if (i < 0) {
-			String[] tmp = substring.split(" ");
-			day = Integer.parseInt(tmp[0]);
-			month = months.get(tmp[1]);
-		} else {
-			String[] tmp = substring.split("-");
-			tmp = tmp[1].split(" ");
-			day = Integer.parseInt(tmp[0]);
-			month = months.get(tmp[1]);
-		}
-		GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
-				: year + 1, month, day);
-		return new Date(cal.getTimeInMillis());
-	}
-
-	private static Date getRoundStart(Integer year, String substring) {
-		if(year==null || substring==null){
-			return null;
-		}
-		int i = substring.indexOf("-");
-		int day = -1;
-		int month = -1;
-		if (i < 0) {
-			String[] tmp = substring.split(" ");
-			day = Integer.parseInt(tmp[0]);
-			month = months.get(tmp[1]);
-		} else {
-			String[] tmp = substring.split("-");
-			if (tmp[0].length() > 3) {
-				tmp = tmp[0].split(" ");
-				day = Integer.parseInt(tmp[0]);
-				month = months.get(tmp[1]);
-			} else {
-				day = Integer.parseInt(tmp[0]);
-				tmp = tmp[1].split(" ");
-				month = months.get(tmp[1]);
-			}
-		}
-		GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
-				: year + 1, month, day);
-		return new Date(cal.getTimeInMillis());
 	}
 
 	private String get90minutLink(Integer projectMinutId){

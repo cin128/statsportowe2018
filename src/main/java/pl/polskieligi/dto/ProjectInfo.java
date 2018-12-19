@@ -1,5 +1,6 @@
 package pl.polskieligi.dto;
 
+import pl.polskieligi.log.ReportGenerator;
 import pl.polskieligi.model.Project;
 
 import java.util.ArrayList;
@@ -32,6 +33,10 @@ public class ProjectInfo {
 
 	public void addMessage(String message){
 		messages.add(message);
+	}
+
+	public List<String> getMessages() {
+		return messages;
 	}
 
 	public long getProcessingTime() {
@@ -67,44 +72,10 @@ public class ProjectInfo {
 	}
 
 	@Override public String toString() {
-		return getReport(false);
+		return ReportGenerator.getStringReport(this);
 	}
 
 	public String toHtml() {
-		return getReport(true);
-	}
-
-	private String getReport(boolean html){
-		StringBuilder report = new StringBuilder();
-		String nl;
-		if(html){
-			nl="<br/>";
-		} else {
-			nl = "\n";
-		}
-		report.append(nl + "Project id = " + project.getId());
-		report.append(nl + "Project minut id = " + project.getMinut_id());
-		report.append(nl + "Archive = " + project.getArchive());
-		report.append(nl + "Published = " + project.getPublished());
-		report.append(nl + "Type = " + project.getType());
-		if(skipped){
-			report.append(nl + "Skipped");
-		} else {
-			report.append(nl + "League = " + (project.getLeague()!=null?project.getLeague().getName():null));
-			report.append(nl + "Season = " + (project.getSeason()!=null?project.getSeason().getName():null));
-			report.append(nl + "liczba dru�yn = " + teams_count);
-			report.append(nl + "liczba mecz�w = " + matches_count);
-			report.append(nl + "liczba kolejek = " + rounds_count);
-			if(rounds_count >= (teams_count - 1) * 2
-					&& matches_count == teams_count * teams_count
-					- teams_count) {
-				report.append(nl + "Ilo�� dru�yn/mecz�w jest niepoprawna");
-			}
-			report.append(nl + "czas trwania = " + processingTime / 1000 + " sec");
-		}
-		for(String m: messages){
-			report.append(nl + m);
-		}
-		return report.toString();
+		return ReportGenerator.getHtmlReport(this);
 	}
 }
