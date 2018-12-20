@@ -14,8 +14,12 @@
 	<bean id="deployProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean"
 		p:location="/WEB-INF/persistence-mariadb.properties" />
- 	
- 	<!-- Import extra configuration -->
+
+	<bean id="applicationProperties"
+		  class="org.springframework.beans.factory.config.PropertiesFactoryBean"
+		  p:location="/WEB-INF/applicationProperties.properties" />
+
+	<!-- Import extra configuration -->
 	<import resource="hibernate4Config.xml"/>
 	<import resource="job-config.xml"/>
 	

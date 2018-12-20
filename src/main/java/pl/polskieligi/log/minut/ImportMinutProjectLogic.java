@@ -1,9 +1,8 @@
-package pl.polskieligi.log;
+package pl.polskieligi.log.minut;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +37,12 @@ import pl.polskieligi.model.TeamLeague;
 
 @Component
 @Transactional
-public class ImportProjectLogic {
+public class ImportMinutProjectLogic {
 	private static final String TEAM_ID = "id_klub=";
 	private static final String AMP = "&amp;";
 	private static final String MINUT_URL = "http://www.90minut.pl";
 
-
-	final static Logger log = Logger.getLogger(ImportProjectLogic.class);
+	final static Logger log = Logger.getLogger(ImportMinutProjectLogic.class);
 	
 	@Autowired
 	SessionFactory sessionFactory;
@@ -163,6 +161,7 @@ public class ImportProjectLogic {
 					tl.setProject(leagueProject);
 					tl.setTeam(t);
 					tl = teamLeagueDAO.saveUpdate(tl);
+
 					log.debug("TeamLeague saved " + tl.getId());
 					teams_count++;					
 				}

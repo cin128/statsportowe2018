@@ -1,6 +1,7 @@
-package pl.polskieligi.log;
+package pl.polskieligi.log.minut;
 
 import org.junit.Test;
+import pl.polskieligi.log.minut.TimestampParser;
 
 public class TimestampParserTest {
 

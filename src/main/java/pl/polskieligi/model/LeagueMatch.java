@@ -10,14 +10,14 @@ public class LeagueMatch {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long match_id;
-	private Integer match_number;
+/*	private Integer match_number;*/
 	private Integer playground_id;
 	private Timestamp match_date;
 	private Long matchpart1;
 	private Long matchpart2;
 	private Float matchpart1_result;
 	private Float matchpart2_result;
-	private Integer matchpart1_bonus;
+	/*private Integer matchpart1_bonus;
 	private Integer matchpart2_bonus;
 	private Float matchpart1_legs;
 	private Float matchpart2_legs;
@@ -29,32 +29,34 @@ public class LeagueMatch {
 	private Boolean alt_decision;
 	private Float matchpart1_result_decision;
 	private Float matchpart2_result_decision;
-	private String decision_info;
+	private String decision_info;*/
 	private Long project_id;
 	private Long round_id;
 	private Boolean count_result;
 	private Boolean published;
 	private Integer crowd;
-	private Integer referee_id;
+/*	private Integer referee_id;
 	private Integer checked_out;
-	private Timestamp checked_out_time;
+	private Timestamp checked_out_time;*/
 	private String summary;
-	private Boolean show_report;
-	private String match_result_detail;
+/*	private Boolean show_report;
+	private String match_result_detail;*/
 	private Timestamp modified;
-	private Integer modified_by;
+/*	private Integer modified_by;
 	private String formation1;
-	private String formation2;
+	private String formation2;*/
+
+	private Long af_id;
 
 	public LeagueMatch() {
-		match_number = 0;
+/*		match_number = 0;*/
 		playground_id = 0;
 		match_date = new Timestamp(0);
 		matchpart1 = Long.valueOf(0);
 		matchpart2 = Long.valueOf(0);
 		matchpart1_result = new Float(0);
 		matchpart2_result = new Float(0);
-		matchpart1_bonus = 0;
+/*		matchpart1_bonus = 0;
 		matchpart2_bonus = 0;
 		matchpart1_legs = new Float(0);
 		matchpart2_legs = new Float(0);
@@ -66,22 +68,23 @@ public class LeagueMatch {
 		alt_decision = false;
 		matchpart1_result_decision = new Float(0);
 		matchpart2_result_decision = new Float(0);
-		decision_info = "";
+		decision_info = "";*/
 		project_id = Long.valueOf(0);
 		round_id = Long.valueOf(0);
 		count_result = false;
 		published = false;
 		crowd = 0;
-		referee_id = 0;
+/*		referee_id = 0;
 		checked_out = 0;
-		checked_out_time = new Timestamp(0);
+		checked_out_time = new Timestamp(0);*/
 		summary = "";
-		show_report = false;
-		match_result_detail = "";
+/*		show_report = false;
+		match_result_detail = "";*/
 		modified = new Timestamp(0);
-		modified_by = 0;
+/*		modified_by = 0;
 		formation1 = "";
-		formation2 = "";
+		formation2 = "";*/
+		af_id = Long.valueOf(0);
 	}
 
 	public Long getMatch_id() {
@@ -92,13 +95,13 @@ public class LeagueMatch {
 		this.match_id = match_id;
 	}
 
-	public Integer getMatch_number() {
+/*	public Integer getMatch_number() {
 		return match_number;
 	}
 
 	public void setMatch_number(Integer match_number) {
 		this.match_number = match_number;
-	}
+	}*/
 
 	public Integer getPlayground_id() {
 		return playground_id;
@@ -148,7 +151,7 @@ public class LeagueMatch {
 		this.matchpart2_result = matchpart2_result;
 	}
 
-	public Integer getMatchpart1_bonus() {
+	/*public Integer getMatchpart1_bonus() {
 		return matchpart1_bonus;
 	}
 
@@ -250,7 +253,7 @@ public class LeagueMatch {
 
 	public void setDecision_info(String decision_info) {
 		this.decision_info = decision_info;
-	}
+	}*/
 
 	public Long getProject_id() {
 		return project_id;
@@ -292,7 +295,7 @@ public class LeagueMatch {
 		this.crowd = crowd;
 	}
 
-	public Integer getReferee_id() {
+	/*public Integer getReferee_id() {
 		return referee_id;
 	}
 
@@ -314,7 +317,7 @@ public class LeagueMatch {
 
 	public void setChecked_out_time(Timestamp checked_out_time) {
 		this.checked_out_time = checked_out_time;
-	}
+	}*/
 
 	public String getSummary() {
 		return summary;
@@ -324,7 +327,7 @@ public class LeagueMatch {
 		this.summary = summary;
 	}
 
-	public Boolean getShow_report() {
+	/*public Boolean getShow_report() {
 		return show_report;
 	}
 
@@ -338,7 +341,7 @@ public class LeagueMatch {
 
 	public void setMatch_result_detail(String match_result_detail) {
 		this.match_result_detail = match_result_detail;
-	}
+	}*/
 
 	public Timestamp getModified() {
 		return modified;
@@ -348,7 +351,7 @@ public class LeagueMatch {
 		this.modified = modified;
 	}
 
-	public Integer getModified_by() {
+	/*public Integer getModified_by() {
 		return modified_by;
 	}
 
@@ -370,5 +373,17 @@ public class LeagueMatch {
 
 	public void setFormation2(String formation2) {
 		this.formation2 = formation2;
+	}*/
+
+	public Long getAf_id() {
+		return af_id;
+	}
+
+	public void setAf_id(Long af_id) {
+		this.af_id = af_id;
+	}
+
+	@Override public String toString() {
+		return match_id+" " + match_date + " " + matchpart1 + " " + matchpart1_result + " - " + matchpart2_result + " " + matchpart2;
 	}
 }

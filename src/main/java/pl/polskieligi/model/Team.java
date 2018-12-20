@@ -12,22 +12,22 @@ public class Team {
 	private Long id;
 	private Integer minut_id;
 	private String name;
-	private String short_name;
+	/*private String short_name;
 	private String middle_name;
 	private String description;
 	private Integer club_id;
 	private Integer checked_out;
-	private Timestamp checked_out_time;
+	private Timestamp checked_out_time;*/
 
 	public Team() {
 		minut_id = 0;
 		name = "";
-		short_name = "";
+/*		short_name = "";
 		middle_name = "";
 		description = "";
 		club_id = 0;
 		checked_out = 0;
-		checked_out_time = new Timestamp(0);
+		checked_out_time = new Timestamp(0);*/
 	}
 
 	public Long getId() {
@@ -54,7 +54,7 @@ public class Team {
 		this.name = name;
 	}
 
-	public String getShort_name() {
+/*	public String getShort_name() {
 		return short_name;
 	}
 
@@ -100,5 +100,5 @@ public class Team {
 
 	public void setChecked_out_time(Timestamp checked_out_time) {
 		this.checked_out_time = checked_out_time;
-	}	
+	}	*/
 }

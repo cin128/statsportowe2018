@@ -7,15 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import pl.polskieligi.dto.ProjectInfo;
-import pl.polskieligi.log.ImportProjectLogic;
+import pl.polskieligi.log.minut.ImportMinutProjectLogic;
 
 @Controller
 public class ImportProjectController {
 
 	final static Logger log = Logger.getLogger(ImportProjectController.class);
 
-	@Autowired
-	ImportProjectLogic importProjectLogic;
+	@Autowired ImportMinutProjectLogic importProjectLogic;
 	
 	@RequestMapping("/importProject")
 	public ModelAndView importProject(String projectId) {

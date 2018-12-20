@@ -17,7 +17,7 @@ public class TeamLeague {
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Team team;
 	
-	private Integer division_id;
+/*	private Integer division_id;
 	private Integer start_points;
 	private Integer admin;
 	private String info;
@@ -25,10 +25,10 @@ public class TeamLeague {
 	private Timestamp checked_out_time;
 	private String picture;
 	private String description;
-	private Integer standard_playground;
+	private Integer standard_playground;*/
 
 	public TeamLeague() {
-		division_id = 0;
+/*		division_id = 0;
 		start_points = 0;
 		admin = 0;
 		info = "";
@@ -36,9 +36,9 @@ public class TeamLeague {
 		checked_out_time = new Timestamp(0);
 		picture = "";
 		description = "";
-		standard_playground = 0;
+		standard_playground = 0;*/
 	}
-
+/*
 	public Integer getDivision_id() {
 		return division_id;
 	}
@@ -109,7 +109,7 @@ public class TeamLeague {
 
 	public void setStandard_playground(Integer standard_playground) {
 		this.standard_playground = standard_playground;
-	}
+	}*/
 
 	public Long getId() {
 		return id;

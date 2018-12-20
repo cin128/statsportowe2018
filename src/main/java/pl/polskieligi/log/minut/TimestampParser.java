@@ -1,4 +1,6 @@
-package pl.polskieligi.log;
+package pl.polskieligi.log.minut;
+
+import org.springframework.util.StringUtils;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -120,5 +122,22 @@ public class TimestampParser {
 		GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
 				: year + 1, month, day);
 		return new Date(cal.getTimeInMillis());
+	}
+
+	/**
+	 * 	20 grudnia 1988 (30 lat)
+	 */
+	public static Date parseDate(String text) {
+		Date result = null;
+		if(!StringUtils.isEmpty(text)){
+			String[] tmp = text.split(" ");
+			int day = Integer.parseInt(tmp[0]);
+			int month = months.get(tmp[1]);
+			int year = Integer.parseInt(tmp[2]);
+			GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
+					: year + 1, month, day);
+			result = new Date(cal.getTimeInMillis());
+		}
+		return result;
 	}
 }

@@ -16,16 +16,16 @@ public class Round {
 	  private Date round_date_first;
 	  private Date round_date_last;
 	  private Long project_id;
-	  private Integer checked_out;
-	  private Timestamp checked_out_time;
+/*	  private Integer checked_out;
+	  private Timestamp checked_out_time;*/
 	  public Round(){
 		  matchcode = 0;
 		  name = "";
 		  round_date_first = new Date(0);
 		  round_date_last = new Date(0);
 		  project_id = Long.valueOf(0);
-		  checked_out = 0;
-		  checked_out_time = new Timestamp(0);
+/*		  checked_out = 0;
+		  checked_out_time = new Timestamp(0);*/
 	  }
 	  
 	public Long getId() {
@@ -64,7 +64,7 @@ public class Round {
 	public void setProject_id(Long project_id) {
 		this.project_id = project_id;
 	}
-	public Integer getChecked_out() {
+/*	public Integer getChecked_out() {
 		return checked_out;
 	}
 	public void setChecked_out(Integer checked_out) {
@@ -75,6 +75,6 @@ public class Round {
 	}
 	public void setChecked_out_time(Timestamp checked_out_time) {
 		this.checked_out_time = checked_out_time;
-	}
+	}*/
 	
 }

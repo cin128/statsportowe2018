@@ -39,13 +39,13 @@ public class ProjectUpdateScheduler {
 					new JobParameters(parameters);
 			execution = launcher.run(job, jobParameters);
 		} catch (JobExecutionAlreadyRunningException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (JobRestartException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (JobInstanceAlreadyCompleteException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} catch (JobParametersInvalidException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 	}	
 }

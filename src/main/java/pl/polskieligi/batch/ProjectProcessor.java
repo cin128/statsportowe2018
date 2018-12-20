@@ -5,15 +5,14 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.polskieligi.dto.ProjectInfo;
-import pl.polskieligi.log.ImportProjectLogic;
+import pl.polskieligi.log.minut.ImportMinutProjectLogic;
 import pl.polskieligi.model.Project;
 
 public class ProjectProcessor implements ItemProcessor<Project, Object> {
 
 	final static Logger log = Logger.getLogger(ProjectProcessor.class);
 
-	@Autowired
-	ImportProjectLogic importProjectLogic;
+	@Autowired ImportMinutProjectLogic importProjectLogic;
 	
 	public Object process(Project p) throws Exception {
 		log.info("Process: "+p.getMinut_id());
