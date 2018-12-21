@@ -10,7 +10,7 @@ public class EmptyWriter implements ItemWriter {
 
 	final static Logger log = Logger.getLogger(EmptyWriter.class);
 
-	public void write(List items) throws Exception {
+	public void write(List items) {
 		log.debug("Write: "+items);
 	}
 }

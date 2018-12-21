@@ -2,7 +2,7 @@ package pl.polskieligi.dto;
 
 import org.springframework.batch.core.JobExecution;
 
-public class ProjectImportJob {
+public class ImportJob {
 	JobExecution jobExecution;
 	Long progress;
 	Long processingTime;

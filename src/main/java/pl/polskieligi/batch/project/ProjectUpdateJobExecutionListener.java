@@ -1,4 +1,4 @@
-package pl.polskieligi.batch;
+package pl.polskieligi.batch.project;
 
 import org.apache.log4j.Logger;
 import org.springframework.batch.core.JobExecution;

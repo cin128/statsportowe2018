@@ -15,28 +15,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import pl.polskieligi.dto.ProjectImportJob;
+import pl.polskieligi.dto.ImportJob;
 
 @Controller
-public class ProjectUpdateController {
+public class ImportStatusController {
 
-	final static Logger log = Logger.getLogger(ProjectUpdateController.class);
+	final static Logger log = Logger.getLogger(ImportStatusController.class);
 
 	@Autowired
 	JobExplorer jobExplorer;
 
-	@RequestMapping("/updateProject")
+	@RequestMapping("/importStatus")
 	public ModelAndView showUpdateInfo() {
-		log.info("updateProject start");
-		List<ProjectImportJob> rows = new ArrayList<ProjectImportJob>();
+		log.info("importStatus start");
+		List<ImportJob> rows = new ArrayList<ImportJob>();
 		for (String jobName : jobExplorer.getJobNames()) {
 
 			List<JobInstance> list = jobExplorer.findJobInstancesByJobName(jobName, 0, 20);
 			for (JobInstance jobInstance : list) {
 				List<JobExecution> jobExecutions = jobExplorer.getJobExecutions(jobInstance);
 				for (JobExecution jobExecution : jobExecutions) {
- 
-					ProjectImportJob row = new ProjectImportJob();
+
+					ImportJob row = new ImportJob();
 					row.setJobExecution(jobExecution);
 					row.setProgress(getProgress(jobExecution));
 					Date endTime = jobExecution.getEndTime();
@@ -47,9 +47,9 @@ public class ProjectUpdateController {
 				}
 			}
 		}
-		Collections.sort(rows,(ProjectImportJob o1, ProjectImportJob o2) -> o1.getJobExecution().getId().intValue()-o2.getJobExecution().getId().intValue());
+		Collections.sort(rows,(ImportJob o1, ImportJob o2) -> o1.getJobExecution().getId().intValue()-o2.getJobExecution().getId().intValue());
 		
-		ModelAndView mv = new ModelAndView("updateProject", "rows", rows);
+		ModelAndView mv = new ModelAndView("importStatus", "rows", rows);
 		return mv;
 	}
 	

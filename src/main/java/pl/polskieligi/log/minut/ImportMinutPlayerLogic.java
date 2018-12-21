@@ -21,16 +21,14 @@ import java.io.IOException;
 
 	final static Logger log = Logger.getLogger(ImportMinutPlayerLogic.class);
 
-	@Autowired SessionFactory sessionFactory;
-
-	@Autowired PlayerDAO playerDAO;
+	@Autowired
+	private PlayerDAO playerDAO;
 
 	public Player doImport(Integer playerMinutId) {
 		Player result = null;
 		log.info("Importing player id = " + playerMinutId);
 		java.util.Date startDate = new java.util.Date();
 
-		Session session = sessionFactory.openSession();
 		try {
 			Player oldPlayer = playerDAO.retrievePlayerByMinut(playerMinutId);
 			if (oldPlayer != null) {
@@ -40,14 +38,15 @@ import java.io.IOException;
 			{
 				log.debug("Start parsing... id = " + playerMinutId);
 				Document doc = Jsoup.connect(get90minutLink(playerMinutId)).get();
-				Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr[bgcolor]");
+				Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr");
 				Player player = new Player();
-				for (int i=0; i<bios.size() && i<8; i++) {
+				player.setMinut_id(playerMinutId);
+				for (int i=0; i<bios.size() && i<9; i++) {
 					Element bio = bios.get(i);
 					Elements row = bio.select("td");
 					if(row.size()>1){
-						String key = row.get(0).text();
-						Element value = row.get(1);
+						String key = row.get(i==8?1:0).text();
+						Element value = row.get(i==8?2:1);
 						switch (key){
 							case "Imię":
 								player.setName(value.text());
@@ -91,9 +90,6 @@ import java.io.IOException;
 			}
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-		} finally {
-			session.flush();
-			session.close();
 		}
 
 		return result;
@@ -101,5 +97,9 @@ import java.io.IOException;
 
 	private String get90minutLink(Integer playerMinutId) {
 		return MINUT_URL + "/kariera.php?id=" + playerMinutId;
+	}
+
+	public void setPlayerDAO(PlayerDAO playerDAO) {
+		this.playerDAO = playerDAO;
 	}
 }

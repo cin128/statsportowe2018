@@ -18,7 +18,10 @@ pageEncoding="ISO-8859-1"%>
 			<a href="importProjectsBatch">Start projects import</a>
 		</h3>
 		<h3>
-			<a href="updateProject">Project update status</a>
+			<a href="importPlayersBatch">Start player import</a>
+		</h3>
+		<h3>
+			<a href="importStatus">Import status</a>
 		</h3>
 		<h3>
 			<a href="table?projectId=1">Show Table</a>

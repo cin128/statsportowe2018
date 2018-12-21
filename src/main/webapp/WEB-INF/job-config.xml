@@ -30,15 +30,21 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<!--Import JOB-->
+	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
 
-	<bean id="pojectImportJobLauncher"
-		class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+	<bean id="importJobLauncher"
+		  class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
 		<property name="jobRepository" ref="jobRepository" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 
-	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
+	<bean id="emptyWriter" class="pl.polskieligi.batch.EmptyWriter" />
+
+	<!--Project-->
+
+	<bean id="projectProcessor" class="pl.polskieligi.batch.project.ProjectProcessor" />
+
+	<!--Import JOB-->
 
 	<job id="projectImportJob" xmlns="http://www.springframework.org/schema/batch"
 		 restartable="true">
@@ -50,11 +56,11 @@
 		</step>
 	</job>
 
-	<bean id="projectImportReader" class="pl.polskieligi.batch.ProjectImportReader" />
+	<bean id="projectImportReader" class="pl.polskieligi.batch.project.ProjectImportReader" />
 
 	<!--Update JOB-->
 
-<!-- 	<bean id="projectUpdateScheduler" class="pl.polskieligi.batch.ProjectUpdateScheduler" />
+<!-- 	<bean id="projectUpdateScheduler" class="pl.polskieligi.project.batch.ProjectUpdateScheduler" />
 
 	<task:scheduled-tasks>
 		<task:scheduled ref="projectUpdateScheduler" method="run"
@@ -97,14 +103,22 @@
 		</property>
 	</bean>
 
-	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.ProjectUpdateJobExecutionListener" />
+	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.project.ProjectUpdateJobExecutionListener" />
 
-	<!--Utils-->
+    <!--Player-->
 
-	<bean id="projectProcessor" class="pl.polskieligi.batch.ProjectProcessor" />
+    <job id="playerImportJob" xmlns="http://www.springframework.org/schema/batch"
+         restartable="true">
+        <step id="playerImportStep" allow-start-if-complete="true">
+            <tasklet transaction-manager="transactionManager">
+                <chunk reader="playerImportReader" processor="playerProcessor"
+                       writer="emptyWriter" commit-interval="1" />
+            </tasklet>
+        </step>
+    </job>
 
-	<bean id="emptyWriter" class="pl.polskieligi.batch.EmptyWriter" />
+    <bean id="playerImportReader" class="pl.polskieligi.batch.player.PlayerImportReader" />
 
-	<!--<bean id="myTasklet" class="pl.polskieligi.batch.LigaTasklet"/> -->
+    <bean id="playerProcessor" class="pl.polskieligi.batch.player.PlayerProcessor" />
 
 </beans>

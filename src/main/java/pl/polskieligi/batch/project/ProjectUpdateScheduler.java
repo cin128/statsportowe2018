@@ -1,4 +1,4 @@
-package pl.polskieligi.batch;
+package pl.polskieligi.batch.project;
 
 import java.util.HashMap;
 import java.util.Map;
