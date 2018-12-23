@@ -8,12 +8,14 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import pl.polskieligi.dto.ImportJob;
 
 import java.util.*;
 
+@Controller
 public class ImportPlayersBatchController {
 
 	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);

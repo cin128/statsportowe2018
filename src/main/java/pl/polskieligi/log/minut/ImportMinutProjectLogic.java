@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,9 +43,6 @@ public class ImportMinutProjectLogic {
 	final static Logger log = Logger.getLogger(ImportMinutProjectLogic.class);
 	
 	@Autowired
-	SessionFactory sessionFactory;
-	
-	@Autowired
 	ProjectDAO projectDAO;
 	
 	@Autowired
@@ -76,7 +71,6 @@ public class ImportMinutProjectLogic {
 		Long projectId = null;
 		Integer year = null;
 		Map<String, Long> leagueTeams = new HashMap<String, Long>();
-		Session session = sessionFactory.openSession();
 		try {
 			int matches_count = 0;
 			int rounds_count = 0;
@@ -304,6 +298,7 @@ public class ImportMinutProjectLogic {
 								round.setMatchcode(round_matchcode);
 								round.setProject_id(projectId);
 								round = roundDAO.saveUpdate(round);
+								round_id = round.getId();
 								rounds_count++;
 							}
 						}
@@ -331,10 +326,7 @@ public class ImportMinutProjectLogic {
 		} catch (Exception e) {
 			pi.addMessage(e.getMessage());
 			log.error(e.getMessage(), e);
-		} finally {
-			session.flush();
-			session.close();
-		}
+		} 
 		return pi;
 	}
 
