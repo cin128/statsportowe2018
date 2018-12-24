@@ -10,6 +10,7 @@ public class LeagueMatch {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long match_id;
+	private Integer minut_id;
 /*	private Integer match_number;*/
 	private Integer playground_id;
 	private Timestamp match_date;
@@ -50,6 +51,7 @@ public class LeagueMatch {
 
 	public LeagueMatch() {
 /*		match_number = 0;*/
+		minut_id = 0;
 		playground_id = 0;
 		match_date = new Timestamp(0);
 		matchpart1 = Long.valueOf(0);
@@ -102,6 +104,14 @@ public class LeagueMatch {
 	public void setMatch_number(Integer match_number) {
 		this.match_number = match_number;
 	}*/
+
+	public Integer getMinut_id() {
+		return minut_id;
+	}
+
+	public void setMinut_id(Integer minut_id) {
+		this.minut_id = minut_id;
+	}
 
 	public Integer getPlayground_id() {
 		return playground_id;

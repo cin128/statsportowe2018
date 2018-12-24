@@ -337,4 +337,32 @@ public class ImportMinutProjectLogic {
 		}
 		return MINUT_URL+"/liga/"+index+"/liga" + projectMinutId + ".html";
 	}
+
+	public void setProjectDAO(ProjectDAO projectDAO) {
+		this.projectDAO = projectDAO;
+	}
+
+	public void setLeagueDAO(LeagueDAO leagueDAO) {
+		this.leagueDAO = leagueDAO;
+	}
+
+	public void setSeasonDAO(SeasonDAO seasonDAO) {
+		this.seasonDAO = seasonDAO;
+	}
+
+	public void setTeamDAO(TeamDAO teamDAO) {
+		this.teamDAO = teamDAO;
+	}
+
+	public void setTeamLeagueDAO(TeamLeagueDAO teamLeagueDAO) {
+		this.teamLeagueDAO = teamLeagueDAO;
+	}
+
+	public void setMatchDAO(LeagueMatchDAO matchDAO) {
+		this.matchDAO = matchDAO;
+	}
+
+	public void setRoundDAO(RoundDAO roundDAO) {
+		this.roundDAO = roundDAO;
+	}
 }
