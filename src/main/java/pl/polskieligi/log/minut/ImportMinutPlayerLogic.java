@@ -39,12 +39,13 @@ import java.io.IOException;
 				Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr");
 				Player player = new Player();
 				player.setMinut_id(playerMinutId);
-				for (int i=0; i<bios.size() && i<9; i++) {
+				int posIndex = 7;
+				for (int i=0; i<bios.size() && i<10; i++) {
 					Element bio = bios.get(i);
 					Elements row = bio.select("td");
 					if(row.size()>1){
-						String key = row.get(i==8?1:0).text();
-						Element value = row.get(i==8?2:1);
+						String key = row.get(i==posIndex?1:0).text();
+						Element value = row.get(i==posIndex?2:1);
 						switch (key){
 							case "Imię":
 								player.setName(value.text());
@@ -62,6 +63,15 @@ import java.io.IOException;
 								player.setBirthTown(value.text());
 								Elements img = value.select("img");
 								player.setBirthCountry(img.attr("title"));
+								break;
+							case "Data śmierci":
+								player.setDeathDate(TimestampParser.parseDate(row.get(1).text()));
+								posIndex = 9;
+								break;
+							case "Miejsce śmierci":
+								player.setDeatTown(value.text());
+								Elements img2 = value.select("img");
+								player.setDeatCountry(img2.attr("title"));
 								break;
 							case "Wzrost / waga":
 								String d = value.text();

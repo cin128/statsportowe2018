@@ -15,6 +15,9 @@ public class Player {
 	private Date birthDate;
 	private String birthTown;
 	private String birthCountry;
+	private Date deathDate;
+	private String deatTown;
+	private String deatCountry;
 	private String nationality;
 	private String position;
 	private Float weight;
@@ -24,9 +27,12 @@ public class Player {
 		minut_id = 0;
 		name = "";
 		surname = "";
-		birthDate = new Date(0);
+		birthDate = null;
 		birthTown = "";
 		birthCountry = "";
+		deathDate = null;
+		deatTown = "";
+		deatCountry = "";
 		nationality = "";
 		position = "";
 		weight = new Float(0);
@@ -121,9 +127,32 @@ public class Player {
 		this.height = height;
 	}
 
-	@Override public String toString() {
-		return id + " " + minut_id + " " +name + " " +surname + " " +birthDate + " " +birthTown + " " +birthCountry+ " " + nationality
-				+ " " +position + " " + weight + " " + height;
+	public Date getDeathDate() {
+		return deathDate;
+	}
 
+	public void setDeathDate(Date deathDate) {
+		this.deathDate = deathDate;
+	}
+
+	public String getDeatTown() {
+		return deatTown;
+	}
+
+	public void setDeatTown(String deatTown) {
+		this.deatTown = deatTown;
+	}
+
+	public String getDeatCountry() {
+		return deatCountry;
+	}
+
+	public void setDeatCountry(String deatCountry) {
+		this.deatCountry = deatCountry;
+	}
+
+	@Override public String toString() {
+		return id + " " + minut_id + " " +name + " " +surname + " " +birthDate + " " +birthTown + " " +birthCountry+ " "
+				+ deathDate+ " " + deatTown+ " " + deatCountry+ " " + nationality + " " +position + " " + weight + " " + height;
 	}
 }

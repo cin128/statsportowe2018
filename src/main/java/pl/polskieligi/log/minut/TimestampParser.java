@@ -134,8 +134,7 @@ public class TimestampParser {
 			int day = Integer.parseInt(tmp[0]);
 			int month = months.get(tmp[1]);
 			int year = Integer.parseInt(tmp[2]);
-			GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
-					: year + 1, month, day);
+			GregorianCalendar cal = new GregorianCalendar(year, month, day);
 			result = new Date(cal.getTimeInMillis());
 		}
 		return result;
