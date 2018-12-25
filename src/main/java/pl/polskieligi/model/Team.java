@@ -1,8 +1,11 @@
 package pl.polskieligi.model;
 
-import java.sql.Timestamp;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false) })
@@ -12,6 +15,7 @@ public class Team {
 	private Long id;
 	private Integer minut_id;
 	private String name;
+	private String longName;
 	/*private String short_name;
 	private String middle_name;
 	private String description;
@@ -21,7 +25,6 @@ public class Team {
 
 	public Team() {
 		minut_id = 0;
-		name = "";
 /*		short_name = "";
 		middle_name = "";
 		description = "";
@@ -52,6 +55,14 @@ public class Team {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getLongName() {
+		return longName;
+	}
+
+	public void setLongName(String longName) {
+		this.longName = longName;
 	}
 
 /*	public String getShort_name() {
@@ -101,4 +112,9 @@ public class Team {
 	public void setChecked_out_time(Timestamp checked_out_time) {
 		this.checked_out_time = checked_out_time;
 	}	*/
+	
+	@Override
+	public String toString() {
+		return minut_id + " "+ name +" " + longName;
+	}
 }

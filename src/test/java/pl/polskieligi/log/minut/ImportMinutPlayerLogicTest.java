@@ -28,6 +28,11 @@ public class ImportMinutPlayerLogicTest {
 	public void fullTest() {
 		System.out.println(logic.doImport(1));
 	}
+	
+	@Test
+	public void fullTest2() {
+		System.out.println(logic.doImport(2));
+	}
 
 	@Test
 	public void emptyTest() {

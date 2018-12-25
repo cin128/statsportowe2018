@@ -48,4 +48,19 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 
 		return result;
 	}
+	
+	@Override
+	public Team retrieveTeamByMinut(Integer minutId) {
+		Team result = null;
+		Session session = getCurrentSession();
+
+		Query query = session.createQuery("from Team where minut_id = :minut_id");
+		query.setParameter("minut_id", minutId);
+		@SuppressWarnings("unchecked") List<Team> teams = query.list();
+		for (Team t : teams) {
+			result = t;
+		}
+
+		return result;
+	}
 }

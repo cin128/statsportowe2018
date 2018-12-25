@@ -1,6 +1,7 @@
 package pl.polskieligi.log.minut;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -10,6 +11,8 @@ import pl.polskieligi.dao.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportMinutProjectLogicTest {
@@ -36,6 +39,8 @@ public class ImportMinutProjectLogicTest {
 
 	@Before
 	public void setUp() {
+		System.setProperty("log4j.configuration","log4j.properties");	
+		
 		logic = new ImportMinutProjectLogic();
 		logic.setProjectDAO(projectDAO);
 		when(projectDAO.saveUpdate(any())).thenAnswer(i->i.getArgument(0));
@@ -52,11 +57,15 @@ public class ImportMinutProjectLogicTest {
 		logic.setTeamLeagueDAO(teamLeagueDAO);
 		when(teamLeagueDAO.saveUpdate(any())).thenAnswer(i->i.getArgument(0));
 
-
 		logic.setMatchDAO(matchDAO);
-		when(matchDAO.saveUpdate(anyList())).thenAnswer(i->1);
+		when(matchDAO.saveUpdate(anyList())).thenAnswer(i->((List)i.getArgument(0)).size());
 
 		logic.setRoundDAO(roundDAO);
 		when(roundDAO.saveUpdate(any())).thenAnswer(i->i.getArgument(0));
+	}
+	
+	@Test
+	public void fullTest() {
+		System.out.println(logic.doImport(9322));
 	}
 }

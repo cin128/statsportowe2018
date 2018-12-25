@@ -6,4 +6,5 @@ import pl.polskieligi.model.Team;
 
 public interface TeamDAO extends AbstractDAO<Team>{
 	public List<Team> getTeams();
+	public Team retrieveTeamByMinut(Integer minutId);
 }

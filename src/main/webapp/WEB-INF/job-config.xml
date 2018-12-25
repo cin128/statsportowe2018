@@ -120,5 +120,21 @@
     <bean id="playerImportReader" class="pl.polskieligi.batch.player.PlayerImportReader" />
 
     <bean id="playerProcessor" class="pl.polskieligi.batch.player.PlayerProcessor" />
+        
+    <!--Team-->
 
+    <job id="teamImportJob" xmlns="http://www.springframework.org/schema/batch"
+         restartable="true">
+        <step id="teamImportStep" allow-start-if-complete="true">
+            <tasklet transaction-manager="transactionManager">
+                <chunk reader="teamImportReader" processor="teamProcessor"
+                       writer="emptyWriter" commit-interval="1" />
+            </tasklet>
+        </step>
+    </job>
+
+    <bean id="teamImportReader" class="pl.polskieligi.batch.team.TeamImportReader" />
+
+    <bean id="teamProcessor" class="pl.polskieligi.batch.team.TeamProcessor" />
+    
 </beans>

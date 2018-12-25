@@ -1,7 +1,17 @@
 package pl.polskieligi.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
@@ -11,25 +21,24 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
 import pl.polskieligi.dto.ImportJob;
 
-import java.util.*;
+@Controller
+public class ImportTeamsBatchController {
 
-//@Controller
-public class ImportPlayersBatchController {
-
-	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);
+	final static Logger log = Logger.getLogger(ImportTeamsBatchController.class);
 
 	@Autowired
 	@Qualifier("importJobLauncher")
 	private JobLauncher launcher;
 
 	@Autowired
-	@Qualifier("playerImportJob") Job job;
+	@Qualifier("teamImportJob") Job job;
 
-	@RequestMapping("/importPlayersBatch")
+	@RequestMapping("/importTeamsBatch")
 	public ModelAndView importPlayersBatch() {
-		log.info("importPlayersBatch start");
+		log.info("importTeamsBatch start");
 		List<ImportJob> rows = new ArrayList<ImportJob>();
 		JobParameter jp = new JobParameter(new Date());
 		Map<String, JobParameter> map = new HashMap<String, JobParameter>();
