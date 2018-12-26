@@ -38,8 +38,9 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 		List<T> objs = query.list();
 		for (T t : objs) {
 			oldObj = t;
-			updateData(obj, oldObj);			
-			session.update(oldObj);
+			if(updateData(obj, oldObj)) {				
+				session.update(oldObj);
+			}
 			obj = oldObj;
 		}
 		if (oldObj == null) {
@@ -51,6 +52,8 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 	
 	protected abstract Query getRetrieveQuery(T obj);
 	
-	protected void updateData(T source, T target) {}
+	protected boolean updateData(T source, T target) {
+		return false;
+	}
 	
 }

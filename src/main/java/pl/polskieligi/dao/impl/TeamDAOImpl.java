@@ -27,10 +27,12 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 		return query;
 	}
 	@Override
-	protected void updateData(Team source, Team target) {
+	protected boolean updateData(Team source, Team target) {
 		if (source.getName() != null && !source.getName().isEmpty()) {
 			target.setName(source.getName());
+			return true;
 		}
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -59,6 +61,22 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 		@SuppressWarnings("unchecked") List<Team> teams = query.list();
 		for (Team t : teams) {
 			result = t;
+		}
+
+		return result;
+	}
+
+	@Override
+	public Team retrieveTeamByName(String name) {
+		Team result = null;
+		Session session = getCurrentSession();
+
+		Query query = session.createQuery("from Team where name = :name");
+		query.setParameter("name", name);
+		@SuppressWarnings("unchecked") List<Team> teams = query.list();
+		for (Team t : teams) {
+			result = t;
+			break;
 		}
 
 		return result;

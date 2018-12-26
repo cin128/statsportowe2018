@@ -40,5 +40,10 @@ public class ImportMinutTeamLogicTest {
 	@Test
 	public void test3() {
 		System.out.println(logic.doImport(25));
-	}	
+	}
+	
+	@Test
+	public void titleTest() {
+		System.out.println(logic.doImport(2816));
+	}
 }

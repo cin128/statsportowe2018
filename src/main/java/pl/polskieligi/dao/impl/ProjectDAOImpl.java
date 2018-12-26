@@ -48,26 +48,37 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 	}
 	
 	@Override
-	protected void updateData(Project leagueProject, Project oldProject) {
-		if (leagueProject.getMinut_id() > 0) {
+	protected boolean updateData(Project leagueProject, Project oldProject) {
+		boolean result = false;
+		if (leagueProject.getMinut_id() > 0 && leagueProject.getMinut_id()!=oldProject.getMinut_id()) {
 			oldProject.setMinut_id(leagueProject.getMinut_id());
+			result=true;
 		}
 		if (leagueProject.getLeague()!=null) {
 			oldProject.setLeague(leagueProject.getLeague());
+			result=true;
 		}
 		if (leagueProject.getSeason() !=null) {
 			oldProject.setSeason(leagueProject.getSeason());
+			result=true;
 		}
-		if (leagueProject.getName() != null && !leagueProject.getName().isEmpty()) {
+		if (leagueProject.getName() != null && !leagueProject.getName().isEmpty() && !leagueProject.getName().equals(oldProject.getName())) {
 			oldProject.setName(leagueProject.getName());
+			result=true;
 		}
 		if (leagueProject.getStart_date() != null && !leagueProject.getStart_date().equals(new Date(0))) {
 			oldProject.setStart_date(leagueProject.getStart_date());
+			result=true;
 		}
-		oldProject.setArchive(leagueProject.getArchive());
+		if(oldProject.getArchive()!=leagueProject.getArchive()) {
+			oldProject.setArchive(leagueProject.getArchive());
+			result=true;
+		}
 		if (leagueProject.getType() > 0) {
 			oldProject.setType(leagueProject.getType());
+			result=true;
 		}
+		return result;
 	}
 
 	public Project getLastProjectForTeam(Integer teamId) {

@@ -34,7 +34,7 @@ public class ImportTeamsBatchController {
 	private JobLauncher launcher;
 
 	@Autowired
-	@Qualifier("teamImportJob") Job job;
+	@Qualifier("teamUpdateJob") Job job;
 
 	@RequestMapping("/importTeamsBatch")
 	public ModelAndView importPlayersBatch() {

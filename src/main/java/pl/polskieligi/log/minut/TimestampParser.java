@@ -82,6 +82,10 @@ public class TimestampParser {
 		int day = -1;
 		int month = -1;
 		if (i < 0) {
+			if(substring.contains(", ")) {
+				String[] tmp1 = substring.split(", ");
+				substring = tmp1[1];
+			} 
 			String[] tmp = substring.split(" ");
 			day = Integer.parseInt(tmp[0]);
 			month = months.get(tmp[1]);
@@ -104,9 +108,13 @@ public class TimestampParser {
 		int day = -1;
 		int month = -1;
 		if (i < 0) {
+			if(substring.contains(",")) {
+				String[] tmp1 = substring.split(",");
+				substring = tmp1[0];
+			} 
 			String[] tmp = substring.split(" ");
 			day = Integer.parseInt(tmp[0]);
-			month = months.get(tmp[1]);
+			month = months.get(tmp[1]);			
 		} else {
 			String[] tmp = substring.split("-");
 			if (tmp[0].length() > 3) {

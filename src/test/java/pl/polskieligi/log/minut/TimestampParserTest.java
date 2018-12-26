@@ -15,5 +15,11 @@ public class TimestampParserTest {
 		System.out.println(TimestampParser.getRoundEnd(2012, "22-23 marca"));
 		System.out.println(TimestampParser.getRoundStart(2012, "30 listopada-1 grudnia"));
 		System.out.println(TimestampParser.getRoundEnd(2012, "30 listopada-1 grudnia"));
+		System.out.println(TimestampParser.getRoundStart(2012, "9 sierpnia, 23 sierpnia"));
+	}
+	
+	@Test
+	public void testCup() {
+		System.out.println(TimestampParser.getRoundStart(2012, "9 sierpnia, 23 sierpnia"));
 	}
 }

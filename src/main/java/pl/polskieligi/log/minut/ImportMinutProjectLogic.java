@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import pl.polskieligi.dao.LeagueDAO;
 import pl.polskieligi.dao.LeagueMatchDAO;
@@ -73,7 +74,7 @@ public class ImportMinutProjectLogic {
 			Project oldProject = projectDAO.retrieveProjectByMinut(projectMinutId);
 			if (oldProject != null
 					&& (oldProject.getArchive() && oldProject.getPublished() || oldProject
-							.getType() == Project.OTHER)) {
+							.getType() == Project.OTHER)) {			
 				log.info("Project alerady loaded id = "+projectMinutId);
 				pi.setProject(oldProject);
 				pi.setSkipped(true);
@@ -94,7 +95,10 @@ public class ImportMinutProjectLogic {
 					leagueProject.setType(Project.OTHER);
 				} else {
 					leagueProject.setType(Project.REGULAR_LEAGUE);
-					parseLeague(doc, leagueProject, leagueTeams, year, pi);
+				}
+				List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, year, pi);
+				if(teams_count==0 && missingTeams.size()>0 ) {
+					updateTeamLeagues(missingTeams, leagueProject);
 				}
 
 				leagueProject = projectDAO.saveUpdate(leagueProject);
@@ -112,7 +116,7 @@ public class ImportMinutProjectLogic {
 		} 
 		return pi;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private Integer parseProjectHeader(Document doc, Integer projectMinutId, ProjectInfo pi) {
 		Integer year = null;
@@ -194,7 +198,18 @@ public class ImportMinutProjectLogic {
 		return leagueTeams;
 	}
 	
-	private void parseLeague(Document doc, Project leagueProject, Map<String, Long> leagueTeams, Integer year, ProjectInfo pi) {
+	private void updateTeamLeagues(List<Team> missingTeams, Project leagueProject) {
+		for(Team team: missingTeams) {
+			TeamLeague tl = new TeamLeague();
+			tl.setProject(leagueProject);
+			tl.setTeam(team);
+			tl = teamLeagueDAO.saveUpdate(tl);
+			log.debug("TeamLeague saved " + tl.getId());
+		}
+	}
+	
+	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Long> leagueTeams, Integer year, ProjectInfo pi) {
+		List<Team> missingTeams = new ArrayList<Team>();
 		int teams_count = leagueTeams.size();
 		int matches_count = 0;
 		int rounds_count = 0;
@@ -218,6 +233,8 @@ public class ImportMinutProjectLogic {
 					if (teams.size() == 2 && result.size() == 1) {
 						String t1 = teams.get(0).text();
 						String t2 = teams.get(1).text();
+						checkTeam(t1, leagueTeams, missingTeams);						
+						checkTeam(t2, leagueTeams, missingTeams);
 						if (leagueTeams.containsKey(t1)
 								&& leagueTeams.containsKey(t2)) {
 							String resultValue = result.get(0)
@@ -294,7 +311,7 @@ public class ImportMinutProjectLogic {
 							}
 							roundMatches.add(roundMatch);
 							log.debug("Match: " + roundMatch.getMatchpart1() + " " + roundMatch.getMatchpart2());
-						}
+						} 
 						Elements info = match
 								.select("td[colspan=4]");
 						if (info.size() > 0) {
@@ -310,7 +327,7 @@ public class ImportMinutProjectLogic {
 				matches_count += matchDAO.saveUpdate(roundMatches);
 			} else {
 				Elements nowaKolejka = kolejka
-						.select("td[colspan=3]");
+						.select("td[colspan=3]>b>u");
 				if (nowaKolejka.size() == 1) {
 					String tmp = nowaKolejka.get(0).text();
 					round_matchcode++;
@@ -346,6 +363,19 @@ public class ImportMinutProjectLogic {
 		}
 		pi.setMatches_count(matches_count);
 		pi.setRounds_count(rounds_count);
+		return missingTeams;
+	}
+	
+	private void checkTeam(String teamName, Map<String, Long> leagueTeams, List<Team> missingTeams) {
+		if(!StringUtils.isEmpty(teamName) && !leagueTeams.containsKey(teamName)) {
+			Team team = teamDAO.retrieveTeamByName(teamName);
+			if(team!=null) {
+				leagueTeams.put(teamName, team.getId());
+				missingTeams.add(team);
+			} else {
+				log.warn("Team: " + teamName + " is missing!!!");				
+			}
+		}
 	}
 
 	private String get90minutLink(Integer projectMinutId){

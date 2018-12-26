@@ -66,6 +66,6 @@ public class ImportMinutProjectLogicTest {
 	
 	@Test
 	public void fullTest() {
-		System.out.println(logic.doImport(9322));
+		System.out.println(logic.doImport(10529));
 	}
 }

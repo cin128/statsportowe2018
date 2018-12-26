@@ -137,4 +137,31 @@
 
     <bean id="teamProcessor" class="pl.polskieligi.batch.team.TeamProcessor" />
     
+    
+     <job id="teamUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+         restartable="true">
+        <step id="teamUpdateStep" allow-start-if-complete="true">
+            <tasklet transaction-manager="transactionManager">
+                <chunk reader="teamUpdateReader" processor="teamProcessor"
+                       writer="emptyWriter" commit-interval="1" />
+            </tasklet>
+        </step>
+    </job>
+    
+    <bean id="teamUpdateReader"
+		  class="org.springframework.batch.item.database.HibernateCursorItemReader">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="queryString">
+			<!-- Why CDATA? because < etc. is not allowed for xml values when you
+				use &lt; xml parser will work, but now the sql won't because of the & spring
+				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
+			<value>
+				<![CDATA[
+                    FROM Team where name IS NULL
+                ]]>
+			</value>
+		</property>
+	</bean>
+    
+    
 </beans>

@@ -32,7 +32,7 @@ public class ImportMinutTeamLogic {
 
 		try {
 			Team oldTeam = teamDAO.retrieveTeamByMinut(teamMinutId);
-			if (oldTeam != null) {
+			if (oldTeam != null && !StringUtil.isBlank(oldTeam.getName())) {
 				log.info("Team alerady loaded id = " + teamMinutId);
 				result = oldTeam;
 			} else {				
@@ -45,6 +45,12 @@ public class ImportMinutTeamLogic {
 					Elements img = info.select("img[src][alt]");
 					name = img.attr("alt");
 				}
+				if(StringUtil.isBlank(name)) {
+					String title = doc.select("title").text();
+					name = title.replace("Skarb - ", "");
+				}
+				name = name.replace(" (f)", "");//futsal
+				name = name.replace(" (k)", "");//kobiety
 				Elements longNameElem = info.select("font[size=2]>b");
 				
 				Team team = new Team();
