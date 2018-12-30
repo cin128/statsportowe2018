@@ -10,7 +10,7 @@
 	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<jsp:include page="css/index.css" />
+<link href="<c:url value="/resources/css/index.css" />" rel="stylesheet">
 <script>
 	$(function() {
 		$(document).tooltip();
@@ -59,7 +59,7 @@
 						<td>${row.defeats}</td>
 						<td>${row.goalsScored}-${row.goalsAgainst}</td>
 						
-						<!-- <td class="last-ten-matches"><c:forEach var="match"
+						 <td class="last-ten-matches"><c:forEach var="match"
 								items="${row.lastMatches}">
 								<c:if test="${match!=null}">
 									<c:if test="${match.result==0}">
@@ -75,7 +75,7 @@
 											class="match_lose">P</div>
 									</c:if>
 								</c:if>
-							</c:forEach></td> -->
+							</c:forEach></td> 
 					</tr>
 				</c:forEach>
 			</tbody>

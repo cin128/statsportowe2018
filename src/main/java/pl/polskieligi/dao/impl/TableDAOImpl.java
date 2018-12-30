@@ -1,5 +1,6 @@
 package pl.polskieligi.dao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,6 +28,9 @@ import pl.polskieligi.model.Team;
 @Repository
 @Transactional
 public class TableDAOImpl implements TableDAO {
+	
+	final static Logger log = Logger.getLogger(TableDAOImpl.class);
+	
 	@Autowired
 	SessionFactory sessionFactory;
 
@@ -42,32 +47,32 @@ public class TableDAOImpl implements TableDAO {
 			+ "SUM(case when m.matchpart1_result > m.matchpart2_result then 1 else 0 end) s3, "
 			+ "SUM(case when m.matchpart1_result = m.matchpart2_result then 1 else 0 end) s4, "
 			+ "SUM(case when m.matchpart1_result < m.matchpart2_result then 1 else 0 end) s5 " 
-			+ "FROM leaguematch AS m "
-			+ "JOIN team AS t ON m.matchpart1 = t.id "
+			+ "FROM LeagueMatch AS m "
+			+ "JOIN Team AS t ON m.matchpart1 = t.id "
 			+ "WHERE m.project_id = :project_id and m.published = :published and m.count_result = :count_result and m.matchpart1 in (:team_ids) and m.matchpart2 in (:team_ids) GROUP BY m.matchpart1, t.name";
 
 	private final static String matchAwayQuery = "SELECT m.matchpart2, t.name, count( * ), "
 			+ "SUM(m.matchpart2_result) s1, " + "SUM(m.matchpart1_result) s2, "
 			+ "SUM(case when m.matchpart2_result > m.matchpart1_result then 1 else 0 end) s3, "
 			+ "SUM(case when m.matchpart2_result = m.matchpart1_result then 1 else 0 end) s4, "
-			+ "SUM(case when m.matchpart2_result < m.matchpart1_result then 1 else 0 end) s5 " + "FROM leaguematch AS m "
-			+ "JOIN team AS t ON m.matchpart2 = t.id "
+			+ "SUM(case when m.matchpart2_result < m.matchpart1_result then 1 else 0 end) s5 " + "FROM LeagueMatch AS m "
+			+ "JOIN Team AS t ON m.matchpart2 = t.id "
 			+ "WHERE m.project_id = :project_id and m.published = :published and m.count_result = :count_result and m.matchpart1 in (:team_ids) and m.matchpart2 in (:team_ids) GROUP BY m.matchpart2, t.name";
 
 	private static final String lastMatchesQuery = "select m.match_date, m.matchpart1_result as result1, m.matchpart2_result as result2, t1.name as name1, t2.name as name2, m.matchpart1 "
-			+ "from leaguematch m join team t1 on t1.id = m.matchpart1 join team t2 on t2.id = m.matchpart2 "
+			+ "from LeagueMatch m join Team t1 on t1.id = m.matchpart1 join Team t2 on t2.id = m.matchpart2 "
 			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart1 = :matchpart1 or m.matchpart2 = :matchpart2 ) and m.count_result = :count_result order by m.match_date desc";
 
 	public List<TableRow> getTableRows(Long projectId) {
 		java.util.Date startDate = new java.util.Date();
 		List<TableRow> result = calculateTable(projectId);
 		java.util.Date date = new java.util.Date();
-		System.out.println("Point A1: " + (date.getTime() - startDate.getTime()));
+		log.info("calculateTable in (ms) " + (date.getTime() - startDate.getTime()));
 		for (TableRow row : result) {
 			row.setLastMatches(getLastMatches(projectId, row.getTeam_id()));
 		}
 		date = new java.util.Date();
-		System.out.println("Point A2: " + (date.getTime() - startDate.getTime()));
+		log.info("All in (ms) " + (date.getTime() - startDate.getTime()));
 		return result;
 	}
 
@@ -75,7 +80,7 @@ public class TableDAOImpl implements TableDAO {
 		java.util.Date startDate = new java.util.Date();
 		List<Team> allTeams = teamLeagueDAO.getTeams(projectId);
 		java.util.Date date = new java.util.Date();
-		System.out.println("Point B1: " + (date.getTime() - startDate.getTime()));
+		log.debug("Point B1: " + (date.getTime() - startDate.getTime()));
 		List<Long> allTeamsIds = new ArrayList<Long>();
 		for (Team t : allTeams) {
 			allTeamsIds.add(t.getId());
@@ -86,7 +91,7 @@ public class TableDAOImpl implements TableDAO {
 			tr1.setSequence(i++);
 		}
 		date = new java.util.Date();
-		System.out.println("Point B2: " + (date.getTime() - startDate.getTime()));
+		log.debug("Point B2: " + (date.getTime() - startDate.getTime()));
 		List<TableRow> result = new ArrayList<TableRow>();
 		Map<Long, TableRow> equalPoints = new HashMap<Long, TableRow>();
 		Integer points = Integer.MIN_VALUE;
@@ -111,7 +116,7 @@ public class TableDAOImpl implements TableDAO {
 			}
 		}
 		date = new java.util.Date();
-		System.out.println("Point B3: " + (date.getTime() - startDate.getTime()));
+		log.debug("Point B3: " + (date.getTime() - startDate.getTime()));
 		if (equalPoints.size() == 1) {
 			for (TableRow r : equalPoints.values()) {
 				result.add(r);
@@ -120,7 +125,7 @@ public class TableDAOImpl implements TableDAO {
 			result.addAll(sortEqualPoints(projectId, equalPoints));
 		}
 		date = new java.util.Date();
-		System.out.println("Point B4: " + (date.getTime() - startDate.getTime()));
+		log.debug("Point B4: " + (date.getTime() - startDate.getTime()));
 		return result;
 	}
 
@@ -263,36 +268,41 @@ public class TableDAOImpl implements TableDAO {
 		row.setGoalsScoredAway(0);
 	}
 
-	// private void setValues(TableRow row, Object[] r) {
-	// row.setTeamName((String) r[1]);
-	// row.setGames(((BigInteger) r[2]).intValue());
-	// row.setGoalsScored(((Double) r[3]).intValue());
-	// row.setGoalsAgainst(((Double) r[4]).intValue());
-	// row.setWins(((BigDecimal) r[5]).intValue());
-	// row.setDraws(((BigDecimal) r[6]).intValue());
-	// row.setDefeats(((BigDecimal) r[7]).intValue());
-	// row.setPoints(row.getWins() * 3 + row.getDraws());
-	// }
-
 	private void addValues(TableRow row, Object[] r) {
 		row.setTeamName((String) r[1]);
-		row.setGames(((BigInteger) r[2]).intValue() + row.getGames());
-		row.setGoalsScored(((Float) r[3]).intValue() + row.getGoalsScored());
-		row.setGoalsAgainst(((Float) r[4]).intValue() + row.getGoalsAgainst());
-		row.setWins(((BigInteger) r[5]).intValue() + row.getWins());
-		row.setDraws(((BigInteger) r[6]).intValue() + row.getDraws());
-		row.setDefeats(((BigInteger) r[7]).intValue() + row.getDefeats());
+		row.setGames(getIntValue(r[2]) + row.getGames());
+		row.setGoalsScored(getIntValue(r[3]) + row.getGoalsScored());
+		row.setGoalsAgainst(getIntValue(r[4]) + row.getGoalsAgainst());
+		row.setWins(getIntValue(r[5]) + row.getWins());
+		row.setDraws(getIntValue(r[6]) + row.getDraws());
+		row.setDefeats(getIntValue(r[7]) + row.getDefeats());
 		row.setPoints(row.getWins() * 3 + row.getDraws());
+	}
+	
+	private int getIntValue(Object obj) {
+		if(obj==null) {
+			return 0;
+		} else if(obj instanceof Float) {
+			return ((Float) obj).intValue();
+		} else if(obj instanceof Double) {
+			return ((Double) obj).intValue();
+		}else if(obj instanceof BigInteger) {
+			return ((BigInteger) obj).intValue();
+		}else if(obj instanceof BigDecimal) {
+			return ((BigDecimal) obj).intValue();
+		}
+		
+		return 0;
 	}
 
 	private void addValuesHome(TableRow row, Object[] r) {
-		row.setGoalsScoredHome(((Float) r[3]).intValue() + row.getGoalsScoredHome());
-		row.setGoalsAgainstHome(((Float) r[4]).intValue() + row.getGoalsAgainstHome());
+		row.setGoalsScoredHome(getIntValue(r[3]) + row.getGoalsScoredHome());
+		row.setGoalsAgainstHome(getIntValue(r[4]) + row.getGoalsAgainstHome());
 	}
 
 	private void addValuesAway(TableRow row, Object[] r) {
-		row.setGoalsScoredAway(((Float) r[3]).intValue() + row.getGoalsScoredAway());
-		row.setGoalsAgainstAway(((Float) r[4]).intValue() + row.getGoalsAgainstAway());
+		row.setGoalsScoredAway(getIntValue(r[3]) + row.getGoalsScoredAway());
+		row.setGoalsAgainstAway(getIntValue(r[4]) + row.getGoalsAgainstAway());
 	}
 
 	private class TableRowComparator implements Comparator<TableRow> {
