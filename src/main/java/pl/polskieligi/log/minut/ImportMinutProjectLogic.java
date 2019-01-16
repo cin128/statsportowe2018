@@ -261,11 +261,9 @@ public class ImportMinutProjectLogic {
 											.setCount_result(true);
 									roundMatch.setPublished(true);
 									roundMatch
-											.setMatchpart1_result(Float
-													.valueOf(results[0]));
+											.setMatchpart1_result(parseFloat(results[0]));
 									roundMatch
-											.setMatchpart2_result(Float
-													.valueOf(results[1]));
+											.setMatchpart2_result(parseFloat(results[1]));
 								}
 							}
 							if (date.size() == 1) {
@@ -384,6 +382,15 @@ public class ImportMinutProjectLogic {
 			index = "1";
 		}
 		return MINUT_URL+"/liga/"+index+"/liga" + projectMinutId + ".html";
+	}
+	
+	private Float parseFloat(String value) {
+		try {
+			return Float.valueOf(value);
+		} catch (NumberFormatException e) {
+			log.warn("Value: " + value + " is not a number!!!");
+		}
+		return null;
 	}
 
 	public void setProjectDAO(ProjectDAO projectDAO) {
