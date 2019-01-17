@@ -78,14 +78,21 @@ public class TimestampParser {
 		if(year==null || substring==null){
 			return null;
 		}
+
+		if(substring.contains(" - ")) {
+			String[] tmp1 = substring.split(" - ");
+			substring = tmp1[tmp1.length-1];
+		}
+
+		if(substring.contains(", ")) {
+			String[] tmp1 = substring.split(", ");
+			substring = tmp1[tmp1.length-1];
+		}
+
 		int i = substring.indexOf("-");
 		int day = -1;
 		int month = -1;
 		if (i < 0) {
-			if(substring.contains(", ")) {
-				String[] tmp1 = substring.split(", ");
-				substring = tmp1[1];
-			} 
 			String[] tmp = substring.split(" ");
 			day = Integer.parseInt(tmp[0]);
 			month = months.get(tmp[1]);
@@ -104,14 +111,20 @@ public class TimestampParser {
 		if(year==null || substring==null){
 			return null;
 		}
+
+		if(substring.contains(" - ")) {
+			String[] tmp1 = substring.split(" - ");
+			substring = tmp1[tmp1.length-1];
+		}
+
+		if(substring.contains(",")) {
+			String[] tmp1 = substring.split(",");
+			substring = tmp1[0];
+		}
 		int i = substring.indexOf("-");
 		int day = -1;
 		int month = -1;
 		if (i < 0) {
-			if(substring.contains(",")) {
-				String[] tmp1 = substring.split(",");
-				substring = tmp1[0];
-			} 
 			String[] tmp = substring.split(" ");
 			day = Integer.parseInt(tmp[0]);
 			month = months.get(tmp[1]);			

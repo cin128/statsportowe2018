@@ -21,21 +21,25 @@ public class TimestampParserTest {
 	@Test
 	public void testCup() {
 		System.out.println(TimestampParser.getRoundStart(2012, "9 sierpnia, 23 sierpnia"));
+		System.out.println(TimestampParser.getRoundEnd(2012, "9 sierpnia, 23 sierpnia"));
 	}
 	
 	@Test
 	public void testMS() {
 		System.out.println(TimestampParser.getRoundStart(2012, "20-21 marca, 27-28 marca"));
+		System.out.println(TimestampParser.getRoundEnd(2012, "20-21 marca, 27-28 marca"));
 	}
 	
 	@Test
 	public void testJako() {
 		System.out.println(TimestampParser.getRoundStart(2012, "jako 22) - 12-13 kwietnia"));
+		System.out.println(TimestampParser.getRoundEnd(2012, "jako 22) - 12-13 kwietnia"));
 	}
 	
 	@Test
 	public void testPolfinal() {
 		System.out.println(TimestampParser.getRoundStart(2012, "1/2 finału - 2 maja"));
+		System.out.println(TimestampParser.getRoundEnd(2012, "1/2 finału - 2 maja"));
 	}
 	
 }
