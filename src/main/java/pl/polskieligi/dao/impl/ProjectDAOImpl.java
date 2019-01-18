@@ -3,7 +3,7 @@ package pl.polskieligi.dao.impl;
 import java.sql.Date;
 import java.util.List;
 
-import org.hibernate.Query;
+import javax.persistence.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
@@ -22,12 +22,12 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 
 	public Project retrieveProjectByMinut(Integer minutId) {
 		Project result = null;
-		Session session = getCurrentSession();
 
-		Query query = session.createQuery("from Project where minut_id = :minut_id");
+		Query query = getEntityManager().createQuery("SELECT p from Project p where minut_id = :minut_id");
 		query.setParameter("minut_id", minutId);
+		query.setMaxResults(1);
 		@SuppressWarnings("unchecked")
-		List<Project> projects = query.list();
+		List<Project> projects = query.getResultList();
 		for (Project p : projects) {
 			result = p;
 		}
@@ -37,9 +37,8 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 
 	@Override
 	protected Query getRetrieveQuery(Project leagueProject) {
-		Session session = getCurrentSession();
-		Query query = session.createQuery(
-				"from Project where minut_id = :minut_id");// or (league_id = :league_id and season_id = :season_id)
+		Query query = getEntityManager().createQuery(
+				"SELECT p from Project p where minut_id = :minut_id");// or (league_id = :league_id and season_id = :season_id)
 		query.setParameter("minut_id", leagueProject.getMinut_id());
 		
 //		query.setParameter("league_id", leagueProject.getLeague().getId());
@@ -83,26 +82,24 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 
 	public Project getLastProjectForTeam(Integer teamId) {
 		Project result = null;
-		Session session = getCurrentSession();
-		SQLQuery query = session.createSQLQuery("SELECT p.* " + "FROM team_leagues tl "
+		Query query = getEntityManager().createNativeQuery("SELECT p " + "FROM team_leagues tl "
 				+ "LEFT JOIN projects p ON p.id = tl.project_id "
 				+ "WHERE tl.team_id = :team_id and p.published = :published and p.type = :type AND p.start_date = ( "
 				+ "SELECT MAX( p2.start_date ) " + "FROM team_leagues tl2 "
 				+ "LEFT JOIN projects p2 ON p2.id = tl2.project_id "
-				+ "WHERE tl2.team_id = tl.team_id and p2.published = :published and p2.type = :type )");
-		query.addEntity(Project.class);
+				+ "WHERE tl2.team_id = tl.team_id and p2.published = :published and p2.type = :type )", Project.class);
 		query.setParameter("team_id", teamId);
 		query.setParameter("published", true);
 		query.setParameter("type", Project.REGULAR_LEAGUE);
-		for (Object i : query.list()) {
+		query.setMaxResults(1);
+		for (Object i : query.getResultList()) {
 			result = (Project) i;
 		}
-
 		return result;
 	}
 	
 	public Long getOpenProjectsCount() {
-		Session session = getCurrentSession();
-		return (Long) session.createCriteria(Project.class).setProjection(Projections.rowCount()).uniqueResult();
+		Query query = getEntityManager().createQuery("SELECT COUNT(p) FROM Project p " );
+		return (Long) query.getSingleResult();
 	}
 }

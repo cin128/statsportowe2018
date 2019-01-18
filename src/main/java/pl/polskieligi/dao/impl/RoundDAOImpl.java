@@ -2,13 +2,13 @@ package pl.polskieligi.dao.impl;
 
 import java.sql.Date;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.RoundDAO;
 import pl.polskieligi.model.Round;
+
+import javax.persistence.Query;
 
 @Repository
 @Transactional
@@ -19,8 +19,7 @@ public class RoundDAOImpl extends AbstractDAOImpl<Round> implements RoundDAO {
 
 	@Override
 	protected Query getRetrieveQuery(Round round) {
-		Session session = getCurrentSession();
-		Query query = session.createQuery("from Round where project_id = :project_id and matchcode = :matchcode");
+		Query query = getEntityManager().createQuery("SELECT r from Round r where project_id = :project_id and matchcode = :matchcode");
 		query.setParameter("project_id", round.getProject_id());
 		query.setParameter("matchcode", round.getMatchcode());
 		return query;

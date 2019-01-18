@@ -1,12 +1,12 @@
 package pl.polskieligi.dao.impl;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.LeagueDAO;
 import pl.polskieligi.model.League;
+
+import javax.persistence.Query;
 
 @Repository
 @Transactional
@@ -18,8 +18,7 @@ public class LeagueDAOImpl extends AbstractDAOImpl<League> implements LeagueDAO 
 
 	@Override
 	protected Query getRetrieveQuery(League league) {
-		Session session = getCurrentSession();
-		Query query = session.createQuery("from League where name = :name");
+		Query query = getEntityManager().createQuery("SELECT l from League l where name = :name");
 		query.setParameter("name", league.getName());
 		return query;
 	}

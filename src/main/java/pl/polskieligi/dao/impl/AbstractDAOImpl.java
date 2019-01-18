@@ -2,19 +2,20 @@ package pl.polskieligi.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.Query;
 
 import pl.polskieligi.dao.AbstractDAO;
 
-public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
-	@Autowired
-	SessionFactory sessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-	protected Session getCurrentSession() {
-		return sessionFactory.getCurrentSession();
+public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
+
+	@PersistenceContext
+	private EntityManager em;
+
+	protected EntityManager getEntityManager() {
+		return em;
 	}
 	
 	private final Class<T> clazz;
@@ -26,27 +27,25 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 	
 	@SuppressWarnings("unchecked")
 	public T retrieveById(Long id) {
-		Session session = getCurrentSession();
-		return (T)session.get(clazz, id);		
+		return (T) getEntityManager().find(clazz, id);
 	}
 	
 	public T saveUpdate(T obj) {
-		Session session = getCurrentSession();
 		Query query = getRetrieveQuery(obj);			
 		T oldObj = null;
 		@SuppressWarnings("unchecked")
-		List<T> objs = query.list();
+		List<T> objs = query.getResultList();
 		for (T t : objs) {
 			oldObj = t;
-			if(updateData(obj, oldObj)) {				
-				session.update(oldObj);
+			if(updateData(obj, oldObj)) {
+				getEntityManager().merge(oldObj);
 			}
 			obj = oldObj;
 		}
 		if (oldObj == null) {
-			session.persist(obj);
+			getEntityManager().persist(obj);
 		}
-		session.flush();
+		getEntityManager().flush();
 		return obj;
 	}
 	

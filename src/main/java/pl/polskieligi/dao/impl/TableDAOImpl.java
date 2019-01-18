@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,20 +22,24 @@ import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.dto.TableRowMatch;
 import pl.polskieligi.model.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 @Repository
 @Transactional
 public class TableDAOImpl implements TableDAO {
 	
 	final static Logger log = Logger.getLogger(TableDAOImpl.class);
-	
-	@Autowired
-	SessionFactory sessionFactory;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	@Autowired
 	TeamLeagueDAO teamLeagueDAO;
 
-	protected Session getCurrentSession() {
-		return sessionFactory.getCurrentSession();
+	protected EntityManager getEntityManager() {
+		return em;
 	}
 
 	private static int NUMBER_OF_LAST_MATCHES = 10;
@@ -164,7 +165,6 @@ public class TableDAOImpl implements TableDAO {
 	@SuppressWarnings("unchecked")
 	private List<TableRow> calculateTable(Long projectId, List<Long> teamIds, List<Integer> sequence) {
 		Map<Long, TableRow> result = new HashMap<Long, TableRow>();
-		Session session = getCurrentSession();
 		for (int i = 0; i < teamIds.size(); i++) {
 			Long id = teamIds.get(i);
 			TableRow row = new TableRow();
@@ -176,13 +176,13 @@ public class TableDAOImpl implements TableDAO {
 			result.put(id, row);
 		}
 
-		Query query = session.createSQLQuery(matchHomeQuery);
+		Query query = getEntityManager().createNativeQuery(matchHomeQuery);
 		query.setParameter("project_id", projectId);
 		query.setParameter("published", true);
 		query.setParameter("count_result", true);
-		query.setParameterList("team_ids", teamIds);
+		query.setParameter("team_ids", teamIds);
 
-		List<Object[]> rows = query.list();
+		List<Object[]> rows = query.getResultList();
 		for (Object[] r : rows) {
 			Long teamId = ((BigInteger) r[0]).longValue();
 			if (result.containsKey(teamId)) {
@@ -193,12 +193,12 @@ public class TableDAOImpl implements TableDAO {
 			}
 		}
 
-		query = session.createSQLQuery(matchAwayQuery);
+		query = getEntityManager().createNativeQuery(matchAwayQuery);
 		query.setParameter("project_id", projectId);
 		query.setParameter("published", true);
 		query.setParameter("count_result", true);
-		query.setParameterList("team_ids", teamIds);
-		rows = query.list();
+		query.setParameter("team_ids", teamIds);
+		rows = query.getResultList();
 		for (Object[] r : rows) {
 			Long teamId = ((BigInteger) r[0]).longValue();
 			if (result.containsKey(teamId)) {
@@ -216,8 +216,7 @@ public class TableDAOImpl implements TableDAO {
 
 	private TableRowMatch[] getLastMatches(Long project, Long teamId) {
 		TableRowMatch[] result = new TableRowMatch[NUMBER_OF_LAST_MATCHES];
-		Session session = getCurrentSession();
-		Query query = session.createSQLQuery(lastMatchesQuery);
+		Query query = getEntityManager().createNativeQuery(lastMatchesQuery);
 		query.setParameter("project_id", project);
 		query.setParameter("published", true);
 		query.setParameter("matchpart1", teamId);
@@ -225,7 +224,7 @@ public class TableDAOImpl implements TableDAO {
 		query.setParameter("count_result", true);
 		query.setMaxResults(NUMBER_OF_LAST_MATCHES);
 		@SuppressWarnings("unchecked")
-		List<Object[]> matches = query.list();
+		List<Object[]> matches = query.getResultList();
 		int i = 0;
 		for (Object[] match : matches) {
 			TableRowMatch m = new TableRowMatch();
