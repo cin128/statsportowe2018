@@ -35,8 +35,8 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Team> getTeams() {
-		Query query = getEntityManager().createNamedQuery(
-				"SELECT t FROM team_leagues tl join teams t on t.id = tl.team_id join projects p on p.id = tl.project_id where p.archive = :archive and p.type = :type and p.published = :published", Team.class);
+		Query query = getEntityManager().createNativeQuery(
+				"SELECT t.* FROM team_league tl join team t on t.id = tl.team_id join project p on p.id = tl.project_id where p.archive = :archive and p.type = :type and p.published = :published", Team.class);
 		query.setParameter("archive", false);
 		query.setParameter("type", Project.REGULAR_LEAGUE);
 		query.setParameter("published", true);

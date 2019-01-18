@@ -82,11 +82,11 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 
 	public Project getLastProjectForTeam(Integer teamId) {
 		Project result = null;
-		Query query = getEntityManager().createNativeQuery("SELECT p " + "FROM team_leagues tl "
-				+ "LEFT JOIN projects p ON p.id = tl.project_id "
+		Query query = getEntityManager().createNativeQuery("SELECT p " + "FROM team_league tl "
+				+ "LEFT JOIN project p ON p.id = tl.project_id "
 				+ "WHERE tl.team_id = :team_id and p.published = :published and p.type = :type AND p.start_date = ( "
-				+ "SELECT MAX( p2.start_date ) " + "FROM team_leagues tl2 "
-				+ "LEFT JOIN projects p2 ON p2.id = tl2.project_id "
+				+ "SELECT MAX( p2.start_date ) " + "FROM team_league tl2 "
+				+ "LEFT JOIN project p2 ON p2.id = tl2.project_id "
 				+ "WHERE tl2.team_id = tl.team_id and p2.published = :published and p2.type = :type )", Project.class);
 		query.setParameter("team_id", teamId);
 		query.setParameter("published", true);

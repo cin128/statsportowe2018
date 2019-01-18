@@ -61,7 +61,7 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	public List<Team> getTeams(Long projectId) {
 		List<Team> result = null;
 
-			Query query = getEntityManager().createQuery("from Team t where exists ( from TeamLeague tl join tl.team t1 join tl.project p1 where t.id = t1.id and p1.id = :project_id) order by t.name");
+			Query query = getEntityManager().createQuery("select t from Team t where exists (select tl from TeamLeague tl join tl.team t1 join tl.project p1 where t.id = t1.id and p1.id = :project_id) order by t.name");
 			query.setParameter("project_id", projectId);
 			result = query.getResultList();
 			

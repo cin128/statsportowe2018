@@ -48,7 +48,7 @@ public class TableDAOImpl implements TableDAO {
 			+ "SUM(case when m.matchpart1_result > m.matchpart2_result then 1 else 0 end) s3, "
 			+ "SUM(case when m.matchpart1_result = m.matchpart2_result then 1 else 0 end) s4, "
 			+ "SUM(case when m.matchpart1_result < m.matchpart2_result then 1 else 0 end) s5 " 
-			+ "FROM LeagueMatch AS m "
+			+ "FROM League_Match AS m "
 			+ "JOIN Team AS t ON m.matchpart1 = t.id "
 			+ "WHERE m.project_id = :project_id and m.published = :published and m.count_result = :count_result and m.matchpart1 in (:team_ids) and m.matchpart2 in (:team_ids) GROUP BY m.matchpart1, t.name";
 
@@ -56,12 +56,12 @@ public class TableDAOImpl implements TableDAO {
 			+ "SUM(m.matchpart2_result) s1, " + "SUM(m.matchpart1_result) s2, "
 			+ "SUM(case when m.matchpart2_result > m.matchpart1_result then 1 else 0 end) s3, "
 			+ "SUM(case when m.matchpart2_result = m.matchpart1_result then 1 else 0 end) s4, "
-			+ "SUM(case when m.matchpart2_result < m.matchpart1_result then 1 else 0 end) s5 " + "FROM LeagueMatch AS m "
+			+ "SUM(case when m.matchpart2_result < m.matchpart1_result then 1 else 0 end) s5 " + "FROM League_Match AS m "
 			+ "JOIN Team AS t ON m.matchpart2 = t.id "
 			+ "WHERE m.project_id = :project_id and m.published = :published and m.count_result = :count_result and m.matchpart1 in (:team_ids) and m.matchpart2 in (:team_ids) GROUP BY m.matchpart2, t.name";
 
 	private static final String lastMatchesQuery = "select m.match_date, m.matchpart1_result as result1, m.matchpart2_result as result2, t1.name as name1, t2.name as name2, m.matchpart1 "
-			+ "from LeagueMatch m join Team t1 on t1.id = m.matchpart1 join Team t2 on t2.id = m.matchpart2 "
+			+ "from League_Match m join Team t1 on t1.id = m.matchpart1 join Team t2 on t2.id = m.matchpart2 "
 			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart1 = :matchpart1 or m.matchpart2 = :matchpart2 ) and m.count_result = :count_result order by m.match_date desc";
 
 	public List<TableRow> getTableRows(Long projectId) {
@@ -229,8 +229,8 @@ public class TableDAOImpl implements TableDAO {
 		for (Object[] match : matches) {
 			TableRowMatch m = new TableRowMatch();
 			Timestamp ts = (Timestamp) match[0];
-			Float result1 = (Float) match[1];
-			Float result2 = (Float) match[2];
+			int result1 = getIntValue(match[1]);
+			int result2 = getIntValue(match[2]);
 			String team1 = (String) match[3];
 			String team2 = (String) match[4];
 			Long team1Id = ((BigInteger) match[5]).longValue();
