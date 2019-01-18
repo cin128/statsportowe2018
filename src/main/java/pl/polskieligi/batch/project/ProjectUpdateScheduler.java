@@ -21,7 +21,6 @@ public class ProjectUpdateScheduler {
 	final static Logger log = Logger.getLogger(ProjectUpdateScheduler.class);
 
 	@Autowired
-	@Qualifier("pojectUpdateJobLauncher")
 	private JobLauncher launcher;
 	
 	@Autowired

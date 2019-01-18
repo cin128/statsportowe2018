@@ -21,7 +21,6 @@ public class ImportPlayersBatchController {
 	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);
 
 	@Autowired
-	@Qualifier("importJobLauncher")
 	private JobLauncher launcher;
 
 	@Autowired

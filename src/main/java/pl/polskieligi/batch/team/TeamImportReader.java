@@ -8,23 +8,19 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.batch.item.ItemReader;
 
+import org.springframework.beans.factory.annotation.Value;
 import pl.polskieligi.model.Team;
 
 public class TeamImportReader implements ItemReader<Team> {
-	private final static String MINUT_START = "minut.team.start.id";
-	private final static String MINUT_END = "minut.team.end.id";
-
-	@Resource(name = "applicationProperties") Properties properties;
-
 	final static Logger log = Logger.getLogger(TeamImportReader.class);
 
+	@Value("${minut.team.start.id}")
 	private Integer start;
+	@Value("${minut.team.end.id}")
 	private Integer end;
 	private Integer index;
 
 	@PostConstruct public void initService() {
-		start = Integer.parseInt(properties.getProperty(MINUT_START, "1"));
-		end = Integer.parseInt(properties.getProperty(MINUT_END, "21967"));
 		index = start;
 	}
 

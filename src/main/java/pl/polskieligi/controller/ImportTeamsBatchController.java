@@ -30,7 +30,6 @@ public class ImportTeamsBatchController {
 	final static Logger log = Logger.getLogger(ImportTeamsBatchController.class);
 
 	@Autowired
-	@Qualifier("importJobLauncher")
 	private JobLauncher launcher;
 
 	@Autowired

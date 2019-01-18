@@ -2,6 +2,7 @@ package pl.polskieligi.batch.player;
 
 import org.apache.log4j.Logger;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.beans.factory.annotation.Value;
 import pl.polskieligi.model.Player;
 
 import javax.annotation.PostConstruct;
@@ -9,20 +10,15 @@ import javax.annotation.Resource;
 import java.util.Properties;
 
 public class PlayerImportReader implements ItemReader<Player> {
-	private final static String MINUT_START = "minut.player.start.id";
-	private final static String MINUT_END = "minut.player.end.id";
-
-	@Resource(name = "applicationProperties") Properties properties;
-
 	final static Logger log = Logger.getLogger(PlayerImportReader.class);
 
+	@Value("${minut.player.start.id}")
 	private Integer start;
+	@Value("${minut.player.end.id}")
 	private Integer end;
 	private Integer index;
 
 	@PostConstruct public void initService() {
-		start = Integer.parseInt(properties.getProperty(MINUT_START, "1"));
-		end = Integer.parseInt(properties.getProperty(MINUT_END, "36211"));
 		index = start;
 	}
 
