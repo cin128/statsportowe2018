@@ -37,7 +37,7 @@ table {
     overflow:hidden;
     border:1px solid #d3d3d3;
     background:#fefefe;
-    width:70%;
+    /* width:70%; */
     margin:5% auto 0;
     -moz-border-radius:5px; /* FF1+ */
     -webkit-border-radius:5px; /* Saf3-4 */
@@ -48,7 +48,7 @@ table {
 
 th, td {padding:5px 5px 5px; text-align:center; }
 
-th {padding-top:22px; text-shadow: 1px 1px 1px #fff; background:#e8eaeb;}
+th {/* padding-top:22px; */ text-shadow: 1px 1px 1px #fff; background:#e8eaeb;}
 
 td {border-top:1px solid #e0e0e0; border-right:1px solid #e0e0e0;}
 
