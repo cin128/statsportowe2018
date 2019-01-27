@@ -1,9 +1,6 @@
 package pl.polskieligi.batch.team;
 
-import java.util.Properties;
-
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.batch.item.ItemReader;
@@ -14,9 +11,9 @@ import pl.polskieligi.model.Team;
 public class TeamImportReader implements ItemReader<Team> {
 	final static Logger log = Logger.getLogger(TeamImportReader.class);
 
-	@Value("${minut.team.start.id}")
+	@Value("${minut.team.start}")
 	private Integer start;
-	@Value("${minut.team.end.id}")
+	@Value("${minut.team.end}")
 	private Integer end;
 	private Integer index;
 

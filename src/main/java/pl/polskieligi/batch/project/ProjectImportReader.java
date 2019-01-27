@@ -7,15 +7,13 @@ import org.springframework.beans.factory.annotation.Value;
 import pl.polskieligi.model.Project;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.util.Properties;
 
 public class ProjectImportReader implements ItemReader<Project> {
 
 	final static Logger log = Logger.getLogger(ProjectImportReader.class);
-	@Value("${minut.project.start.id}")
+	@Value("${minut.project.start}")
 	private Integer start;
-	@Value("${minut.project.end.id}")
+	@Value("${minut.project.end}")
 	private Integer end;
 	private Integer index;
 

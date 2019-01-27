@@ -6,15 +6,13 @@ import org.springframework.beans.factory.annotation.Value;
 import pl.polskieligi.model.Player;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.util.Properties;
 
 public class PlayerImportReader implements ItemReader<Player> {
 	final static Logger log = Logger.getLogger(PlayerImportReader.class);
 
-	@Value("${minut.player.start.id}")
+	@Value("${minut.player.start}")
 	private Integer start;
-	@Value("${minut.player.end.id}")
+	@Value("${minut.player.end}")
 	private Integer end;
 	private Integer index;
 
