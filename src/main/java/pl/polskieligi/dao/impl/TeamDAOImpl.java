@@ -69,4 +69,13 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 		}
 		return result;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Team> getMatchingTeams(String name) {
+		Query query = getEntityManager().createQuery("SELECT t from Team t where lower(name) like lower(concat('%', :name,'%'))", Team.class);
+		query.setParameter("name", name);
+		query.setMaxResults(3);
+		return query.getResultList();
+	}
 }

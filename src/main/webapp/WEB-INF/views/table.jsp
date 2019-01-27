@@ -5,12 +5,44 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<%--  --%>
+
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet"
-	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	
 <link href="<c:url value="/css/index.css" />" rel="stylesheet">
+
+<script>
+$(document).ready(function() {
+		$("#address").autocomplete({
+			source : function(request, response) {
+				$.ajax({
+					url : "${pageContext.request.contextPath }/teams",
+					dataType : "json",
+					data : {
+						team : request.term,
+						 maxRows: 2
+					},
+					success : function(data) {
+						//alert(data);
+						//console.log(data);
+						response(data);						
+					}
+				});
+			},			
+			select: function(event, ui){
+				$("#address").val(ui.item.label);
+				$("#addressId").val(ui.item.value);
+				return false;
+			  },
+			minLength : 2
+		});
+	});
+
+</script>
+
 <script>
 	$(function() {
 		$(document).tooltip();
@@ -27,6 +59,13 @@
 <title>Tabela</title>
 </head>
 <body>
+
+<input type="text"  id="address" value="">
+<input type="hidden"  id="addressId" value="">
+	<span>
+	  <button id="button-id" type="button">Search</button>
+	</span>
+	
 	<c:if test="${not empty rows}">
 		<table class="bordered">
 			<thead>
