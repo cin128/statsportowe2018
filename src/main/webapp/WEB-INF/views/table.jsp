@@ -90,7 +90,7 @@ $(document).ready(function() {
 					<c:set var="count" value="${count + 1}" scope="page" />
 					<tr>
 						<th>${count}</th>
-						<td><b>${row.teamName}</b></td>
+						<td class="team_name"><b>${row.teamName}</b></td>
 						<td>${row.games}</td>
 						<td><b>${row.points}</b></td>
 						<td>${row.wins}</td>
