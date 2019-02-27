@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>Polskie ligi</name>
+    <name>Polskie ligi - parent</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -16,9 +16,51 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <log4j.version>1.2.17</log4j.version>
+        <jsoup.version>1.7.3</jsoup.version>
+        <json.version>1.1</json.version>
+
+        <junit.version>4.12</junit.version>
+        <mockito.version>2.23.4</mockito.version>
     </properties>
 
     <modules>
         <module>polskieligi-core</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- logowanie -->
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${json.version}</version>
+            </dependency>
+
+            <!-- test -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 </project>
