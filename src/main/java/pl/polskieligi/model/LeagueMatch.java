@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_LM_PR_RO_MA", columnList = "project_id,round_id,matchpart1,matchpart2", unique = false) })
+@Table(name="LeagueMatch", indexes = { @Index(name = "IDX_LM_PR_RO_MA", columnList = "project_id,round_id,matchpart1,matchpart2", unique = false) })
 public class LeagueMatch {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

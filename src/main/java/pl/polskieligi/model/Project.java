@@ -5,7 +5,7 @@ import java.sql.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_PR_MINUT_ID", columnList = "minut_id", unique = false) })
+@Table(name="Project", indexes = { @Index(name = "IDX_PR_MINUT_ID", columnList = "minut_id", unique = false) })
 public class Project {
 	public final static Integer REGULAR_LEAGUE = 1;
 	public final static Integer OTHER = 2;

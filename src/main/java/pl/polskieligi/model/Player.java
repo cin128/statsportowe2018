@@ -3,7 +3,7 @@ package pl.polskieligi.model;
 import javax.persistence.*;
 import java.sql.Date;
 
-@Entity @Table(indexes = {@Index(name = "IDX_PL_MINUT_ID", columnList = "minut_id", unique = false)})
+@Entity @Table(name="Player", indexes = {@Index(name = "IDX_PL_MINUT_ID", columnList = "minut_id", unique = false)})
 public class Player {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

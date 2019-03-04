@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_RO_PR_MA", columnList = "project_id,matchcode", unique = false) })
+@Table(name="Round", indexes = { @Index(name = "IDX_RO_PR_MA", columnList = "project_id,matchcode", unique = false) })
 public class Round {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

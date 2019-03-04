@@ -3,7 +3,7 @@ package pl.polskieligi.model;
 import javax.persistence.*;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_SE_NAME", columnList = "name", unique = false) })
+@Table(name="Season", indexes = { @Index(name = "IDX_SE_NAME", columnList = "name", unique = false) })
 public class Season {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

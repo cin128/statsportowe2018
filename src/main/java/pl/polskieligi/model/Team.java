@@ -8,7 +8,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false),
+@Table(name="Team", indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false),
 		 @Index(name = "IDX_TE_NAME", columnList = "name", unique = false)})
 public class Team {
 	@Id
