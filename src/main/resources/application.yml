@@ -9,6 +9,8 @@ spring:
       show_sql: false
       use_sql_comments: false
       format_sql: false
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl     
   batch:
     job:
       enabled: false

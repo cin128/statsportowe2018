@@ -7,8 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="Fb_Page")
 public class Fb_Page {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -44,5 +46,6 @@ public class Fb_Page {
 
 	public void setTeam(Team team) {
 		this.team = team;
-	}	
+	}
+
 }
