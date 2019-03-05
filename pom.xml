@@ -33,7 +33,6 @@
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>1.1</version>
         </dependency>
 
         <dependency>
@@ -84,7 +83,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -102,6 +100,19 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://XXX/manager/text</url>
+					<path>/polskieligi</path>
+					<update>true</update>
+				<!-- 	<username></username>
+					<password></password> -->
+					<server>TomcatServer</server>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
 </project>
