@@ -67,10 +67,10 @@
  	<bean id="projectUpdateScheduler" class="pl.polskieligi.batch.project.ProjectUpdateScheduler" />
 
 	<task:scheduled-tasks>
- 		<task:scheduled ref="projectUpdateScheduler" method="run"
-			cron="*/30 * * * * *" />
-<!--		<task:scheduled ref="projectUpdateScheduler" method="run"
-			cron="* * 1 ? * WED" />-->
+<!-- 		<task:scheduled ref="projectUpdateScheduler" method="run"
+			cron="*/30 * * * * *" />-->
+		<task:scheduled ref="projectUpdateScheduler" method="run"
+			cron="* * 1 ? * WED" />
 	</task:scheduled-tasks>
 
 
