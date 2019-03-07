@@ -92,6 +92,19 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <url>http://XXX/manager/text</url>
+                    <path>/polskieligi</path>
+                    <update>true</update>
+                    <username></username>
+                    <password></password>
+                    <!--<server>TomcatServer</server>-->
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
