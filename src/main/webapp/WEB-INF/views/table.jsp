@@ -47,6 +47,10 @@ $(document).ready(function() {
 	$(function() {
 		$(document).tooltip();
 	});
+
+	$( function() {
+	    $( "#tabs" ).tabs();
+	 } );
 </script>
 <style type="text/css">
 .ui-tooltip {
@@ -60,14 +64,26 @@ $(document).ready(function() {
 </head>
 <body>
 
-<input type="text"  id="address" value="">
-<input type="hidden"  id="addressId" value="">
-	<span>
-	  <button id="button-id" type="button">Search</button>
-	</span>
+<input type="text"  id="address" value=""/>
+<input type="hidden"  id="addressId" value=""/>
+<span>
+  <button id="button-id" type="button">Search</button>
+</span>
 	
 	<c:if test="${not empty rows}">
-		<table class="bordered">
+	
+	<div id="tabs">
+	<div id="menu">
+		<ul class="buttons">
+			<li><a class="active" href="#tabs-all">Ogółem</a></li>
+			<li><a href="#tabs-home">Dom</a></li>
+			<li><a href="#tabs-away">Wyjazd</a></li>
+		</ul>
+	</div>
+	<div id="tabs-all">
+	
+	
+		<table>
 			<thead>
 				<tr>
 					<th colspan="9">${project_name}</th>
@@ -119,6 +135,18 @@ $(document).ready(function() {
 				</c:forEach>
 			</tbody>
 		</table>
+		
+		</div>
+		  
+  <div id="tabs-home">
+    <p>Dom tabela</p>
+  </div>
+  <div id="tabs-away">
+    <p>Wyjazd tabela</p>
+	</div>
+</div>
+		
+		
 	</c:if>
 </body>
 </html>
