@@ -26,6 +26,7 @@
 
     <modules>
         <module>polskieligi-core</module>
+        <module>polskieligi-admin</module>
     </modules>
 
     <dependencyManagement>
