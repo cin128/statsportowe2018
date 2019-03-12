@@ -103,7 +103,7 @@
 						<td th:text="${row.defeats}"></td>
 						<td th:text="${row.goalsScored}+'-'+${row.goalsAgainst}"></td>
 						<td class="last-ten-matches">
-							<th:block th:each="match : ${row.lastMatches}">						
+							<th:block th:each="match : ${row.lastMatches}" th:if="${match}">						
 								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw">R</div>
 								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win">Z</div>
 								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose">P</div>										 								
@@ -142,7 +142,7 @@
 						<td th:text="${row.defeatsHome}"></td>
 						<td th:text="${row.goalsScoredHome}+'-'+${row.goalsAgainstHome}"></td>
 						<td class="last-ten-matches">
-							<th:block th:each="match : ${row.lastMatches}">						
+							<th:block th:each="match : ${row.lastMatchesHome}" th:if="${match}">						
 								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw">R</div>
 								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win">Z</div>
 								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose">P</div>										 								
@@ -181,7 +181,7 @@
 						<td th:text="${row.defeatsAway}"></td>
 						<td th:text="${row.goalsScoredAway}+'-'+${row.goalsAgainstAway}"></td>
 						<td class="last-ten-matches">
-							<th:block th:each="match : ${row.lastMatches}">						
+							<th:block th:each="match : ${row.lastMatchesAway}" th:if="${match}">						
 								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw">R</div>
 								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win">Z</div>
 								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose">P</div>										 								
