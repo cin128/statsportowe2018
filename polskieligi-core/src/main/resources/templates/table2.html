@@ -1,0 +1,197 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<!-- jquery -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<link rel="stylesheet"
+		  href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+
+	<script>
+        $(document).ready(function() {
+            $("#address").autocomplete({
+                source : function(request, response) {
+                    $.ajax({
+                        url : "${pageContext.request.contextPath }/teams",
+                        dataType : "json",
+                        data : {
+                            team : request.term,
+                            maxRows: 2
+                        },
+                        success : function(data) {
+                            //alert(data);
+                            //console.log(data);
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui){
+                    $("#address").val(ui.item.label);
+                    $("#addressId").val(ui.item.value);
+                    return false;
+                },
+                minLength : 2
+            });
+        });
+
+	</script>
+
+	<script>
+        $(function() {
+            $(document).tooltip();
+        });
+
+        $( function() {
+            $( "#tabs" ).tabs();
+        } );
+	</script>
+	<style type="text/css">
+		.ui-tooltip {
+			border-radius: 6px;
+			font: 14px "Helvetica Neue", Sans-Serif;
+			box-shadow: 0 0 7px black;
+		}
+	</style>
+
+	<title>Tabela</title>
+</head>
+<body>
+
+<input type="text"  id="address" value=""/>
+<input type="hidden"  id="addressId" value=""/>
+<span>
+  <button id="button-id" type="button">Search</button>
+</span>
+
+
+	<div th:text="${project_name}"></div>
+	<div id="tabs">
+		<div id="menu">
+			<ul class="buttons">
+				<li><a class="active" href="#tabs-all">Ogółem</a></li>
+				<li><a href="#tabs-home">Dom</a></li>
+				<li><a href="#tabs-away">Wyjazd</a></li>
+			</ul>
+		</div>
+		<div id="tabs-all">
+			<table>
+				<thead>
+				<tr>
+					<th><abbr title="Pozycja">Poz</abbr></th>
+					<th>Drużyna</th>
+					<th><abbr title="Mecze">M</abbr></th>
+					<th><abbr title="Punkty">Pkt</abbr></th>
+					<th><abbr title="Zwycięstwa">Z</abbr></th>
+					<th><abbr title="Remisy">R</abbr></th>
+					<th><abbr title="Porażki">P</abbr></th>
+					<th>Bramki</th>
+					<th class="last-ten-matches">10 ostatnich meczów</th>
+				</tr>
+				</thead>
+				<tbody>
+				<th:block th:each="row,itr : ${rows}">
+					<tr>
+						<th th:text="${itr.index+1}"></th>
+						<td class="team_name"><b th:text="${row.teamName}"></b></td>
+						<td th:text="${row.games}"></td>
+						<td><b th:text="${row.points}"></b></td>
+						<td th:text="${row.wins}"></td>
+						<td th:text="${row.draws}"></td>
+						<td th:text="${row.defeats}"></td>
+						<td th:text="${row.goalsScored}+'-'+${row.goalsAgainst}"></td>
+						<td class="last-ten-matches">
+							<th:block th:each="match : ${row.lastMatches}">						
+								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw">R</div>
+								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win">Z</div>
+								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose">P</div>										 								
+							</th:block>
+						</td>
+					</tr>
+				</th:block>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="tabs-home">
+			<table>
+				<thead>
+				<tr>
+					<th><abbr title="Pozycja">Poz</abbr></th>
+					<th>Drużyna</th>
+					<th><abbr title="Mecze">M</abbr></th>
+					<th><abbr title="Punkty">Pkt</abbr></th>
+					<th><abbr title="Zwycięstwa">Z</abbr></th>
+					<th><abbr title="Remisy">R</abbr></th>
+					<th><abbr title="Porażki">P</abbr></th>
+					<th>Bramki</th>
+					<th class="last-ten-matches">10 ostatnich meczów</th>
+				</tr>
+				</thead>
+				<tbody>
+				<th:block th:each="row,itr : ${rowsHome}">
+					<tr>
+						<th th:text="${itr.index+1}"></th>
+						<td class="team_name"><b th:text="${row.teamName}"></b></td>
+						<td th:text="${row.gamesHome}"></td>
+						<td><b th:text="${row.pointsHome}"></b></td>
+						<td th:text="${row.winsHome}"></td>
+						<td th:text="${row.drawsHome}"></td>
+						<td th:text="${row.defeatsHome}"></td>
+						<td th:text="${row.goalsScoredHome}+'-'+${row.goalsAgainstHome}"></td>
+						<td class="last-ten-matches">
+							<th:block th:each="match : ${row.lastMatches}">						
+								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw">R</div>
+								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win">Z</div>
+								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose">P</div>										 								
+							</th:block>
+						</td>
+					</tr>
+				</th:block>
+				</tbody>
+			</table>
+
+		</div>
+		<div id="tabs-away">
+			<table>
+				<thead>
+				<tr>
+					<th><abbr title="Pozycja">Poz</abbr></th>
+					<th>Drużyna</th>
+					<th><abbr title="Mecze">M</abbr></th>
+					<th><abbr title="Punkty">Pkt</abbr></th>
+					<th><abbr title="Zwycięstwa">Z</abbr></th>
+					<th><abbr title="Remisy">R</abbr></th>
+					<th><abbr title="Porażki">P</abbr></th>
+					<th>Bramki</th>
+					<th class="last-ten-matches">10 ostatnich meczów</th>
+				</tr>
+				</thead>
+				<tbody>
+				<th:block th:each="row,itr : ${rowsAway}">
+					<tr>
+						<th th:text="${itr.index+1}"></th>
+						<td class="team_name"><b th:text="${row.teamName}"></b></td>
+						<td th:text="${row.gamesAway}"></td>
+						<td><b th:text="${row.pointsAway}"></b></td>
+						<td th:text="${row.winsAway}"></td>
+						<td th:text="${row.drawsAway}"></td>
+						<td th:text="${row.defeatsAway}"></td>
+						<td th:text="${row.goalsScoredAway}+'-'+${row.goalsAgainstAway}"></td>
+						<td class="last-ten-matches">
+							<th:block th:each="match : ${row.lastMatches}">						
+								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw">R</div>
+								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win">Z</div>
+								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose">P</div>										 								
+							</th:block>
+						</td>
+					</tr>
+				</th:block>
+				</tbody>
+			</table>			
+		</div>
+	</div>
+</body>
+</html>
