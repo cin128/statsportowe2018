@@ -20,6 +20,7 @@ import pl.polskieligi.dao.TableDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.dto.TableRowMatch;
+import pl.polskieligi.log.comparator.TableRowComparator;
 import pl.polskieligi.model.Team;
 
 import javax.persistence.EntityManager;
@@ -64,6 +65,15 @@ public class TableDAOImpl implements TableDAO {
 			+ "from LeagueMatch m join Team t1 on t1.id = m.matchpart1 join Team t2 on t2.id = m.matchpart2 "
 			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart1 = :matchpart1 or m.matchpart2 = :matchpart2 ) and m.count_result = :count_result order by m.match_date desc";
 
+	private static final String lastMatchesHomeQuery = "select m.match_date, m.matchpart1_result as result1, m.matchpart2_result as result2, t1.name as name1, t2.name as name2, m.matchpart1 "
+			+ "from LeagueMatch m join Team t1 on t1.id = m.matchpart1 join Team t2 on t2.id = m.matchpart2 "
+			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart1 = :matchpart1 ) and m.count_result = :count_result order by m.match_date desc";
+
+	private static final String lastMatchesAwayQuery = "select m.match_date, m.matchpart1_result as result1, m.matchpart2_result as result2, t1.name as name1, t2.name as name2, m.matchpart1 "
+			+ "from LeagueMatch m join Team t1 on t1.id = m.matchpart1 join Team t2 on t2.id = m.matchpart2 "
+			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart2 = :matchpart2 ) and m.count_result = :count_result order by m.match_date desc";
+
+
 	public List<TableRow> getTableRows(Long projectId) {
 		java.util.Date startDate = new java.util.Date();
 		List<TableRow> result = calculateTable(projectId);
@@ -71,6 +81,8 @@ public class TableDAOImpl implements TableDAO {
 		log.info("calculateTable in (ms) " + (date.getTime() - startDate.getTime()));
 		for (TableRow row : result) {
 			row.setLastMatches(getLastMatches(projectId, row.getTeam_id()));
+			row.setLastMatchesHome(getLastMatchesHome(projectId, row.getTeam_id()));
+			row.setLastMatchesAway(getLastMatchesAway(projectId, row.getTeam_id()));
 		}
 		date = new java.util.Date();
 		log.info("All in (ms) " + (date.getTime() - startDate.getTime()));
@@ -215,12 +227,28 @@ public class TableDAOImpl implements TableDAO {
 	}
 
 	private TableRowMatch[] getLastMatches(Long project, Long teamId) {
+		return  getLastMatches(project, teamId, lastMatchesQuery, true, true);
+	}
+
+	private TableRowMatch[] getLastMatchesHome(Long project, Long teamId) {
+		return  getLastMatches(project, teamId, lastMatchesHomeQuery, true, false);
+	}
+
+	private TableRowMatch[] getLastMatchesAway(Long project, Long teamId) {
+		return  getLastMatches(project, teamId, lastMatchesAwayQuery, false, true);
+	}
+
+	private TableRowMatch[] getLastMatches(Long project, Long teamId, String queryString, boolean home, boolean away) {
 		TableRowMatch[] result = new TableRowMatch[NUMBER_OF_LAST_MATCHES];
-		Query query = getEntityManager().createNativeQuery(lastMatchesQuery);
+		Query query = getEntityManager().createNativeQuery(queryString);
 		query.setParameter("project_id", project);
 		query.setParameter("published", true);
-		query.setParameter("matchpart1", teamId);
-		query.setParameter("matchpart2", teamId);
+		if(home) {
+			query.setParameter("matchpart1", teamId);
+		}
+		if(away) {
+			query.setParameter("matchpart2", teamId);
+		}
 		query.setParameter("count_result", true);
 		query.setMaxResults(NUMBER_OF_LAST_MATCHES);
 		@SuppressWarnings("unchecked")
@@ -261,10 +289,20 @@ public class TableDAOImpl implements TableDAO {
 		row.setDraws(0);
 		row.setDefeats(0);
 		row.setPoints(0);
-		row.setGoalsAgainstHome(0);
-		row.setGoalsAgainstAway(0);
+		row.setGamesHome(0);
 		row.setGoalsScoredHome(0);
+		row.setGoalsAgainstHome(0);
+		row.setWinsHome(0);
+		row.setDrawsHome(0);
+		row.setDefeatsHome(0);
+		row.setPointsHome(0);
+		row.setGamesAway(0);
 		row.setGoalsScoredAway(0);
+		row.setGoalsAgainstAway(0);
+		row.setWinsAway(0);
+		row.setDrawsAway(0);
+		row.setDefeatsAway(0);
+		row.setPointsAway(0);
 	}
 
 	private void addValues(TableRow row, Object[] r) {
@@ -295,38 +333,22 @@ public class TableDAOImpl implements TableDAO {
 	}
 
 	private void addValuesHome(TableRow row, Object[] r) {
+		row.setGamesHome(getIntValue(r[2]) + row.getGamesHome());
+		row.setWinsHome(getIntValue(r[5]) + row.getWinsHome());
+		row.setDrawsHome(getIntValue(r[6]) + row.getDrawsHome());
+		row.setDefeatsHome(getIntValue(r[7]) + row.getDefeatsHome());
+		row.setPointsHome(row.getWins() * 3 + row.getDrawsHome());
 		row.setGoalsScoredHome(getIntValue(r[3]) + row.getGoalsScoredHome());
 		row.setGoalsAgainstHome(getIntValue(r[4]) + row.getGoalsAgainstHome());
 	}
 
 	private void addValuesAway(TableRow row, Object[] r) {
+		row.setGamesAway(getIntValue(r[2]) + row.getGamesAway());
+		row.setWinsAway(getIntValue(r[5]) + row.getWinsAway());
+		row.setDrawsAway(getIntValue(r[6]) + row.getDrawsAway());
+		row.setDefeatsAway(getIntValue(r[7]) + row.getDefeatsAway());
+		row.setPointsAway(row.getWins() * 3 + row.getDrawsAway());
 		row.setGoalsScoredAway(getIntValue(r[3]) + row.getGoalsScoredAway());
 		row.setGoalsAgainstAway(getIntValue(r[4]) + row.getGoalsAgainstAway());
-	}
-
-	private class TableRowComparator implements Comparator<TableRow> {
-
-		@Override
-		public int compare(TableRow tr1, TableRow tr2) {
-			if (tr1.getPoints() > tr2.getPoints()) {
-				return -1;
-			} else if (tr1.getPoints() < tr2.getPoints()) {
-				return 1;
-			} else if (tr1.getGoalsScored() - tr1.getGoalsAgainst() > tr2.getGoalsScored() - tr2.getGoalsAgainst()) {
-				return -1;
-			} else if (tr1.getGoalsScored() - tr1.getGoalsAgainst() < tr2.getGoalsScored() - tr2.getGoalsAgainst()) {
-				return 1;
-			} else if (tr1.getGoalsScored() > tr2.getGoalsScored()) {
-				return -1;
-			} else if (tr1.getGoalsScored() < tr2.getGoalsScored()) {
-				return 1;
-			} else if (tr1.getSequence() > tr2.getSequence()) {
-				return 1;
-			} else if (tr1.getSequence() < tr2.getSequence()) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
 	}
 }
