@@ -8,9 +8,9 @@
     <artifactId>polskieligi-admin</artifactId>
     <packaging>war</packaging>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.0.RELEASE</version>
+        <artifactId>polskieligi-parent</artifactId>
+        <groupId>pl.polskieligi</groupId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -57,11 +57,11 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>http://XXX/manager/text</url>
+                    <url>${tomcat.url}</url>
                     <path>/polskieligi-admin</path>
                     <update>true</update>
-                    <username></username>
-                    <password></password>
+                    <username>${tomcat.user}</username>
+                    <password>${tomcat.password}</password>
                     <!--<server>TomcatServer</server>-->
                 </configuration>
             </plugin>

@@ -97,11 +97,11 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>http://XXX/manager/text</url>
+                    <url>${tomcat.url}</url>
                     <path>/polskieligi</path>
                     <update>true</update>
-                    <username></username>
-                    <password></password>
+                    <username>${tomcat.user}</username>
+                    <password>${tomcat.password}</password>
                     <!--<server>TomcatServer</server>-->
                 </configuration>
             </plugin>
