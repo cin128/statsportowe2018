@@ -55,7 +55,7 @@ public class ImportProjectsBatchController {
 		pij.setProgress(Long.valueOf(0));
 		pij.setProcessingTime(Long.valueOf(0));//TODO
 		rows.add(pij);
-		ModelAndView mv = new ModelAndView("importStatus", "rows", rows);
+		ModelAndView mv = new ModelAndView("views/importStatus", "rows", rows);
 		return mv;
 	}
 }

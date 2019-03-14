@@ -267,7 +267,7 @@ public class TableDAOImpl implements TableDAO {
 			}
 			String rivalName = teamId.equals(team1Id) ? team2 : team1;
 			m.setResult(Math.round(teamId.equals(team1Id) ? result1 - result2 : result2 - result1));
-			m.setDescription(Math.round(result1) + "-" + Math.round(result2) + " przeciwko " + rivalName);
+			m.setDescription(Math.round(result1) + "-" + Math.round(result2) + " vs " + rivalName);
 			result[i++] = m;
 		}
 

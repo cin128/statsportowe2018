@@ -49,7 +49,7 @@ public class ImportStatusController {
 		}
 		Collections.sort(rows,(ImportJob o1, ImportJob o2) -> o1.getJobExecution().getId().intValue()-o2.getJobExecution().getId().intValue());
 		
-		ModelAndView mv = new ModelAndView("importStatus", "rows", rows);
+		ModelAndView mv = new ModelAndView("views/importStatus", "rows", rows);
 		return mv;
 	}
 	

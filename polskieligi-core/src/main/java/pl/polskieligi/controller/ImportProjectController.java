@@ -20,7 +20,7 @@ public class ImportProjectController {
 	public ModelAndView importProject(String projectId) {
 		log.info("importProject start. ProjectId = "+projectId);
 		ProjectInfo result = importProjectLogic.doImport(Integer.parseInt(projectId));
-		ModelAndView mv = new ModelAndView("importProject", "result", result.toHtml());
+		ModelAndView mv = new ModelAndView("views/importProject", "result", result.toHtml());
 		return mv;		
 	}
 }

@@ -35,7 +35,7 @@ public class TableController {
 		List<TableRow> rows = tableDAO.getTableRows(projectId);
 		Project p = projectDAO.find(projectId);
 		String title = p.getName();
-		ModelAndView mv = new ModelAndView("table2");
+		ModelAndView mv = new ModelAndView("thymeleaf/table");
 		mv.addObject("project_name", title);
 		mv.addObject("rows", rows);
 		mv.addObject("rowsHome", sortRowsHome(rows));

@@ -1,13 +1,12 @@
 spring:
-  mvc:
-    view:
-      prefix: /WEB-INF/views/
-      suffix: .jsp      
+  view:
+    prefix: /WEB-INF/
+    suffix: .jsp
+    view-names: views/*
   thymeleaf:
     cache: false
     enabled: true
-    prefix: classpath:/templates/
-    suffix: .html
+    view-names: thymeleaf/*
   jpa:
     hibernate:
       ddl-auto: update
