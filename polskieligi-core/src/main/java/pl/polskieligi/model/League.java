@@ -9,6 +9,7 @@ public class League {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
+	private Integer leagueType;
 
 	public League() {
 		name = "";
@@ -29,9 +30,17 @@ public class League {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public LeagueType getLeagueType() {
+		return LeagueType.getById(leagueType);
+	}
+
+	public void setLeagueType(Integer leagueType) {
+		this.leagueType = leagueType;
+	}
+
 	@Override
 	public String toString(){
-		return "id="+id+", name="+name;
+		return "id="+id+", name="+name+", type="+getLeagueType();
 	}
 }

@@ -8,6 +8,7 @@ import pl.polskieligi.dao.TableDAO;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.log.comparator.TableRowAwayComparator;
 import pl.polskieligi.log.comparator.TableRowHomeComparator;
+import pl.polskieligi.model.LeagueType;
 import pl.polskieligi.model.Project;
 
 import java.util.ArrayList;
@@ -70,5 +71,9 @@ public class TableSessionBean {
 
 	public List<TableRow> getRowsAway() {
 		return rowsAway;
+	}
+
+	public LeagueType getLeagueType(){
+		return project.getLeague().getLeagueType();
 	}
 }

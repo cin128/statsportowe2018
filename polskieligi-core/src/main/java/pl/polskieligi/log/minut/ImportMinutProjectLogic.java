@@ -27,13 +27,7 @@ import pl.polskieligi.dao.SeasonDAO;
 import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.ProjectInfo;
-import pl.polskieligi.model.League;
-import pl.polskieligi.model.LeagueMatch;
-import pl.polskieligi.model.Project;
-import pl.polskieligi.model.Round;
-import pl.polskieligi.model.Season;
-import pl.polskieligi.model.Team;
-import pl.polskieligi.model.TeamLeague;
+import pl.polskieligi.model.*;
 
 @Component
 @Transactional
@@ -137,6 +131,7 @@ public class ImportMinutProjectLogic {
 				String leagueName = tmp.replaceAll(" " + sezon, "");
 				League league = new League();
 				league.setName(leagueName);
+				league.setLeagueType(LeagueType.getByLeagueName(leagueName).getId());
 				league = leagueDAO.saveUpdate(league);
 				log.info("League " + leagueName + " saved id = " + league.getId());
 				Season season = new Season();
