@@ -5,6 +5,7 @@
 	<!-- jquery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" th:src="@{/js/locale.js}"></script>
 	<link rel="stylesheet"
 		  href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
 
@@ -47,25 +48,6 @@
         $( function() {
             $( "#tabs" ).tabs();
         } );
-
-        $(document).ready(function() {
-            $("#locales").change(function () {
-                var selectedOption = $('#locales').val();
-                if (selectedOption != ''){
-                    var hrefval =window.location.href;
-                    if(hrefval.search('\\?')>0) {
-                        if (hrefval.search('lang=')>0) {
-                            var url = hrefval.split('lang=')[0] + "lang=" + selectedOption;
-                        } else {
-                        	var url = hrefval + "&lang=" + selectedOption;
-                    	}
-                    }else{
-                        var url = hrefval+"?lang="+selectedOption;
-                    }
-                    window.location.replace(url);
-                }
-            });
-        });
 	</script>
 	<style type="text/css">
 		.ui-tooltip {
@@ -94,7 +76,7 @@
 </select>
 
 
-	<div th:text="${project_name}"></div>
+	<div th:text="${ts.projectName}"></div>
 	<div id="tabs">
 		<div id="menu">
 			<ul class="buttons">
@@ -108,7 +90,7 @@
 				<thead>
 				<tr>
 					<th><abbr th:attr="title=#{table.pos.tooltip}" th:text="#{table.pos}"></abbr></th>
-					<th th:text="#{table.team}">Drużyna</th>
+					<th th:text="#{table.team}"></th>
 					<th><abbr th:attr="title=#{table.mp.tooltip}" th:text="#{table.mp}"></abbr></th>
 					<th><abbr th:attr="title=#{table.pts.tooltip}" th:text="#{table.pts}"></abbr></th>
 					<th><abbr th:attr="title=#{table.w.tooltip}" th:text="#{table.w}"></abbr></th>
@@ -119,7 +101,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<th:block th:each="row,itr : ${rows}">
+				<th:block th:each="row,itr : ${ts.rows}">
 					<tr>
 						<th th:text="${itr.index+1}"></th>
 						<td class="team_name"><b th:text="${row.teamName}"></b></td>
@@ -160,7 +142,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<th:block th:each="row,itr : ${rowsHome}">
+				<th:block th:each="row,itr : ${ts.rowsHome}">
 					<tr>
 						<th th:text="${itr.index+1}"></th>
 						<td class="team_name"><b th:text="${row.teamName}"></b></td>
@@ -201,7 +183,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<th:block th:each="row,itr : ${rowsAway}">
+				<th:block th:each="row,itr : ${ts.rowsAway}">
 					<tr>
 						<th th:text="${itr.index+1}"></th>
 						<td class="team_name"><b th:text="${row.teamName}"></b></td>
