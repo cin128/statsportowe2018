@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+
+<body>
+	<thead th:fragment="tableHeader">
+		<tr>
+			<th><abbr th:attr="title=#{table.pos.tooltip}"
+				th:text="#{table.pos}"></abbr></th>
+			<th th:text="#{table.team}"></th>
+			<th><abbr th:attr="title=#{table.mp.tooltip}"
+				th:text="#{table.mp}"></abbr></th>
+			<th><abbr th:attr="title=#{table.pts.tooltip}"
+				th:text="#{table.pts}"></abbr></th>
+			<th><abbr th:attr="title=#{table.w.tooltip}"
+				th:text="#{table.w}"></abbr></th>
+			<th><abbr th:attr="title=#{table.d.tooltip}"
+				th:text="#{table.d}"></abbr></th>
+			<th><abbr th:attr="title=#{table.l.tooltip}"
+				th:text="#{table.l}"></abbr></th>
+			<th><abbr th:attr="title=#{table.g.tooltip}"
+				th:text="#{table.g}"></abbr></th>
+			<th class="last-ten-matches"><abbr
+				th:attr="title=#{table.form.tooltip}" th:text="#{table.form}"></abbr></th>
+		</tr>
+	</thead>
+</body>
+</html>

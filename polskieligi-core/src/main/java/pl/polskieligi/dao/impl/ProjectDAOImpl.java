@@ -4,9 +4,8 @@ import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.criterion.Projections;
+import javax.persistence.TypedQuery;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,5 +100,13 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 	public Long getOpenProjectsCount() {
 		Query query = getEntityManager().createQuery("SELECT COUNT(p) FROM Project p " );
 		return (Long) query.getSingleResult();
+	}
+
+	@Override
+	public List<Project> findProjects(Integer leagueType, Integer region) {
+		TypedQuery<Project> query = getEntityManager().createQuery("SELECT p FROM Project p JOIN p.league l WHERE l.leagueType = :leagueType and l.region = :region", Project.class);
+		query.setParameter("leagueType", leagueType);
+		query.setParameter("region", region);
+		return query.getResultList();
 	}
 }

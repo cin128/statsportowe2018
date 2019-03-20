@@ -31,9 +31,9 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 		int result = 0;
 			for (LeagueMatch match : roundMatches) {
 				Query query = getEntityManager()
-						.createQuery("SELECT lm from LeagueMatch lm where project_id = :project_id and round_id = :round_id and matchpart1 = :matchpart1 and matchpart2 = :matchpart2");
+						.createQuery("SELECT lm from LeagueMatch lm where project_id = :project_id and round = :round and matchpart1 = :matchpart1 and matchpart2 = :matchpart2");
 				query.setParameter("project_id", match.getProject_id());
-				query.setParameter("round_id", match.getRound_id());
+				query.setParameter("round", match.getRound());
 				query.setParameter("matchpart1", match.getMatchpart1());
 				query.setParameter("matchpart2", match.getMatchpart2());
 				LeagueMatch oldMatch = null;
@@ -66,5 +66,15 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 				}
 			}		
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LeagueMatch> getMatchesByProjectId(Long projectId) {
+		Query query = getEntityManager()
+				.createQuery("SELECT lm from LeagueMatch lm where project_id = :project_id and published = :published order by round.matchcode desc, match_date desc");
+		query.setParameter("project_id", projectId);
+		query.setParameter("published", true);
+		return query.getResultList();
+		
 	}
 }

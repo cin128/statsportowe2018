@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+
+<body>
+	<div th:text="${ts.ptrojectName}"></div>
+	<div th:fragment="tableContent" id="tabs1" class="flat-tabs">
+		<div id="menu1">
+			<ul class="buttons1">
+				<li><a class="active" href="#tabs-table"
+					th:text="#{table.table}"></a></li>
+				<li><a href="#tabs-results" th:text="#{table.results}"></a></li>
+			</ul>
+		</div>
+		<div id="tabs-table">
+
+			<div id="tabs2" class="flat-tabs">
+				<div id="menu">
+					<ul class="buttons">
+						<li><a class="active" href="#tabs-all"
+							th:text="#{table.total}"></a></li>
+						<li><a href="#tabs-home" th:text="#{table.home}"></a></li>
+						<li><a href="#tabs-away" th:text="#{table.away}"></a></li>
+					</ul>
+				</div>
+				<div id="tabs-all">
+					<table>
+						<thead th:replace="thymeleaf/fragments/general :: tableHeader"></thead>
+						<tbody>
+							<th:block th:each="row,itr : ${ts.rows}">
+								<tr>
+									<th th:text="${itr.index+1}"></th>
+									<td class="team_name"><b th:text="${row.teamName}"></b></td>
+									<td th:text="${row.games}"></td>
+									<td><b th:text="${row.points}"></b></td>
+									<td th:text="${row.wins}"></td>
+									<td th:text="${row.draws}"></td>
+									<td th:text="${row.defeats}"></td>
+									<td th:text="${row.goalsScored}+'-'+${row.goalsAgainst}"></td>
+									<td class="last-ten-matches"><th:block
+											th:each="match : ${row.lastMatches}" th:if="${match}">
+											<div th:if="${match.result==0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_draw" th:text="#{table.d}"></div>
+											<div th:if="${match.result>0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_win" th:text="#{table.w}"></div>
+											<div th:if="${match.result<0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_lose" th:text="#{table.l}"></div>
+										</th:block></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+
+				<div id="tabs-home">
+					<table>
+						<thead th:replace="thymeleaf/fragments/general :: tableHeader"></thead>
+						<tbody>
+							<th:block th:each="row,itr : ${ts.rowsHome}">
+								<tr>
+									<th th:text="${itr.index+1}"></th>
+									<td class="team_name"><b th:text="${row.teamName}"></b></td>
+									<td th:text="${row.gamesHome}"></td>
+									<td><b th:text="${row.pointsHome}"></b></td>
+									<td th:text="${row.winsHome}"></td>
+									<td th:text="${row.drawsHome}"></td>
+									<td th:text="${row.defeatsHome}"></td>
+									<td
+										th:text="${row.goalsScoredHome}+'-'+${row.goalsAgainstHome}"></td>
+									<td class="last-ten-matches"><th:block
+											th:each="match : ${row.lastMatchesHome}" th:if="${match}">
+											<div th:if="${match.result==0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_draw" th:text="#{table.d}"></div>
+											<div th:if="${match.result>0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_win" th:text="#{table.w}"></div>
+											<div th:if="${match.result<0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_lose" th:text="#{table.l}"></div>
+										</th:block></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+
+				</div>
+				<div id="tabs-away">
+					<table>
+						<thead th:replace="thymeleaf/fragments/general :: tableHeader"></thead>
+						<tbody>
+							<th:block th:each="row,itr : ${ts.rowsAway}">
+								<tr>
+									<th th:text="${itr.index+1}"></th>
+									<td class="team_name"><b th:text="${row.teamName}"></b></td>
+									<td th:text="${row.gamesAway}"></td>
+									<td><b th:text="${row.pointsAway}"></b></td>
+									<td th:text="${row.winsAway}"></td>
+									<td th:text="${row.drawsAway}"></td>
+									<td th:text="${row.defeatsAway}"></td>
+									<td
+										th:text="${row.goalsScoredAway}+'-'+${row.goalsAgainstAway}"></td>
+									<td class="last-ten-matches"><th:block
+											th:each="match : ${row.lastMatchesAway}" th:if="${match}">
+											<div th:if="${match.result==0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_draw" th:text="#{table.d}"></div>
+											<div th:if="${match.result>0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_win" th:text="#{table.w}"></div>
+											<div th:if="${match.result<0}"
+												th:attr="title=${match.description+' '+match.date}"
+												class="match_lose" th:text="#{table.l}"></div>
+										</th:block></td>
+								</tr>
+							</th:block>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="tabs-results">
+			<table>
+				<thead>
+					<tr>
+					</tr>
+				</thead>
+				<tbody>
+					<th:block th:each="m,itr : ${ts.matches}">
+						<tr
+							th:if="${itr.index==0 OR ts.matches[itr.index-1].round.matchcode != m.round.matchcode}">
+							<th th:text="#{table.round}"></th>
+							<th th:text="${m.round.matchcode}"></th>
+							<th
+								th:text="${#dates.format(m.round.round_date_first, 'dd.MM.yyyy')}"></th>
+							<th th:if="${m.round.round_date_first!=m.round.round_date_last}"
+								th:text="${#dates.format(m.round.round_date_last, 'dd.MM.yyyy')}"></th>
+						</tr>
+
+						<tr>
+							<td th:text="${#dates.format(m.match_date, 'dd.MM.yyyy HH:mm')}"></td>
+							<td><b th:text="${m.matchpart1.name}"></b></td>
+							<td><b
+								th:text="${#numbers.formatDecimal(m.matchpart1_result,0,0)}"></b></td>
+							<td><b
+								th:text="${#numbers.formatDecimal(m.matchpart2_result,0,0)}"></b></td>
+							<td><b th:text="${m.matchpart2.name}"></b></td>
+						</tr>
+					</th:block>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

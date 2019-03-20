@@ -1,19 +1,22 @@
 package pl.polskieligi.web;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import pl.polskieligi.controller.TableController;
+
+import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dao.TableDAO;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.log.comparator.TableRowAwayComparator;
 import pl.polskieligi.log.comparator.TableRowHomeComparator;
+import pl.polskieligi.model.LeagueMatch;
 import pl.polskieligi.model.LeagueType;
 import pl.polskieligi.model.Project;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import pl.polskieligi.model.Region;
 
 public class TableSessionBean {
 
@@ -22,6 +25,8 @@ public class TableSessionBean {
 	@Autowired TableDAO tableDAO;
 
 	@Autowired ProjectDAO projectDAO;
+	
+	@Autowired LeagueMatchDAO leagueMatchDAO;
 
 	private Long projectId = null;
 
@@ -30,6 +35,7 @@ public class TableSessionBean {
 	private List<TableRow> rowsAway;
 	private Project project;
 	private String projectName;
+	private List<LeagueMatch> matches;
 
 	public void calculateTable(Long projectId) {
 		log.info("calculateTable: "+projectId);
@@ -41,6 +47,7 @@ public class TableSessionBean {
 			rowsAway = sortRowsAway(rows);
 			project = projectDAO.find(projectId);
 			projectName = project.getName();
+			matches = leagueMatchDAO.getMatchesByProjectId(projectId);
 			log.info("projectName: "+projectName);
 		}
 	}
@@ -75,5 +82,17 @@ public class TableSessionBean {
 
 	public LeagueType getLeagueType(){
 		return project.getLeague().getLeagueType();
+	}
+	
+	public List<LeagueMatch> getMatches(){
+		return matches;
+	}
+	
+	public Region getRegion(){
+		return project.getLeague().getRegion();
+	}
+	
+	public List<Project> findProjects(Integer leagueType, Integer region){
+		return projectDAO.findProjects(leagueType, region);
 	}
 }

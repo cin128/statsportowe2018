@@ -16,8 +16,19 @@ public enum LeagueType {
 	KLASA_A(8, "Klasa A"),
 	KLASA_B(9, "Klasa B"),
 	KLASA_C(10, "Klasa C"),
-	PUCHAR_POLSKI(11, "Puchar Polski");
-
+	PUCHAR_POLSKI(11, "Puchar Polski"),
+	EKSTRALIGA_KOBIET(12, "Ekstraliga kobiet"),
+	I_LIGA_KOBIET(13, "I liga kobiet"),
+	II_LIGA_KOBIET(14, "II liga kobiet"),
+	III_LIGA_KOBIET(15, "III liga kobiet"),
+	IV_LIGA_KOBIET(16, "IV liga kobiet"),
+	PUCHAR_POLSKI_KOBIET(17, "Puchar Polski kobiet"),
+	EKSTRAKLASA_FURSALU(18, "Ekstraklasa futsalu"),
+	I_LIGA_FUTSALU(19, "I liga futsalu"),
+	PUCHAR_POLSKI_W_FUTSALU(20, "Puchar Polski w futsalu"),
+	CLJ(21, "Centralna Liga Juniorów"),
+	CLJ17(22, "Centralna Liga Juniorów U-17");
+	
 	private final Integer id;
 	private final String name;
 
@@ -36,12 +47,14 @@ public enum LeagueType {
 	}
 
 	public static LeagueType getByLeagueName(String leagueName) {
-		if (leagueName != null)
+		LeagueType result = UNDEFINED;
+		if (leagueName != null) {
 			for (LeagueType s : values()) {
 				if (leagueName.contains(s.getName()))
-					return s;
+					result = s;
 			}
-		return UNDEFINED;
+		}
+		return result;
 	}
 
 	private static void initMapping(){

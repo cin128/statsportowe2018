@@ -14,78 +14,42 @@ public class LeagueMatch {
 /*	private Integer match_number;*/
 	private Integer playground_id;
 	private Timestamp match_date;
-	private Long matchpart1;
-	private Long matchpart2;
+	
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "matchpart1")
+    private Team matchpart1;
+    
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "matchpart2")
+    private Team matchpart2;
+
 	private Float matchpart1_result;
 	private Float matchpart2_result;
-	/*private Integer matchpart1_bonus;
-	private Integer matchpart2_bonus;
-	private Float matchpart1_legs;
-	private Float matchpart2_legs;
-	private String matchpart1_result_split;
-	private String matchpart2_result_split;
-	private Boolean match_result_type;
-	private Float matchpart1_result_ot;
-	private Float matchpart2_result_ot;
-	private Boolean alt_decision;
-	private Float matchpart1_result_decision;
-	private Float matchpart2_result_decision;
-	private String decision_info;*/
 	private Long project_id;
-	private Long round_id;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "round_id")
+	private Round round;
 	private Boolean count_result;
 	private Boolean published;
 	private Integer crowd;
-/*	private Integer referee_id;
-	private Integer checked_out;
-	private Timestamp checked_out_time;*/
 	private String summary;
-/*	private Boolean show_report;
-	private String match_result_detail;*/
 	private Timestamp modified;
-/*	private Integer modified_by;
-	private String formation1;
-	private String formation2;*/
 
 	private Long af_id;
 
 	public LeagueMatch() {
-/*		match_number = 0;*/
 		minut_id = 0;
 		playground_id = 0;
 		match_date = new Timestamp(0);
-		matchpart1 = Long.valueOf(0);
-		matchpart2 = Long.valueOf(0);
 		matchpart1_result = new Float(0);
 		matchpart2_result = new Float(0);
-/*		matchpart1_bonus = 0;
-		matchpart2_bonus = 0;
-		matchpart1_legs = new Float(0);
-		matchpart2_legs = new Float(0);
-		matchpart1_result_split = ";";
-		matchpart2_result_split = ";";
-		match_result_type = false;
-		matchpart1_result_ot = new Float(0);
-		matchpart2_result_ot = new Float(0);
-		alt_decision = false;
-		matchpart1_result_decision = new Float(0);
-		matchpart2_result_decision = new Float(0);
-		decision_info = "";*/
 		project_id = Long.valueOf(0);
-		round_id = Long.valueOf(0);
 		count_result = false;
 		published = false;
 		crowd = 0;
-/*		referee_id = 0;
-		checked_out = 0;
-		checked_out_time = new Timestamp(0);*/
 		summary = "";
-/*		show_report = false;
-		match_result_detail = "";*/
 		modified = new Timestamp(0);
-/*		modified_by = 0;
-		formation1 = "";
-		formation2 = "";*/
 		af_id = Long.valueOf(0);
 	}
 
@@ -129,19 +93,19 @@ public class LeagueMatch {
 		this.match_date = match_date;
 	}
 
-	public Long getMatchpart1() {
+	public Team getMatchpart1() {
 		return matchpart1;
 	}
 
-	public void setMatchpart1(Long matchpart1) {
+	public void setMatchpart1(Team matchpart1) {
 		this.matchpart1 = matchpart1;
 	}
 
-	public Long getMatchpart2() {
+	public Team getMatchpart2() {
 		return matchpart2;
 	}
 
-	public void setMatchpart2(Long matchpart2) {
+	public void setMatchpart2(Team matchpart2) {
 		this.matchpart2 = matchpart2;
 	}
 
@@ -273,12 +237,12 @@ public class LeagueMatch {
 		this.project_id = project_id;
 	}
 
-	public Long getRound_id() {
-		return round_id;
+	public Round getRound() {
+		return round;
 	}
 
-	public void setRound_id(Long round_id) {
-		this.round_id = round_id;
+	public void setRound(Round round) {
+		this.round = round;
 	}
 
 	public Boolean getCount_result() {

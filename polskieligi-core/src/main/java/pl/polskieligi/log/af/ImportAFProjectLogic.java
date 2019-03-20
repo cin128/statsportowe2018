@@ -46,10 +46,10 @@ public class ImportAFProjectLogic {
 			lm.setMatch_date(new Timestamp(time));
 
 			String t1 = (String)obj.get(TEAM1_NAME);
-			lm.setMatchpart1(teamMap.get(t1));
+			//lm.setMatchpart1(teamMap.get(t1));
 
 			String t2 = (String)obj.get(TEAM2_NAME);
-			lm.setMatchpart2(teamMap.get(t2));
+			//lm.setMatchpart2(teamMap.get(t2));
 
 			String ts1 = (String)obj.get(TEAM1_SCORE);
 			lm.setMatchpart1_result(Float.valueOf(ts1));

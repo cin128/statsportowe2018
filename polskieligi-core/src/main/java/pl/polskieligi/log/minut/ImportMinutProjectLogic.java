@@ -82,7 +82,7 @@ public class ImportMinutProjectLogic {
 				if (leagueProject==null || leagueProject.getId() == null) {
 					throw new IllegalStateException("projecId==null!!!");
 				}
-				Map<String, Long> leagueTeams = parseTeams(doc, leagueProject);
+				Map<String, Team> leagueTeams = parseTeams(doc, leagueProject);
 				int teams_count = leagueTeams.size();
 				pi.setTeams_count(teams_count);
 				if (teams_count == 0) {
@@ -132,6 +132,7 @@ public class ImportMinutProjectLogic {
 				League league = new League();
 				league.setName(leagueName);
 				league.setLeagueType(LeagueType.getByLeagueName(leagueName).getId());
+				league.setRegion(Region.getRegionByProjectName(leagueName).getId());
 				league = leagueDAO.saveUpdate(league);
 				log.info("League " + leagueName + " saved id = " + league.getId());
 				Season season = new Season();
@@ -165,8 +166,8 @@ public class ImportMinutProjectLogic {
 	}
 	
 	
-	private Map<String, Long> parseTeams(Document doc, Project leagueProject) {
-		Map<String, Long> leagueTeams = new HashMap<String, Long>();
+	private Map<String, Team> parseTeams(Document doc, Project leagueProject) {
+		Map<String, Team> leagueTeams = new HashMap<String, Team>();
 		Elements druzyny = doc
 				.select("a[href~=/skarb.php\\?id_klub=*]");
 		for (Element druzyna : druzyny) {
@@ -182,7 +183,7 @@ public class ImportMinutProjectLogic {
 			t.setMinut_id(Integer.parseInt(teamId));
 			t = teamDAO.saveUpdate(t);
 			log.debug("Team "+druzyna.text()+"  saved " + t.getId());
-			leagueTeams.put(t.getName(), t.getId());
+			leagueTeams.put(t.getName(), t);
 			TeamLeague tl = new TeamLeague();
 			tl.setProject(leagueProject);
 			tl.setTeam(t);
@@ -203,12 +204,12 @@ public class ImportMinutProjectLogic {
 		}
 	}
 	
-	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Long> leagueTeams, Integer year, ProjectInfo pi) {
+	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Team> leagueTeams, Integer year, ProjectInfo pi) {
 		List<Team> missingTeams = new ArrayList<Team>();
 		int teams_count = leagueTeams.size();
 		int matches_count = 0;
 		int rounds_count = 0;
-		Long round_id = null;
+		Round round = null;
 		Integer round_matchcode = 0;
 		Elements kolejki = doc
 				.select("table[class=main][width=600][border=0][cellspacing=0][cellpadding][align=center]");
@@ -236,7 +237,7 @@ public class ImportMinutProjectLogic {
 									.text();
 							LeagueMatch roundMatch = new LeagueMatch();
 							roundMatch.setProject_id(leagueProject.getId());
-							roundMatch.setRound_id(round_id);
+							roundMatch.setRound(round);
 							roundMatch.setMatch_date(matchDate);
 							roundMatch.setMatchpart1(leagueTeams
 									.get(t1));
@@ -324,7 +325,7 @@ public class ImportMinutProjectLogic {
 				if (nowaKolejka.size() == 1) {
 					String tmp = nowaKolejka.get(0).text();
 					round_matchcode++;
-					Round round = new Round();
+					round = new Round();
 					int i = tmp.indexOf("-");
 					String roundName = tmp;
 					if (i > 0 && tmp.length() - i > 2) {
@@ -344,7 +345,6 @@ public class ImportMinutProjectLogic {
 					round.setProject_id(leagueProject.getId());
 					round = roundDAO.saveUpdate(round);
 					log.debug("Round saved " + round.getId());
-					round_id = round.getId();
 					rounds_count++;
 				}
 			}
@@ -359,11 +359,11 @@ public class ImportMinutProjectLogic {
 		return missingTeams;
 	}
 	
-	private void checkTeam(String teamName, Map<String, Long> leagueTeams, List<Team> missingTeams) {
+	private void checkTeam(String teamName, Map<String, Team> leagueTeams, List<Team> missingTeams) {
 		if(!StringUtils.isEmpty(teamName) && !leagueTeams.containsKey(teamName)) {
 			Team team = teamDAO.retrieveTeamByName(teamName);
 			if(team!=null) {
-				leagueTeams.put(teamName, team.getId());
+				leagueTeams.put(teamName, team);
 				missingTeams.add(team);
 			} else {
 				log.warn("Team: " + teamName + " is missing!!!");				

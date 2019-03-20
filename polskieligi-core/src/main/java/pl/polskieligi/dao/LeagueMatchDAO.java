@@ -6,4 +6,5 @@ import pl.polskieligi.model.LeagueMatch;
 
 public interface LeagueMatchDAO extends AbstractDAO<LeagueMatch>{
 	public int saveUpdate(List<LeagueMatch> roundMatches);
+	public List<LeagueMatch> getMatchesByProjectId(Long projectId);
 }

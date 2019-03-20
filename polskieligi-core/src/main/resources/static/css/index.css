@@ -5,10 +5,6 @@ body {
     background:#f5f5f5;
 }
 
-#tabs{
-    display: inline-block
-}
-
 table {
     font:12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;
     overflow:hidden;
@@ -65,19 +61,26 @@ div.match_draw {
 }
 
 
-
-#tabs .ui-tabs-panel, #tabs.ui-tabs, #tabs .ui-tabs-nav{
-    padding: 0px;
+#tabs1.ui-tabs, .flat-tabs .ui-tabs-panel, .flat-tabs .ui-tabs, .flat-tabs .ui-tabs-nav{
+    padding: 0px;   
 }
 
-#tabs.ui-corner-all, #tabs .ui-corner-top,  #tabs .ui-corner-all{
+#tabs1{
+    border:0;
+}
+
+.flat-tabs{
+    display: inline-block
+}
+
+.ui-corner-all, .ui-corner-top{
     border-top-left-radius: 0px !important;
     border-top-right-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
     border-bottom-right-radius: 0px !important;
 }
 
-#tabs .ui-tabs-anchor{
+.flat-tabs .ui-tabs-anchor{
     width: 50px;
     height: 17px;
     border: 0;
@@ -86,70 +89,27 @@ div.match_draw {
     text-align: center;
 }
 
-#tabs .ui-tabs-tab{
+.flat-tabs .ui-tabs-tab{
     border: 0;
     background-color: #e8eaeb;
     margin-right: 3px;
     text-decoration: none;
 }
 
-#tabs.ui-widget.ui-widget-content{
+.flat-tabs .ui-widget.ui-widget-content{
     border: 0;
 }
-#tabs .ui-widget-header{
+.flat-tabs .ui-widget-header{
     border-color: #d3d3d3;
     border-bottom: 0;
 }
 
-#tabs li a:hover {
+.flat-tabs li a:hover {
     color: #FFFFFF;
     background-color: #ccc;
 }
 
-#tabs .ui-state-active{
+.flat-tabs .ui-state-active{
     color: #FFFFFF;
     background-color: #656565;
 }
-
-/* 
-.buttons{
-	font:12px/15px "Helvetica Neue",Arial, Helvetica, sans-serif;
-	font-weight: bolder;
-	margin: 0;
-	padding: 0;
-	margin-bottom: -4px;
-	background-color: #e8eaeb;
-	width: auto;
-	border:1px solid #d3d3d3;
-}
-
-.buttons li {    
-  padding: 0;
-  display: inline-block;
-  list-style: none;
-  text-align: center;
-  background-color: #e8eaeb;
-  margin-right: 3px;
-  width: 70px;
-  line-height: 30px;
-  text-decoration: none;
-  overflow:hidden;   
-}
-
-.buttons li a {
-  text-decoration: none;
-  color: #000000;
-  display: block;
-}
-
-.buttons li a:hover {
-  text-decoration: none;
-  color: #FFFFFF;
-  background-color: #ccc;
-}
-.buttons li a.active {
-  text-decoration: none;
-  color: #FFFFFF;
-  background-color: #656565;
-}
- */

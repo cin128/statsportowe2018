@@ -1,18 +1,21 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-	<!-- jquery -->
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-	<script type="text/javascript" th:src="@{/js/locale.js}"></script>
-	<link rel="stylesheet"
-		  href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" th:src="@{/js/locale.js}"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 
-	<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
 
-	<script>
+<script>
         $(document).ready(function() {
+        	 $( "#tabs1" ).tabs();
+             $( "#tabs2" ).tabs();
+             $(document).tooltip();
             $("#address").autocomplete({
                 source : function(request, response) {
                     $.ajax({
@@ -39,173 +42,44 @@
         });
 
 	</script>
+<style type="text/css">
+.ui-tooltip {
+	border-radius: 6px;
+	font: 14px "Helvetica Neue", Sans-Serif;
+	box-shadow: 0 0 7px black;
+}
+</style>
 
-	<script>
-        $(function() {
-            $(document).tooltip();
-        });
-
-        $( function() {
-            $( "#tabs" ).tabs();
-        } );
-	</script>
-	<style type="text/css">
-		.ui-tooltip {
-			border-radius: 6px;
-			font: 14px "Helvetica Neue", Sans-Serif;
-			box-shadow: 0 0 7px black;
-		}
-	</style>
-
-	<title>Tabela</title>
+<title>Tabela</title>
 </head>
 <body>
 
-<h1 th:text="#{greeting}"></h1>
-
-<input type="text"  id="address" value=""/>
-<input type="hidden"  id="addressId" value=""/>
-<span>
-  <button id="button-id" type="button">Search</button>
-</span>
-
-<select id="locales">
-	<option value=""></option>
-	<option value="pl">PL</option>
-	<option value="en">EN</option>
-</select>
-
-
-	<div th:text="${ts.projectName}"></div>
-	<div th:text="${ts.leagueType}"></div>
-	<div id="tabs">
-		<div id="menu">
-			<ul class="buttons">
-				<li><a class="active" href="#tabs-all" th:text="#{table.total}"></a></li>
-				<li><a href="#tabs-home"  th:text="#{table.home}"></a></li>
-				<li><a href="#tabs-away"  th:text="#{table.away}"></a></li>
-			</ul>
-		</div>
-		<div id="tabs-all">
-			<table>
-				<thead>
-				<tr>
-					<th><abbr th:attr="title=#{table.pos.tooltip}" th:text="#{table.pos}"></abbr></th>
-					<th th:text="#{table.team}"></th>
-					<th><abbr th:attr="title=#{table.mp.tooltip}" th:text="#{table.mp}"></abbr></th>
-					<th><abbr th:attr="title=#{table.pts.tooltip}" th:text="#{table.pts}"></abbr></th>
-					<th><abbr th:attr="title=#{table.w.tooltip}" th:text="#{table.w}"></abbr></th>
-					<th><abbr th:attr="title=#{table.d.tooltip}" th:text="#{table.d}"></abbr></th>
-					<th><abbr th:attr="title=#{table.l.tooltip}" th:text="#{table.l}"></abbr></th>
-					<th><abbr th:attr="title=#{table.g.tooltip}" th:text="#{table.g}"></abbr></th>
-					<th class="last-ten-matches"><abbr th:attr="title=#{table.form.tooltip}" th:text="#{table.form}"></abbr></th>
-				</tr>
-				</thead>
-				<tbody>
-				<th:block th:each="row,itr : ${ts.rows}">
-					<tr>
-						<th th:text="${itr.index+1}"></th>
-						<td class="team_name"><b th:text="${row.teamName}"></b></td>
-						<td th:text="${row.games}"></td>
-						<td><b th:text="${row.points}"></b></td>
-						<td th:text="${row.wins}"></td>
-						<td th:text="${row.draws}"></td>
-						<td th:text="${row.defeats}"></td>
-						<td th:text="${row.goalsScored}+'-'+${row.goalsAgainst}"></td>
-						<td class="last-ten-matches">
-							<th:block th:each="match : ${row.lastMatches}" th:if="${match}">						
-								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw"  th:text="#{table.d}"></div>
-								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win"  th:text="#{table.w}"></div>
-								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose"  th:text="#{table.l}"></div>
-							</th:block>
-						</td>
-					</tr>
-				</th:block>
-				</tbody>
-			</table>
-		</div>
-
-		<div id="tabs-home">
-			<table>
-				<thead>
-				<tr>
-				<tr>
-					<th><abbr th:attr="title=#{table.pos.tooltip}" th:text="#{table.pos}"></abbr></th>
-					<th th:text="#{table.team}">Drużyna</th>
-					<th><abbr th:attr="title=#{table.mp.tooltip}" th:text="#{table.mp}"></abbr></th>
-					<th><abbr th:attr="title=#{table.pts.tooltip}" th:text="#{table.pts}"></abbr></th>
-					<th><abbr th:attr="title=#{table.w.tooltip}" th:text="#{table.w}"></abbr></th>
-					<th><abbr th:attr="title=#{table.d.tooltip}" th:text="#{table.d}"></abbr></th>
-					<th><abbr th:attr="title=#{table.l.tooltip}" th:text="#{table.l}"></abbr></th>
-					<th><abbr th:attr="title=#{table.g.tooltip}" th:text="#{table.g}"></abbr></th>
-					<th class="last-ten-matches"><abbr th:attr="title=#{table.form.tooltip}" th:text="#{table.form}"></abbr></th>
-				</tr>
-				</tr>
-				</thead>
-				<tbody>
-				<th:block th:each="row,itr : ${ts.rowsHome}">
-					<tr>
-						<th th:text="${itr.index+1}"></th>
-						<td class="team_name"><b th:text="${row.teamName}"></b></td>
-						<td th:text="${row.gamesHome}"></td>
-						<td><b th:text="${row.pointsHome}"></b></td>
-						<td th:text="${row.winsHome}"></td>
-						<td th:text="${row.drawsHome}"></td>
-						<td th:text="${row.defeatsHome}"></td>
-						<td th:text="${row.goalsScoredHome}+'-'+${row.goalsAgainstHome}"></td>
-						<td class="last-ten-matches">
-							<th:block th:each="match : ${row.lastMatchesHome}" th:if="${match}">
-								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw"  th:text="#{table.d}"></div>
-								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win"  th:text="#{table.w}"></div>
-								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose"  th:text="#{table.l}"></div>
-							</th:block>
-						</td>
-					</tr>
-				</th:block>
-				</tbody>
-			</table>
-
-		</div>
-		<div id="tabs-away">
-			<table>
-				<thead>
-				<tr>
-				<tr>
-					<th><abbr th:attr="title=#{table.pos.tooltip}" th:text="#{table.pos}"></abbr></th>
-					<th th:text="#{table.team}">Drużyna</th>
-					<th><abbr th:attr="title=#{table.mp.tooltip}" th:text="#{table.mp}"></abbr></th>
-					<th><abbr th:attr="title=#{table.pts.tooltip}" th:text="#{table.pts}"></abbr></th>
-					<th><abbr th:attr="title=#{table.w.tooltip}" th:text="#{table.w}"></abbr></th>
-					<th><abbr th:attr="title=#{table.d.tooltip}" th:text="#{table.d}"></abbr></th>
-					<th><abbr th:attr="title=#{table.l.tooltip}" th:text="#{table.l}"></abbr></th>
-					<th><abbr th:attr="title=#{table.g.tooltip}" th:text="#{table.g}"></abbr></th>
-					<th class="last-ten-matches"><abbr th:attr="title=#{table.form.tooltip}" th:text="#{table.form}"></abbr></th>
-				</tr>
-				</tr>
-				</thead>
-				<tbody>
-				<th:block th:each="row,itr : ${ts.rowsAway}">
-					<tr>
-						<th th:text="${itr.index+1}"></th>
-						<td class="team_name"><b th:text="${row.teamName}"></b></td>
-						<td th:text="${row.gamesAway}"></td>
-						<td><b th:text="${row.pointsAway}"></b></td>
-						<td th:text="${row.winsAway}"></td>
-						<td th:text="${row.drawsAway}"></td>
-						<td th:text="${row.defeatsAway}"></td>
-						<td th:text="${row.goalsScoredAway}+'-'+${row.goalsAgainstAway}"></td>
-						<td class="last-ten-matches">
-							<th:block th:each="match : ${row.lastMatchesAway}" th:if="${match}">
-								<div th:if="${match.result==0}" th:attr="title=${match.description+' '+match.date}" class="match_draw"  th:text="#{table.d}"></div>
-								<div th:if="${match.result>0}" th:attr="title=${match.description+' '+match.date}" class="match_win"  th:text="#{table.w}"></div>
-								<div th:if="${match.result<0}" th:attr="title=${match.description+' '+match.date}" class="match_lose"  th:text="#{table.l}"></div>
-							</th:block>
-						</td>
-					</tr>
-				</th:block>
-				</tbody>
-			</table>			
-		</div>
-	</div>
+	<select id="locales">
+		<option value=""></option>
+		<option value="pl">PL</option>
+		<option value="en">EN</option>
+	</select>
+	<form action="#" th:action="@{/table}" th:object="${tableForm}"
+		method="get">
+		<select th:field="*{leagueType}">
+			<option
+				th:each="state : ${T(pl.polskieligi.model.LeagueType).values()}"
+				th:value="${state.id}" th:text="${state.name}"></option>
+		</select> <select th:field="*{region}">
+			<option th:each="r : ${T(pl.polskieligi.model.Region).values()}"
+				th:value="${r.id}" th:text="${r.name}"></option>
+		</select> <select th:field="*{projectId}">
+			<option th:each="p : ${projects}" th:value="${p.id}"
+				th:text="${p.name}"></option>
+		</select> <input type="submit" value="Button" />
+	</form>
+	<div th:replace="thymeleaf/fragments/tableContent :: tableContent"></div>
+	
+	
+	<input type="text" id="address" value="" />
+	<input type="hidden" id="addressId" value="" />
+	<span>
+		<button id="button-id" type="button">Search</button>
+	</span>
 </body>
 </html>

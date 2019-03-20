@@ -16,7 +16,7 @@ public class Project {
 	private Integer minut_id;
 	private String name;
 	
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 	private League league;
 	@OneToOne(cascade = {CascadeType.ALL})
 	private Season season;
