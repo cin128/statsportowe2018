@@ -61,6 +61,11 @@
 	</select>
 	<form action="#" th:action="@{/table}" th:object="${tableForm}"
 		method="get">
+		<select th:field="*{season}">
+			<option
+					th:each="s : ${ts.allSeasons}"
+					th:value="${s.id}" th:text="${s.name}"></option>
+		</select>
 		<select th:field="*{leagueType}">
 			<option
 				th:each="state : ${T(pl.polskieligi.model.LeagueType).values()}"

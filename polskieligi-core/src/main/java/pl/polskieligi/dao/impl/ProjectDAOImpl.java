@@ -103,8 +103,9 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 	}
 
 	@Override
-	public List<Project> findProjects(Integer leagueType, Integer region) {
-		TypedQuery<Project> query = getEntityManager().createQuery("SELECT p FROM Project p JOIN p.league l WHERE l.leagueType = :leagueType and l.region = :region", Project.class);
+	public List<Project> findProjects(Long season, Integer leagueType, Integer region) {
+		TypedQuery<Project> query = getEntityManager().createQuery("SELECT p FROM Project p JOIN p.season s JOIN p.league l WHERE s.id = :season and l.leagueType = :leagueType and l.region = :region order by p.name", Project.class);
+		query.setParameter("season", season);
 		query.setParameter("leagueType", leagueType);
 		query.setParameter("region", region);
 		return query.getResultList();

@@ -9,14 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.dao.ProjectDAO;
+import pl.polskieligi.dao.SeasonDAO;
 import pl.polskieligi.dao.TableDAO;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.log.comparator.TableRowAwayComparator;
 import pl.polskieligi.log.comparator.TableRowHomeComparator;
-import pl.polskieligi.model.LeagueMatch;
-import pl.polskieligi.model.LeagueType;
-import pl.polskieligi.model.Project;
-import pl.polskieligi.model.Region;
+import pl.polskieligi.model.*;
 
 public class TableSessionBean {
 
@@ -27,6 +25,8 @@ public class TableSessionBean {
 	@Autowired ProjectDAO projectDAO;
 	
 	@Autowired LeagueMatchDAO leagueMatchDAO;
+
+	@Autowired SeasonDAO seasonDAO;
 
 	private Long projectId = null;
 
@@ -79,20 +79,20 @@ public class TableSessionBean {
 	public List<TableRow> getRowsAway() {
 		return rowsAway;
 	}
-
-	public LeagueType getLeagueType(){
-		return project.getLeague().getLeagueType();
-	}
 	
 	public List<LeagueMatch> getMatches(){
 		return matches;
 	}
 	
-	public Region getRegion(){
-		return project.getLeague().getRegion();
+	public Project getProject(){
+		return project;
 	}
 	
-	public List<Project> findProjects(Integer leagueType, Integer region){
-		return projectDAO.findProjects(leagueType, region);
+	public List<Project> findProjects(Long season, Integer leagueType, Integer region){
+		return projectDAO.findProjects(season, leagueType, region);
+	}
+
+	public List<Season> getAllSeasons(){
+		return seasonDAO.findAll();
 	}
 }

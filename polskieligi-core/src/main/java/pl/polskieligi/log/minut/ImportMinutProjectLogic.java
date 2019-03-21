@@ -133,6 +133,9 @@ public class ImportMinutProjectLogic {
 				league.setName(leagueName);
 				league.setLeagueType(LeagueType.getByLeagueName(leagueName).getId());
 				league.setRegion(Region.getRegionByProjectName(leagueName).getId());
+				if(leagueName.contains("grupa: ")){
+					league.setGroupName(leagueName.split("grupa:")[1]);
+				}
 				league = leagueDAO.saveUpdate(league);
 				log.info("League " + leagueName + " saved id = " + league.getId());
 				Season season = new Season();

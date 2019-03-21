@@ -18,7 +18,7 @@ public class Project {
 	
 	@OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 	private League league;
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 	private Season season;
 	private Date start_date;
 	private Boolean published;

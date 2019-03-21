@@ -11,6 +11,7 @@ public class League {
 	private String name;
 	private Integer leagueType;
 	private Integer region;
+	private String groupName;
 
 	public League() {
 		name = "";
@@ -40,16 +41,24 @@ public class League {
 		this.leagueType = leagueType;
 	}
 
-	@Override
-	public String toString(){
-		return "id="+id+", name="+name+", type="+getLeagueType();
-	}
-
 	public Region getRegion() {
 		return Region.getById(region);
 	}
 
 	public void setRegion(Integer region) {
 		this.region = region;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	@Override
+	public String toString(){
+		return "id="+id+", name="+name+", type="+getLeagueType();
 	}
 }

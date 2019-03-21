@@ -18,6 +18,7 @@ spring:
   batch:
     job:
       enabled: false
+    initialize-schema: always
 
 minut:
   project:

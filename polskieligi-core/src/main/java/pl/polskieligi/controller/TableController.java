@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import pl.polskieligi.model.Project;
 import pl.polskieligi.web.TableSessionBean;
 
 @Controller
@@ -20,27 +21,31 @@ public class TableController {
 	private TableSessionBean tableSessionBean;
 
 	@RequestMapping("/table")
-	public ModelAndView showTable(@RequestParam(value = "projectId", required = false) Long projectId,
+	public ModelAndView showTable(@RequestParam(value = "season", required = false) Long season,
+			@RequestParam(value = "projectId", required = false) Long projectId,
 			@RequestParam(value = "leagueType", required = false) Integer leagueType,
 			@RequestParam(value = "region", required = false) Integer region) {
-		log.info("showTable: " + projectId);
-		log.info("leagueType: " + leagueType);
-		log.info("region: " + region);
+		log.info("showTable: season: "+season+", leagueType: "+leagueType+", region: "+region+", projectId: " + projectId);
 		TableForm tf = new TableForm();
 		tf.projectId=projectId;
 		tf.leagueType=leagueType;
 		tf.region=region;
+		tf.season=season;
 		ModelAndView mv = new ModelAndView("thymeleaf/table");
 		if (projectId != null) {
 			tableSessionBean.calculateTable(projectId);
-			tf.leagueType=tableSessionBean.getLeagueType().getId();
-			tf.region=tableSessionBean.getRegion().getId();
+			Project p = tableSessionBean.getProject();
+			if(p!=null) {
+				tf.leagueType = p.getLeague().getLeagueType().getId();
+				tf.region = p.getLeague().getRegion().getId();
+				tf.season = p.getSeason().getId();
+			} else {
+				log.warn("Project not found: "+projectId);
+			}
 		}
-		if (tf.leagueType!=null && tf.region!=null) {
-			mv.addObject("projects", tableSessionBean.findProjects(leagueType, region));
+		if (tf.season!=null && tf.leagueType!=null && tf.region!=null) {
+			mv.addObject("projects", tableSessionBean.findProjects(tf.season, tf.leagueType, tf.region));
 		}
-		log.info("leagueType: " + tf.leagueType);
-		log.info("region: " + tf.region);
 		
 		mv.addObject("ts", tableSessionBean);
 		mv.addObject("tableForm", tf);
@@ -66,6 +71,7 @@ public class TableController {
 		public Long projectId;
 		public Integer leagueType;
 		public Integer region;
+		public Long season;
 		
 		public Long getProjectId() {
 			return projectId;
@@ -85,7 +91,13 @@ public class TableController {
 		public void setRegion(Integer region) {
 			this.region = region;
 		}
-		
-		
+
+		public Long getSeason() {
+			return season;
+		}
+
+		public void setSeason(Long season) {
+			this.season = season;
+		}
 	}
 }
