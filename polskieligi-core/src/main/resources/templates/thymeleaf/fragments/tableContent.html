@@ -6,16 +6,15 @@
 </head>
 
 <body>
-	<div th:text="${ts.ptrojectName}"></div>
 	<div th:fragment="tableContent" id="tabs1" class="flat-tabs">
 		<div id="menu1">
 			<ul class="buttons1">
-				<li><a class="active" href="#tabs-table"
+				<li th:if="${ts.project.type == 1}"><a class="active" href="#tabs-table"
 					th:text="#{table.table}"></a></li>
 				<li><a href="#tabs-results" th:text="#{table.results}"></a></li>
 			</ul>
 		</div>
-		<div id="tabs-table">
+		<div id="tabs-table" th:if="${ts.project.type == 1}">
 
 			<div id="tabs2" class="flat-tabs">
 				<div id="menu">
@@ -27,7 +26,7 @@
 					</ul>
 				</div>
 				<div id="tabs-all">
-					<table>
+					<table >
 						<thead th:replace="thymeleaf/fragments/general :: tableHeader"></thead>
 						<tbody>
 							<th:block th:each="row,itr : ${ts.rows}">

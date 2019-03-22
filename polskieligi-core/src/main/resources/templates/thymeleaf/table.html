@@ -78,7 +78,8 @@
 				th:text="${p.name}"></option>
 		</select> <input type="submit" value="Button" />
 	</form>
-	<div th:replace="thymeleaf/fragments/tableContent :: tableContent"></div>
-
+	<th:block th:if="${ts.project}">
+		<div th:replace="thymeleaf/fragments/tableContent :: tableContent"></div>
+	</th:block>
 </body>
 </html>

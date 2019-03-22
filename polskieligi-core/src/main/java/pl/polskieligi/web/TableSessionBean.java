@@ -42,13 +42,18 @@ public class TableSessionBean {
 		if(this.projectId==null || this.projectId!=projectId){
 			log.info("projectId changed. Old: "+this.projectId);
 			this.projectId=projectId;
-			rows = tableDAO.getTableRows(projectId);
-			rowsHome = sortRowsHome(rows);
-			rowsAway = sortRowsAway(rows);
 			project = projectDAO.find(projectId);
-			projectName = project.getName();
-			matches = leagueMatchDAO.getMatchesByProjectId(projectId);
-			log.info("projectName: "+projectName);
+			if(project!=null) {
+				projectName = project.getName();
+				matches = leagueMatchDAO.getMatchesByProjectId(projectId);
+				if(project.getType()==Project.REGULAR_LEAGUE) {
+					rows = tableDAO.getTableRows(projectId);
+					rowsHome = sortRowsHome(rows);
+					rowsAway = sortRowsAway(rows);
+				}
+			} else {
+				log.error("Project not found: " + projectId);
+			}
 		}
 	}
 
