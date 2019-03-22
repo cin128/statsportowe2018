@@ -33,7 +33,7 @@
 							<th:block th:each="row,itr : ${ts.rows}">
 								<tr>
 									<th th:text="${itr.index+1}"></th>
-									<td class="team_name"><b th:text="${row.teamName}"></b></td>
+									<td class="team_name"><b><a th:href="@{/team(teamId=${row.team_id})}" th:text="${row.teamName}"></a></b></td>
 									<td th:text="${row.games}"></td>
 									<td><b th:text="${row.points}"></b></td>
 									<td th:text="${row.wins}"></td>
@@ -65,7 +65,7 @@
 							<th:block th:each="row,itr : ${ts.rowsHome}">
 								<tr>
 									<th th:text="${itr.index+1}"></th>
-									<td class="team_name"><b th:text="${row.teamName}"></b></td>
+									<td class="team_name"><b><a th:href="@{/team(teamId=${row.team_id})}" th:text="${row.teamName}"></a></b></td>
 									<td th:text="${row.gamesHome}"></td>
 									<td><b th:text="${row.pointsHome}"></b></td>
 									<td th:text="${row.winsHome}"></td>
@@ -98,7 +98,7 @@
 							<th:block th:each="row,itr : ${ts.rowsAway}">
 								<tr>
 									<th th:text="${itr.index+1}"></th>
-									<td class="team_name"><b th:text="${row.teamName}"></b></td>
+									<td class="team_name"><b><a th:href="@{/team(teamId=${row.team_id})}" th:text="${row.teamName}"></a></b></td>
 									<td th:text="${row.gamesAway}"></td>
 									<td><b th:text="${row.pointsAway}"></b></td>
 									<td th:text="${row.winsAway}"></td>

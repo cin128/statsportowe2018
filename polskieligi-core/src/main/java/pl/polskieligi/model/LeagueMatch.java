@@ -15,11 +15,11 @@ public class LeagueMatch {
 	private Integer playground_id;
 	private Timestamp match_date;
 	
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "matchpart1")
     private Team matchpart1;
     
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "matchpart2")
     private Team matchpart2;
 
@@ -27,7 +27,7 @@ public class LeagueMatch {
 	private Float matchpart2_result;
 	private Long project_id;
 	
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne
     @JoinColumn(name = "round_id")
 	private Round round;
 	private Boolean count_result;

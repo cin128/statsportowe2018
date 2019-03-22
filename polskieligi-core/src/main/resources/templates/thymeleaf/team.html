@@ -1,0 +1,54 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Team</title>
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet"
+          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var teamsContextPath = /*[[@{/teams}]]*/ '';
+        /*]]>*/
+        $(document).ready(function() {
+            $("#teamName").autocomplete({
+                source : function(request, response) {
+                    $.ajax({
+                        url : teamsContextPath,
+                        dataType : "json",
+                        data : {
+                            team : request.term,
+                            maxRows: 2
+                        },
+                        success : function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui){
+                    $("#teamName").val(ui.item.label);
+                    $("#teamId").val(ui.item.value);
+                    this.form.submit();
+                    return false;
+                },
+                minLength : 2
+            });
+        });
+
+    </script>
+</head>
+<body>
+<form action="#" th:action="@{/team}" method="get">
+    <input type="text" id="teamName" value="" />
+    <input type="hidden" name="teamId" id="teamId" value="" />
+</form>
+
+<th:block th:if="${team}">
+    <div th:text="${team.name}"></div>
+    <div th:replace="thymeleaf/fragments/teamLeague :: teamLeague"></div>
+</th:block>
+</body>
+</html>

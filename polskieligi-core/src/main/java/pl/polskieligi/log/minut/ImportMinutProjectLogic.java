@@ -1,5 +1,6 @@
 package pl.polskieligi.log.minut;
 
+import java.net.SocketTimeoutException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -102,8 +103,11 @@ public class ImportMinutProjectLogic {
 			long diff = endDate.getTime() - startDate.getTime();
 			pi.setProcessingTime(diff);
 			log.info("End processing id = " + projectMinutId + " time = "+ (diff/1000) +" sec");
-		} catch ( org.jsoup.HttpStatusException e){
-			pi.addMessage(e.getMessage()+" "+e.getUrl());
+		} catch ( org.jsoup.HttpStatusException e) {
+			pi.addMessage(e.getMessage() + " " + e.getUrl());
+		} catch (SocketTimeoutException e){
+			pi.addMessage(e.getMessage());
+			log.error(e.getMessage());
 		} catch (Exception e) {
 			pi.addMessage(e.getMessage());
 			log.error(e.getMessage(), e);

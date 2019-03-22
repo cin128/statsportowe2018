@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+
+<body>
+<div th:fragment="teamLeague">
+    <th:block th:each="tl : ${team.teamLeagues}">
+        <div>
+            <a th:href="@{/table(projectId=${tl.project.id})}" th:text="${tl.project.name}"></a>
+        </div>
+    </th:block>
+</div>
+</body>
+</html>

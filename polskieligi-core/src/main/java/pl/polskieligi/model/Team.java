@@ -1,11 +1,8 @@
 package pl.polskieligi.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false),
@@ -17,21 +14,13 @@ public class Team {
 	private Integer minut_id;
 	private String name;
 	private String longName;
-	/*private String short_name;
-	private String middle_name;
-	private String description;
-	private Integer club_id;
-	private Integer checked_out;
-	private Timestamp checked_out_time;*/
+
+	@OneToMany
+	@JoinColumn(name = "team_id")
+	private List<TeamLeague> teamLeagues = new ArrayList<>();
 
 	public Team() {
 		minut_id = 0;
-/*		short_name = "";
-		middle_name = "";
-		description = "";
-		club_id = 0;
-		checked_out = 0;
-		checked_out_time = new Timestamp(0);*/
 	}
 
 	public Long getId() {
@@ -66,54 +55,10 @@ public class Team {
 		this.longName = longName;
 	}
 
-/*	public String getShort_name() {
-		return short_name;
+	public List<TeamLeague> getTeamLeagues() {
+		return teamLeagues;
 	}
 
-	public void setShort_name(String short_name) {
-		this.short_name = short_name;
-	}
-
-	public String getMiddle_name() {
-		return middle_name;
-	}
-
-	public void setMiddle_name(String middle_name) {
-		this.middle_name = middle_name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Integer getClub_id() {
-		return club_id;
-	}
-
-	public void setClub_id(Integer club_id) {
-		this.club_id = club_id;
-	}
-
-	public Integer getChecked_out() {
-		return checked_out;
-	}
-
-	public void setChecked_out(Integer checked_out) {
-		this.checked_out = checked_out;
-	}
-
-	public Timestamp getChecked_out_time() {
-		return checked_out_time;
-	}
-
-	public void setChecked_out_time(Timestamp checked_out_time) {
-		this.checked_out_time = checked_out_time;
-	}	*/
-	
 	@Override
 	public String toString() {
 		return minut_id + " "+ name +" " + longName;
