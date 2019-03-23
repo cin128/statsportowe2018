@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.LeagueDAO;
 import pl.polskieligi.model.League;
+import pl.polskieligi.model.LeagueType;
+import pl.polskieligi.model.Region;
 
 import javax.persistence.Query;
 
@@ -22,4 +24,18 @@ public class LeagueDAOImpl extends AbstractDAOImpl<League> implements LeagueDAO 
 		query.setParameter("name", league.getName());
 		return query;
 	}
+	
+	public void updateRegions() {
+		for(League l: findAll()) {
+			l.setRegion(Region.getRegionByProjectName(l.getName()).getId());
+			update(l);
+		}
+	}
+	public void updateLeagueTypes() {
+		for(League l: findAll()) {
+			l.setLeagueType(LeagueType.getByLeagueName(l.getName()).getId());
+			update(l);
+		}
+	}
+	
 }

@@ -18,7 +18,7 @@ public enum Region {
 	POL(10, "Podlaski ZPN", "Podlaski", "podlaska"),
 	POM(11, "Pomorski ZPN", "Pomorski", "pomorska", "Gdańsk", "Słupsk", "Malbork"),
 	SLA(12, "Śląski ZPN", "Śląski", "śląska", "Bielsko-Biała", "Częstochowa", "Katowice", "Bytom", "Lubliniec", "Racibórz", "Rybnik", "Skoczów", "Sosnowiec", "Tychy", "Zabrze", "Żywiec"),
-	SWI(13, "Świętokrzyski ZPN", "Świętokrzyski, ""świętokrzyska", "Kielce", "Sandomierz"),
+	SWI(13, "Świętokrzyski ZPN", "Świętokrzyski", "świętokrzyska", "Kielce", "Sandomierz"),
 	WAR(14, "Warmińsko-Mazurski ZPN", "Warmińsko-Mazurski", "warmińsko-mazurska"),
 	WIE(15, "Wielkopolski ZPN", "Wielkopolski", "wielkopolska", "Kalisz", "Konin", "Leszno", "Piła", "Poznań"),
 	ZAC(16, "Zachodniopomorski ZPN", "Zachodniopomorski", "zachodniopomorska", "Koszalin", "Szczecin");
