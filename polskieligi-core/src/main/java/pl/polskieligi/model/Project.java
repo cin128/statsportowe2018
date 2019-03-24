@@ -1,6 +1,7 @@
 package pl.polskieligi.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -24,6 +25,9 @@ public class Project {
 	private Boolean published;
 	private Boolean archive;
 	private Integer type;
+	
+	@OneToMany(mappedBy="project")
+	private List<TeamLeague> teamLeagues;
 
 	public Project() {
 		minut_id = 0;
@@ -105,6 +109,11 @@ public class Project {
 	public void setType(Integer type) {
 		this.type = type;
 	}
+	
+	public  List<TeamLeague> getTeamLeagues(){
+		return teamLeagues;
+	}
+	
 	@Override
 	public String toString() {
 		return name;
