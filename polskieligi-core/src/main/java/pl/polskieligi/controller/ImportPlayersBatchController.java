@@ -15,7 +15,7 @@ import pl.polskieligi.dto.ImportJob;
 
 import java.util.*;
 
-//@Controller
+@Controller
 public class ImportPlayersBatchController {
 
 	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);

@@ -74,9 +74,13 @@ public class TableDAOImpl implements TableDAO {
 			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart2 = :matchpart2 ) and m.count_result = :count_result order by m.match_date desc";
 
 
+	public List<TableRow> getTableRowsSimple(Long projectId) {
+		return calculateTable(projectId, false);
+	}
+	
 	public List<TableRow> getTableRows(Long projectId) {
 		java.util.Date startDate = new java.util.Date();
-		List<TableRow> result = calculateTable(projectId);
+		List<TableRow> result = calculateTable(projectId, true);
 		java.util.Date date = new java.util.Date();
 		log.info("calculateTable in (ms) " + (date.getTime() - startDate.getTime()));
 		for (TableRow row : result) {
@@ -89,7 +93,7 @@ public class TableDAOImpl implements TableDAO {
 		return result;
 	}
 
-	private List<TableRow> calculateTable(Long projectId) {
+	private List<TableRow> calculateTable(Long projectId, boolean detailed) {
 		java.util.Date startDate = new java.util.Date();
 		List<Team> allTeams = teamLeagueDAO.getTeams(projectId);
 		java.util.Date date = new java.util.Date();
@@ -99,6 +103,9 @@ public class TableDAOImpl implements TableDAO {
 			allTeamsIds.add(t.getId());
 		}
 		List<TableRow> firstResult = calculateTable(projectId, allTeamsIds);
+		if(!detailed) {
+			return firstResult;
+		}
 		int i = 0;
 		for (TableRow tr1 : firstResult) {
 			tr1.setSequence(i++);

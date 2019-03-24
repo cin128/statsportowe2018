@@ -17,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -25,9 +26,11 @@ import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dao.RoundDAO;
 import pl.polskieligi.dao.SeasonDAO;
+import pl.polskieligi.dao.TableDAO;
 import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.ProjectInfo;
+import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.model.*;
 
 @Component
@@ -59,6 +62,9 @@ public class ImportMinutProjectLogic {
 	
 	@Autowired
 	RoundDAO roundDAO;
+	
+	@Autowired
+	TableDAO tableDAO;
 
 	public ProjectInfo doImport(Integer projectMinutId) {
 		log.info("Importing project id = "+projectMinutId);
@@ -97,6 +103,7 @@ public class ImportMinutProjectLogic {
 				}
 
 				leagueProject = projectDAO.saveUpdate(leagueProject);
+				updateStartPoints(leagueProject);
 				pi.setProject(leagueProject);				
 			}
 			java.util.Date endDate = new java.util.Date();
@@ -179,6 +186,7 @@ public class ImportMinutProjectLogic {
 				.select("a[href~=/skarb.php\\?id_klub=*]");
 		for (Element druzyna : druzyny) {
 			String tmp = druzyna.toString();
+			String pkt = druzyna.parent().nextElementSibling().nextElementSibling().text();
 			int start = tmp.indexOf(TEAM_ID) + TEAM_ID.length();
 			int end = tmp.indexOf(AMP);
 			if (start < 0 || end < 0 || start >= end) {
@@ -194,6 +202,7 @@ public class ImportMinutProjectLogic {
 			TeamLeague tl = new TeamLeague();
 			tl.setProject(leagueProject);
 			tl.setTeam(t);
+			tl.setStartPoints(Integer.parseInt(pkt));
 			tl = teamLeagueDAO.saveUpdate(tl);
 
 			log.debug("TeamLeague saved " + tl.getId());					
@@ -393,6 +402,18 @@ public class ImportMinutProjectLogic {
 			log.warn("Value: " + value + " is not a number!!!");
 		}
 		return null;
+	}
+	
+	private void updateStartPoints(Project leagueProject) {
+		Map<Long, Integer> points = new HashMap<Long, Integer>();
+		for(TableRow row: tableDAO.getTableRowsSimple(leagueProject.getId())) {
+			points.put(row.getTeam_id(), row.getPoints());
+		}//TODO
+		/*for(TeamLeague tl: leagueProject.getTeamLeagues()) {
+			tl.setStartPoints(tl.getStartPoints()-points.get(tl.getTeam().getId()));
+			teamLeagueDAO.update(tl);
+		}*/
+	
 	}
 
 	public void setProjectDAO(ProjectDAO projectDAO) {
