@@ -245,7 +245,7 @@ public class TableDAOImpl implements TableDAO {
 		Project project = projectDAO.find(projectId);
 		Map<Long, Integer> startPoints = new HashMap<Long, Integer>();
 		for(TeamLeague tl: project.getTeamLeagues()) {
-			startPoints.put(tl.getTeam().getId(), tl.getStartPoints());
+			startPoints.put(tl.getTeam_id(), tl.getStartPoints());
 		}
 		for(TableRow tr: sortedResult) {
 			tr.setPoints(tr.getPoints()+startPoints.get(tr.getTeam_id()));
