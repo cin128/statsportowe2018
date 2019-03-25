@@ -66,6 +66,9 @@ public class ImportMinutProjectLogic {
 
 	@Autowired
 	TableDAO tableDAO;
+	
+	@Autowired
+	ImportTeamLeaguePlayerLogic importTeamLeaguePlayerLogic;
 
 	public ProjectInfo doImport(Integer projectMinutId) {
 		log.info("Importing project id = " + projectMinutId);
@@ -210,6 +213,7 @@ public class ImportMinutProjectLogic {
 			tl.setTeam_id(t.getId());
 			tl.setStartPoints(Integer.parseInt(pkt));
 			tl = teamLeagueDAO.saveUpdate(tl);
+			importTeamLeaguePlayerLogic.doImport(tl.getId());
 			leagueTeams.put(t.getName(), Pair.of(t, tl));
 			log.debug("TeamLeague saved " + tl.getId());
 		}
