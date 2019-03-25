@@ -17,9 +17,9 @@ public class TeamController {
 	@Autowired TeamDAO teamDAO;
 
 	@RequestMapping("/team")
-	public ModelAndView showTeam(@RequestParam(value = "season", required = false) Long season,
+	public ModelAndView showTeam(@RequestParam(value = "seasonId", required = false) Long seasonId,
 			@RequestParam(value = "teamId", required = false) Long teamId) {
-		log.info("showTeam: season: " + season + ", teamId: " + teamId);
+		log.info("showTeam: seasonId: " + seasonId + ", teamId: " + teamId);
 		ModelAndView mv = new ModelAndView("thymeleaf/team");
 		if(teamId!=null) {
 			Team team = teamDAO.find(teamId);

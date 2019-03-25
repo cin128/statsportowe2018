@@ -32,7 +32,7 @@
 							<th:block th:each="row,itr : ${ts.rows}">
 								<tr>
 									<th th:text="${itr.index+1}"></th>
-									<td class="team_name"><b><a th:href="@{/team(teamId=${row.team_id})}" th:text="${row.teamName}"></a></b></td>
+									<td class="team_name"><b><a th:href="@{/team(teamId=${row.team_id}, seasonId=${ts.project.season.id})}" th:text="${row.teamName}"></a></b></td>
 									<td th:text="${row.games}"></td>
 									<td><b th:text="${row.points}"></b></td>
 									<td th:text="${row.wins}"></td>

@@ -6,22 +6,22 @@ import java.util.Map;
 public enum Region {
 
 	UNDEFINED(0, "Niezdefiniowana", "Niezdefiniowana"),
-	DOL(1, "Dolnośląski ZPN", "Dolnośląski", "dolnośląska", "Jelenia Góra", "Legnica", "Wałbrzych", "Wrocław", "Środa Śląska", "Trzebnica"),
+	DOL(1, "Dolnośląski ZPN", "Dolnośląski", "dolnośląska", "Jelenia Góra", "Legnica", "Wałbrzych", "Wrocław", "Środa Śląska", "Trzebnica", "Bolesławiec", "Kłodzko", "Lubań", "Oława", "Strzelin", "Zgorzelec", "Świdnica"),
 	KUJ(2, "Kujawsko-Pomorski ZPN", "Kujawsko-Pomorski", "kujawsko-pomorska", "Bydgoszcz", "Toruń", "Włocławek"),
 	LUE(3, "Lubelski ZPN", "Lubelski", "lubelska", "Biała Podlaska", "Chełm", "Lublin", "Zamość"),
-	LUU(4, "Lubuski ZPN", "Lubuski", "lubuska", "Gorzów Wielkopolski", "Krosno Odrzańskie", "Nowa Sól", "Świebodzin", "Zielona Góra", "Żagań", "Żary"),
-	LOD(5, "Łódzki ZPN", "Łódzki", "łódzka", "Łódź", "Piotrków Trybunalski", "Sieradz", "Skierniewice"),
-	MAL(6, "Małopolski ZPN", "Małopolski", "małopolska", "Chrzanów", "Kraków", "Limanowa", "Myślenice", "Nowy Sącz", "Olkusz", "Oświęcim", "Podhale", "Tarnów", "Wadowice", "Wieliczka", "Gorlice"),
+	LUU(4, "Lubuski ZPN", "Lubuski", "lubuska", "Gorzów Wielkopolski", "Krosno Odrzańskie", "Nowa Sól", "Świebodzin", "Zielona Góra", "Żagań", "Żary", "Drezdenko", "Słubice"),
+	LOD(5, "Łódzki ZPN", "Łódzki", "łódzka", "Łódź", "Piotrków Trybunalski", "Sieradz", "Skierniewice", "Brzeg"),
+	MAL(6, "Małopolski ZPN", "Małopolski", "małopolska", "Chrzanów", "Kraków", "Limanowa", "Myślenice", "Nowy Sącz", "Olkusz", "Oświęcim", "Podhale", "Tarnów", "Wadowice", "Wieliczka", "Gorlice", "Bochnia", "Brzesko", "Miechów", "Nowy Targ", "Żabno"),
 	MAZ(7, "Mazowiecki ZPN", "Mazowiecki", "mazowiecka", "Ciechanów", "Ostrołęka", "Płock", "Radom", "Siedlce", "Warszawa"),
-	OPO(8, "Opolski ZPN", "Opolski", "opolska", "Opole"),
+	OPO(8, "Opolski ZPN", "Opolski", "opolska", "Opole", "Głubczyce", "Kluczbork", "Krapkowice", "Kędzierzyn-Koźle", "Nysa", "Olesno", "Prudnik"),
 	POK(9, "Podkarpacki ZPN", "Podkarpacki", "podkarpacka" , "Dębica", "Jarosław", "Krosno", "Rzeszów", "Stalowa Wola", "Lubaczów", "Przemyśl", "Przeworsk"),
 	POL(10, "Podlaski ZPN", "Podlaski", "podlaska"),
-	POM(11, "Pomorski ZPN", "Pomorski", "pomorska", "Gdańsk", "Słupsk", "Malbork"),
+	POM(11, "Pomorski ZPN", "Pomorski", "pomorska", "Gdańsk", "Słupsk", "Malbork", "Puck"),
 	SLA(12, "Śląski ZPN", "Śląski", "śląska", "Bielsko-Biała", "Częstochowa", "Katowice", "Bytom", "Lubliniec", "Racibórz", "Rybnik", "Skoczów", "Sosnowiec", "Tychy", "Zabrze", "Żywiec"),
 	SWI(13, "Świętokrzyski ZPN", "Świętokrzyski", "świętokrzyska", "Kielce", "Sandomierz"),
 	WAR(14, "Warmińsko-Mazurski ZPN", "Warmińsko-Mazurski", "warmińsko-mazurska"),
-	WIE(15, "Wielkopolski ZPN", "Wielkopolski", "wielkopolska", "Kalisz", "Konin", "Leszno", "Piła", "Poznań"),
-	ZAC(16, "Zachodniopomorski ZPN", "Zachodniopomorski", "zachodniopomorska", "Koszalin", "Szczecin");
+	WIE(15, "Wielkopolski ZPN", "Wielkopolski", "wielkopolska", "Kalisz", "Konin", "Leszno", "Piła", "Poznań", "Kościan"),
+	ZAC(16, "Zachodniopomorski ZPN", "Zachodniopomorski", "zachodniopomorska", "Koszalin", "Szczecin", "Białogard", "Darłowo", "Kamienna Góra", "Sławno", "Wałcz");
 
 	private final Integer id;
 	private final String name;
