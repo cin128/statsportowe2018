@@ -44,7 +44,7 @@
 						<td><b>${row.jobExecution.endTime}</b></td>
 						<td><b>${row.jobExecution.status}</b></td>
 						<td><b>${row.jobExecution.exitStatus.exitCode}</b></td>
-						<td><b>${row.jobExecution.jobConfigurationName}</b></td>
+						<td><b>${row.jobExecution.jobInstance.jobName}</b></td>
 						<td><b>${row.jobExecution.stepExecutions[0].readCount}</b></td>
 
 					</tr>

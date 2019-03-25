@@ -23,10 +23,10 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	@Override
 	protected Query getRetrieveQuery(TeamLeague teamLeague) {
 		Query query = getEntityManager()
-				.createQuery("select tl from TeamLeague tl join tl.team t join tl.project p "
-						+ "where t.id = :team_id and p.id = :project_id");
-		query.setParameter("project_id", teamLeague.getProject().getId());
-		query.setParameter("team_id", teamLeague.getTeam().getId());
+				.createQuery("select tl from TeamLeague tl "
+						+ "where tl.team_id = :team_id and tl.project_id = :project_id");
+		query.setParameter("project_id", teamLeague.getProject_id());
+		query.setParameter("team_id", teamLeague.getTeam_id());
 		return query;
 	}
 
@@ -44,8 +44,8 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 				query = getEntityManager()
 						.createQuery("SELECT m from Match m where project_id = :project_id AND (matchpart1 = :matchpart1 or matchpart2 = :matchpart2)");
 				query.setParameter("project_id", projectId);
-				query.setParameter("matchpart1", tl.getTeam().getId());
-				query.setParameter("matchpart2", tl.getTeam().getId());
+				query.setParameter("matchpart1", tl.getTeam_id());
+				query.setParameter("matchpart2", tl.getTeam_id());
 
 				@SuppressWarnings("unchecked")
 				List<LeagueMatch> matchesToDelete = query.getResultList();
@@ -61,7 +61,7 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	public List<Team> getTeams(Long projectId) {
 		List<Team> result = null;
 
-			Query query = getEntityManager().createQuery("select t from Team t where exists (select tl from TeamLeague tl join tl.team t1 join tl.project p1 where t.id = t1.id and p1.id = :project_id) order by t.name");
+			Query query = getEntityManager().createQuery("select t from Team t where exists (select tl from TeamLeague tl where t.id = tl.team_id and tl.project_id = :project_id) order by t.name");
 			query.setParameter("project_id", projectId);
 			result = query.getResultList();
 			

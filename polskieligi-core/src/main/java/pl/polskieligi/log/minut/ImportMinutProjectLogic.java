@@ -192,8 +192,8 @@ public class ImportMinutProjectLogic {
 			log.debug("Team "+druzyna.text()+"  saved " + t.getId());
 			leagueTeams.put(t.getName(), t);
 			TeamLeague tl = new TeamLeague();
-			tl.setProject(leagueProject);
-			tl.setTeam(t);
+			tl.setProject_id(leagueProject.getId());
+			tl.setTeam_id(t.getId());
 			tl = teamLeagueDAO.saveUpdate(tl);
 
 			log.debug("TeamLeague saved " + tl.getId());					
@@ -204,8 +204,8 @@ public class ImportMinutProjectLogic {
 	private void updateTeamLeagues(List<Team> missingTeams, Project leagueProject) {
 		for(Team team: missingTeams) {
 			TeamLeague tl = new TeamLeague();
-			tl.setProject(leagueProject);
-			tl.setTeam(team);
+			tl.setProject_id(leagueProject.getId());
+			tl.setTeam_id(team.getId());
 			tl = teamLeagueDAO.saveUpdate(tl);
 			log.debug("TeamLeague saved " + tl.getId());
 		}

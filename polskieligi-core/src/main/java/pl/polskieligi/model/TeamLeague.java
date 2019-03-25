@@ -10,11 +10,17 @@ public class TeamLeague {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	
-	@OneToOne(cascade = {CascadeType.ALL})
+
+	private Long project_id;
+
+	private Long team_id;
+
+	@OneToOne
+	@JoinColumn(name="project_id", insertable =  false, updatable = false)
 	private Project project;
-	
-	@OneToOne(cascade = {CascadeType.ALL})
+
+	@OneToOne
+	@JoinColumn(name="team_id", insertable =  false, updatable = false)
 	private Team team;
 	
 /*	private Integer division_id;
@@ -119,19 +125,27 @@ public class TeamLeague {
 		this.id = id;
 	}
 
+	public Long getProject_id() {
+		return project_id;
+	}
+
+	public void setProject_id(Long project_id) {
+		this.project_id = project_id;
+	}
+
+	public Long getTeam_id() {
+		return team_id;
+	}
+
+	public void setTeam_id(Long team_id) {
+		this.team_id = team_id;
+	}
+
 	public Project getProject() {
 		return project;
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
-	}
-
 	public Team getTeam() {
 		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
 	}
 }
