@@ -3,7 +3,7 @@ package pl.polskieligi.model;
 import javax.persistence.*;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_TLP_PL_TL", columnList = "player_id,teamLeague_id", unique = false) })
+@Table(indexes = { @Index(name = "IDX_TLP_PL_TL", columnList = "player_id,teamLeague_id", unique = true) })
 public class TeamLeaguePlayer {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -44,4 +44,14 @@ public class TeamLeaguePlayer {
 	public TeamLeague getTeamLeague() {
 		return teamLeague;
 	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public void setTeamLeague(TeamLeague teamLeague) {
+		this.teamLeague = teamLeague;
+	}
+	
+	
 }
