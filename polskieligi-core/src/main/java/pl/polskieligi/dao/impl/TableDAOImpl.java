@@ -248,7 +248,10 @@ public class TableDAOImpl implements TableDAO {
 			startPoints.put(tl.getTeam_id(), tl.getStartPoints());
 		}
 		for(TableRow tr: sortedResult) {
-			tr.setPoints(tr.getPoints()+startPoints.get(tr.getTeam_id()));
+			Integer points = startPoints.get(tr.getTeam_id());
+			if(points!=null) {
+				tr.setPoints(tr.getPoints() + points);
+			}
 		}
 	}
 
