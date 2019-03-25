@@ -1,7 +1,5 @@
 package pl.polskieligi.model;
 
-import java.sql.Timestamp;
-
 import javax.persistence.*;
 
 @Entity
@@ -22,6 +20,8 @@ public class TeamLeague {
 	@OneToOne
 	@JoinColumn(name="team_id", insertable =  false, updatable = false)
 	private Team team;
+	
+	private Integer startPoints;
 	
 /*	private Integer division_id;
 	private Integer start_points;
@@ -147,5 +147,13 @@ public class TeamLeague {
 
 	public Team getTeam() {
 		return team;
+	}
+	
+	public Integer getStartPoints() {
+		return startPoints;
+	}
+
+	public void setStartPoints(Integer startPoints) {
+		this.startPoints = startPoints;
 	}
 }

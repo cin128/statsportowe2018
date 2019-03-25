@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dao.TableDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.dto.TableRowMatch;
 import pl.polskieligi.log.comparator.TableRowComparator;
+import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Team;
+import pl.polskieligi.model.TeamLeague;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,7 +40,10 @@ public class TableDAOImpl implements TableDAO {
 
 	@Autowired
 	TeamLeagueDAO teamLeagueDAO;
-
+	
+	@Autowired
+	ProjectDAO projectDAO;
+	
 	protected EntityManager getEntityManager() {
 		return em;
 	}
@@ -74,9 +79,13 @@ public class TableDAOImpl implements TableDAO {
 			+ "where m.project_id = :project_id and m.published = :published and ( m.matchpart2 = :matchpart2 ) and m.count_result = :count_result order by m.match_date desc";
 
 
+	public List<TableRow> getTableRowsSimple(Long projectId) {
+		return calculateTable(projectId, false);
+	}
+	
 	public List<TableRow> getTableRows(Long projectId) {
 		java.util.Date startDate = new java.util.Date();
-		List<TableRow> result = calculateTable(projectId);
+		List<TableRow> result = calculateTable(projectId, true);
 		java.util.Date date = new java.util.Date();
 		log.info("calculateTable in (ms) " + (date.getTime() - startDate.getTime()));
 		for (TableRow row : result) {
@@ -89,7 +98,7 @@ public class TableDAOImpl implements TableDAO {
 		return result;
 	}
 
-	private List<TableRow> calculateTable(Long projectId) {
+	private List<TableRow> calculateTable(Long projectId, boolean detailed) {
 		java.util.Date startDate = new java.util.Date();
 		List<Team> allTeams = teamLeagueDAO.getTeams(projectId);
 		java.util.Date date = new java.util.Date();
@@ -98,7 +107,10 @@ public class TableDAOImpl implements TableDAO {
 		for (Team t : allTeams) {
 			allTeamsIds.add(t.getId());
 		}
-		List<TableRow> firstResult = calculateTable(projectId, allTeamsIds);
+		List<TableRow> firstResult = calculateTable(projectId, allTeamsIds, true, detailed);
+		if(!detailed) {
+			return firstResult;
+		}
 		int i = 0;
 		for (TableRow tr1 : firstResult) {
 			tr1.setSequence(i++);
@@ -149,7 +161,7 @@ public class TableDAOImpl implements TableDAO {
 		for (Long id : equalTeams) {
 			sequence.add(equalPoints.get(id).getSequence());
 		}
-		List<TableRow> equalTeamResult = calculateTable(projectId, equalTeams, sequence);
+		List<TableRow> equalTeamResult = calculateTable(projectId, equalTeams, sequence, false, true);
 
 		if (equalTeamResult.size() == 2) {
 			TableRow r1 = equalTeamResult.get(0);
@@ -170,12 +182,12 @@ public class TableDAOImpl implements TableDAO {
 		return result;
 	}
 
-	private List<TableRow> calculateTable(Long projectId, List<Long> teamIds) {
-		return calculateTable(projectId, teamIds, null);
+	private List<TableRow> calculateTable(Long projectId, List<Long> teamIds, boolean addStartPoints, boolean detailed) {
+		return calculateTable(projectId, teamIds, null, addStartPoints, detailed);
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<TableRow> calculateTable(Long projectId, List<Long> teamIds, List<Integer> sequence) {
+	private List<TableRow> calculateTable(Long projectId, List<Long> teamIds, List<Integer> sequence, boolean addStartPoints, boolean detailed) {
 		Map<Long, TableRow> result = new HashMap<Long, TableRow>();
 		for (int i = 0; i < teamIds.size(); i++) {
 			Long id = teamIds.get(i);
@@ -222,8 +234,22 @@ public class TableDAOImpl implements TableDAO {
 		}
 
 		List<TableRow> sortedResult = new ArrayList<TableRow>(result.values());
+		if(addStartPoints && detailed) {
+			addStartPoints(sortedResult, projectId);
+		}
 		Collections.sort(sortedResult, new TableRowComparator());
 		return sortedResult;
+	}
+	
+	private void addStartPoints(List<TableRow> sortedResult, Long projectId) {
+		Project project = projectDAO.find(projectId);
+		Map<Long, Integer> startPoints = new HashMap<Long, Integer>();
+		for(TeamLeague tl: project.getTeamLeagues()) {
+			startPoints.put(tl.getTeam().getId(), tl.getStartPoints());
+		}
+		for(TableRow tr: sortedResult) {
+			tr.setPoints(tr.getPoints()+startPoints.get(tr.getTeam_id()));
+		}
 	}
 
 	private TableRowMatch[] getLastMatches(Long project, Long teamId) {
@@ -337,7 +363,7 @@ public class TableDAOImpl implements TableDAO {
 		row.setWinsHome(getIntValue(r[5]) + row.getWinsHome());
 		row.setDrawsHome(getIntValue(r[6]) + row.getDrawsHome());
 		row.setDefeatsHome(getIntValue(r[7]) + row.getDefeatsHome());
-		row.setPointsHome(row.getWins() * 3 + row.getDrawsHome());
+		row.setPointsHome(row.getWinsHome() * 3 + row.getDrawsHome());
 		row.setGoalsScoredHome(getIntValue(r[3]) + row.getGoalsScoredHome());
 		row.setGoalsAgainstHome(getIntValue(r[4]) + row.getGoalsAgainstHome());
 	}
@@ -347,7 +373,7 @@ public class TableDAOImpl implements TableDAO {
 		row.setWinsAway(getIntValue(r[5]) + row.getWinsAway());
 		row.setDrawsAway(getIntValue(r[6]) + row.getDrawsAway());
 		row.setDefeatsAway(getIntValue(r[7]) + row.getDefeatsAway());
-		row.setPointsAway(row.getWins() * 3 + row.getDrawsAway());
+		row.setPointsAway(row.getWinsAway() * 3 + row.getDrawsAway());
 		row.setGoalsScoredAway(getIntValue(r[3]) + row.getGoalsScoredAway());
 		row.setGoalsAgainstAway(getIntValue(r[4]) + row.getGoalsAgainstAway());
 	}

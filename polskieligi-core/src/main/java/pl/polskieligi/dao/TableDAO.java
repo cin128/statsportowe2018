@@ -6,4 +6,5 @@ import pl.polskieligi.dto.TableRow;
 
 public interface TableDAO {
 	public List<TableRow> getTableRows(Long projectId);
+	public List<TableRow> getTableRowsSimple(Long projectId);
 }

@@ -27,7 +27,20 @@ public enum LeagueType {
 	I_LIGA_FUTSALU(19, "I liga futsalu"),
 	PUCHAR_POLSKI_W_FUTSALU(20, "Puchar Polski w futsalu"),
 	CLJ(21, "Centralna Liga Juniorów"),
-	CLJ17(22, "Centralna Liga Juniorów U-17");
+	CLJ17(22, "Centralna Liga Juniorów U-17"),
+	KLASA_OKR(23, "Klasa okręgowa"),
+	LIGA_WOJ(24, "Liga wojewódzka"),
+	MLS(25, "Mazowiecka Liga Seniorów"),
+	LIGA_MOKR(26, "Liga międzyokręgowa"),
+	LMJS(27, "Liga Makroregionalna Juniorów Starszych"),
+	LMJM(28, "Liga Makroregionalna Juniorów Młodszych"),	
+	LM(29, "Liga Mistrzów"),
+	LE(30, "Liga Europy"),	
+	PUCHAR_UEFA(31, "Puchar UEFA"),
+	LIGA_NAR(32, "Liga Narodów"),
+	PZP(33, "Puchar Zdobywców Pucharów");
+	
+	
 	
 	private final Integer id;
 	private final String name;
