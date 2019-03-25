@@ -213,7 +213,7 @@ public class ImportMinutProjectLogic {
 			tl.setTeam_id(t.getId());
 			tl.setStartPoints(Integer.parseInt(pkt));
 			tl = teamLeagueDAO.saveUpdate(tl);
-			importTeamLeaguePlayerLogic.doImport(tl.getId());
+			importTeamLeaguePlayerLogic.doImport(tl.getId(), leagueProject.getSeason().getMinut_id(), t.getMinut_id());
 			leagueTeams.put(t.getName(), Pair.of(t, tl));
 			log.debug("TeamLeague saved " + tl.getId());
 		}
