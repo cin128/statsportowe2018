@@ -15,6 +15,8 @@ public class Team {
 	private String name;
 	private String longName;
 
+	private Integer importStatus;
+
 	@OneToMany
 	@JoinColumn(name = "team_id")
 	private List<TeamLeague> teamLeagues = new ArrayList<>();
@@ -57,6 +59,14 @@ public class Team {
 
 	public List<TeamLeague> getTeamLeagues() {
 		return teamLeagues;
+	}
+
+	public Integer getImportStatus() {
+		return importStatus;
+	}
+
+	public void setImportStatus(Integer importStatus) {
+		this.importStatus = importStatus;
 	}
 
 	@Override

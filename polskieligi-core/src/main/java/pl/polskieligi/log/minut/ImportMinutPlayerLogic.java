@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.polskieligi.dao.PlayerDAO;
+import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.Player;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 @Component @Transactional public class ImportMinutPlayerLogic {
 	private static final String MINUT_URL = "http://www.90minut.pl";
@@ -29,66 +31,80 @@ import java.io.IOException;
 
 		try {
 			Player oldPlayer = playerDAO.retrievePlayerByMinut(playerMinutId);
-			if (oldPlayer != null) {
+			if (oldPlayer != null && oldPlayer.getImportStatus()== ImportStatus.SUCCESS.getValue()) {
 				log.info("Player alerady loaded id = "+playerMinutId);
 				result = oldPlayer;
-			} else
-			{
+			} else {
 				log.debug("Start parsing... id = " + playerMinutId);
-				Document doc = Jsoup.connect(get90minutLink(playerMinutId)).get();
-				Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr");
 				Player player = new Player();
 				player.setMinut_id(playerMinutId);
-				for (int i=0; i<bios.size() && i<10; i++) {
-					Element bio = bios.get(i);
-					Elements row = bio.select("td");
-					if(row.size()>1){
-						String key = row.get(row.size()>2?1:0).text();
-						Element value = row.get(row.size()>2?2:1);
-						switch (key){
-							case "Imię":
-								player.setName(value.text());
-								break;
-							case "Nazwisko":
-								player.setSurname(value.text());
-								break;
-							case "Kraj":
-								player.setNationality(value.text());
-								break;
-							case "Data urodzenia":
-								player.setBirthDate(TimestampParser.parseDate(row.get(1).text()));
-								break;
-							case "Miejsce urodzenia":
-								player.setBirthTown(value.text());
-								Elements img = value.select("img");
-								player.setBirthCountry(img.attr("title"));
-								break;
-							case "Data śmierci":
-								player.setDeathDate(TimestampParser.parseDate(row.get(1).text()));
-								break;
-							case "Miejsce śmierci":
-								player.setDeatTown(value.text());
-								Elements img2 = value.select("img");
-								player.setDeatCountry(img2.attr("title"));
-								break;
-							case "Wzrost / waga":
-								String d = value.text();
-								String[] t = d.split("/");
-								if(t.length==2){
-									player.setHeight(Float.parseFloat(t[0].replaceAll(" cm ", "")));
-									player.setWeight(Float.parseFloat(t[1].replaceAll(" kg", "")));
-								}
-								break;
-							case "Pozycja":
-								player.setPosition(value.text());
-								break;
+				try {
+					Document doc = Jsoup.connect(get90minutLink(playerMinutId)).get();
+					Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr");
+
+					for (int i = 0; i < bios.size() && i < 10; i++) {
+						Element bio = bios.get(i);
+						Elements row = bio.select("td");
+						if (row.size() > 1) {
+							String key = row.get(row.size() > 2 ? 1 : 0).text();
+							Element value = row.get(row.size() > 2 ? 2 : 1);
+							switch (key) {
+								case "Imię":
+									player.setName(value.text());
+									break;
+								case "Nazwisko":
+									player.setSurname(value.text());
+									break;
+								case "Kraj":
+									player.setNationality(value.text());
+									break;
+								case "Data urodzenia":
+									player.setBirthDate(TimestampParser.parseDate(row.get(1).text()));
+									break;
+								case "Miejsce urodzenia":
+									player.setBirthTown(value.text());
+									Elements img = value.select("img");
+									player.setBirthCountry(img.attr("title"));
+									break;
+								case "Data śmierci":
+									player.setDeathDate(TimestampParser.parseDate(row.get(1).text()));
+									break;
+								case "Miejsce śmierci":
+									player.setDeatTown(value.text());
+									Elements img2 = value.select("img");
+									player.setDeatCountry(img2.attr("title"));
+									break;
+								case "Wzrost / waga":
+									String d = value.text();
+									String[] t = d.split("/");
+									if (t.length == 2) {
+										player.setHeight(Float.parseFloat(t[0].replaceAll(" cm ", "")));
+										player.setWeight(Float.parseFloat(t[1].replaceAll(" kg", "")));
+									}
+									break;
+								case "Pozycja":
+									player.setPosition(value.text());
+									break;
+							}
 						}
 					}
+					if (!StringUtil.isBlank(player.getName()) || !StringUtil.isBlank(player.getSurname())) {
+						player.setImportStatus(ImportStatus.SUCCESS.getValue());
+					} else {
+						player.setImportStatus(ImportStatus.INVALID.getValue());
+					}
+				} catch(SocketTimeoutException e){
+					log.warn("Time out for: "+playerMinutId);
+					player.setImportStatus(ImportStatus.TIME_OUT.getValue());
 				}
-				if(!StringUtil.isBlank(player.getName())||!StringUtil.isBlank(player.getSurname())){
+				if (player.getImportStatus()==ImportStatus.TIME_OUT.getValue() || player.getImportStatus()==ImportStatus.SUCCESS.getValue()) {
 					player = playerDAO.saveUpdate(player);
-					log.info("Player saved: "+player);
+					log.info("Player saved: " + player);
 					result = player;
+				} else if(oldPlayer!=null){
+					playerDAO.delete(oldPlayer);
+					log.info("Player deleted: " + oldPlayer);
+					result = null;
 				}
 				java.util.Date endDate = new java.util.Date();
 				long diff = endDate.getTime() - startDate.getTime();

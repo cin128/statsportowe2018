@@ -23,6 +23,8 @@ public class Player {
 	private Float weight;
 	private Float height;
 
+	private Integer importStatus;
+
 	public Player() {
 		minut_id = 0;
 		name = "";
@@ -149,6 +151,14 @@ public class Player {
 
 	public void setDeatCountry(String deatCountry) {
 		this.deatCountry = deatCountry;
+	}
+
+	public Integer getImportStatus() {
+		return importStatus;
+	}
+
+	public void setImportStatus(Integer importStatus) {
+		this.importStatus = importStatus;
 	}
 
 	@Override public String toString() {

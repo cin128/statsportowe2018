@@ -31,6 +31,9 @@ public class ImportTeamLeaguePlayerLogic {
 	@Autowired
 	private PlayerDAO playerDAO;
 
+	@Autowired
+	ImportMinutPlayerLogic importMinutPlayerLogic;
+
 	public List<TeamLeaguePlayer> doImport(Long teamLeagueId, Integer seasonMinutId, Integer teamMinutId) {
 		List<TeamLeaguePlayer> result = new ArrayList<TeamLeaguePlayer>();
 		log.info("Importing teamLeagueId = " + teamLeagueId);
@@ -45,12 +48,20 @@ public class ImportTeamLeaguePlayerLogic {
 			for (Element p : players) {
 				String href = p.attr("href");
 				String playerId = href.replace("/kariera.php?id=", "");
-				Player player = playerDAO.retrievePlayerByMinut(Integer.parseInt(playerId));
-				TeamLeaguePlayer tlp = new TeamLeaguePlayer();
-				tlp.setPlayer_id(player.getId());
-				tlp.setTeamLeague_id(teamLeagueId);
-				teamLeaguePlayerDAO.update(tlp);
-				result.add(tlp);
+				Integer playerMinutId = Integer.parseInt(playerId);
+				Player player = playerDAO.retrievePlayerByMinut(playerMinutId);
+				if(player==null){
+					player=importMinutPlayerLogic.doImport(playerMinutId);
+				}
+				if(player!=null) {
+					TeamLeaguePlayer tlp = new TeamLeaguePlayer();
+					tlp.setPlayer_id(player.getId());
+					tlp.setTeamLeague_id(teamLeagueId);
+					teamLeaguePlayerDAO.update(tlp);
+					result.add(tlp);
+				} else {
+					log.error("Player not found: "+playerMinutId);
+				}
 			}
 
 			java.util.Date endDate = new java.util.Date();
