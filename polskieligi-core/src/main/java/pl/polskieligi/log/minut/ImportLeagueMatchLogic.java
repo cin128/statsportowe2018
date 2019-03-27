@@ -81,13 +81,12 @@ public class ImportLeagueMatchLogic {
 								String number = name.substring(1, name.indexOf(")"));
 								lmp.setNumber(Integer.parseInt(number));
 							}
-							p.nextElementSibling();
+							parseCards(lmp, p);
 							lmpl.add(lmp);
 						}
 					}
 					for(LeagueMatchPlayer lmp: lmpl){
 						leagueMatchPlayerDAO.update(lmp);
-						log.info(lmp);
 					}
 				}
 			}
@@ -100,6 +99,22 @@ public class ImportLeagueMatchLogic {
 		}
 
 		return result;
+	}
+
+	private void parseCards(LeagueMatchPlayer lmp, Element p){
+		Element next = p.nextElementSibling();
+		if(next!=null){
+			String alt = next.attr("alt");
+			switch(alt){
+				case "ŻK":
+					log.info(lmp.getNumber()+" ŻK");
+					parseCards(lmp, next);
+					break;
+				case "CK":
+					log.info(lmp.getNumber()+" CZ");
+					break;
+			}
+		}
 	}
 
 	private String get90minutLink(Integer matchId) {

@@ -42,9 +42,9 @@ public class ImportMinutLeagueMatchLogicTest {
 	@Test
 	public void test1() {
 		LeagueMatch lm = new LeagueMatch();
-		lm.setMinut_id(9939);
+		lm.setMinut_id(1317433);
 		lm.setMatchpart1(new Team());
-		lm.setMatchpart1(new Team());
+		lm.setMatchpart2(new Team());
 		System.out.println(logic.doImport(lm));
 	}
 
