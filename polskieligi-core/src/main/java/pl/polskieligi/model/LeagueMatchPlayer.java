@@ -1,13 +1,8 @@
 package pl.polskieligi.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_LMP_PL_T_LM", columnList = "player_id,team_id,leagueMatch_id", unique = true) })
@@ -28,6 +23,8 @@ public class LeagueMatchPlayer {
 
 	private Integer number;
 
+	private Boolean firstSquad;
+
 	@OneToOne
 	@JoinColumn(name="player_id", insertable =  false, updatable = false)
 	private Player player;
@@ -39,6 +36,19 @@ public class LeagueMatchPlayer {
 	@OneToOne
 	@JoinColumn(name="leagueMatch_id", insertable =  false, updatable = false)
 	private LeagueMatch leagueMatch;
+
+
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name="leagueMatchplayer_id")
+	private List<MatchEvent> matchEvents = new ArrayList<MatchEvent>();
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Long getPlayer_id() {
 		return player_id;
@@ -110,6 +120,22 @@ public class LeagueMatchPlayer {
 
 	public void setNumber(Integer number) {
 		this.number = number;
+	}
+
+	public List<MatchEvent> getMatchEvents() {
+		return matchEvents;
+	}
+
+	public void addMatchEvent(MatchEvent matchEvent) {
+		this.matchEvents.add(matchEvent);
+	}
+
+	public Boolean getFirstSquad() {
+		return firstSquad;
+	}
+
+	public void setFirstSquad(Boolean firstSquad) {
+		this.firstSquad = firstSquad;
 	}
 
 	@Override public String toString() {

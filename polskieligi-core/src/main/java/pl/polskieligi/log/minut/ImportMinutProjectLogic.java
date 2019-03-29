@@ -32,6 +32,7 @@ import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.ProjectInfo;
 import pl.polskieligi.dto.TableRow;
+import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.*;
 
 @Component
@@ -70,6 +71,9 @@ public class ImportMinutProjectLogic {
 	@Autowired
 	ImportTeamLeaguePlayerLogic importTeamLeaguePlayerLogic;
 
+	@Autowired
+	ImportLeagueMatchLogic importLeagueMatchLogic;
+
 	public ProjectInfo doImport(Integer projectMinutId) {
 		log.info("Importing project id = " + projectMinutId);
 		ProjectInfo pi = new ProjectInfo();
@@ -84,37 +88,45 @@ public class ImportMinutProjectLogic {
 				pi.setSkipped(true);
 			} else {
 				log.debug("Start parsing... id = " + projectMinutId);
-				Document doc = Jsoup.connect(get90minutLink(projectMinutId)).get();
-
-				Integer year = parseProjectHeader(doc, projectMinutId, pi);
 				Project leagueProject = pi.getProject();
+				try {
+					Document doc = Jsoup.connect(get90minutLink(projectMinutId)).get();
+					Integer year = parseProjectHeader(doc, projectMinutId, pi);
+					leagueProject = pi.getProject();
+					if (leagueProject == null || leagueProject.getId() == null) {
+						throw new IllegalStateException("projecId==null!!!");
+					}
+					Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
+					Map<String, Team> leagueTeams = new HashMap<String, Team>();
+					Map<Long, TeamLeague> teamLeagues = new HashMap<Long, TeamLeague>();
+					for (Entry<String, Pair<Team, TeamLeague>> e : leagueTeamsPair.entrySet()) {
+						leagueTeams.put(e.getKey(), e.getValue().getFirst());
+						TeamLeague tl = e.getValue().getSecond();
+						teamLeagues.put(tl.getTeam_id(), tl);
+					}
 
-				if (leagueProject == null || leagueProject.getId() == null) {
-					throw new IllegalStateException("projecId==null!!!");
-				}
-				Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
-				Map<String, Team> leagueTeams = new HashMap<String, Team>();
-				Map<Long, TeamLeague> teamLeagues = new HashMap<Long, TeamLeague>();
-				for (Entry<String, Pair<Team, TeamLeague>> e : leagueTeamsPair.entrySet()) {
-					leagueTeams.put(e.getKey(), e.getValue().getFirst());
-					TeamLeague tl = e.getValue().getSecond();
-					teamLeagues.put(tl.getTeam_id(), tl);
-				}
+					int teams_count = leagueTeams.size();
+					pi.setTeams_count(teams_count);
+					if (teams_count == 0) {
+						leagueProject.setType(Project.OTHER);
+					} else {
+						leagueProject.setType(Project.REGULAR_LEAGUE);
+					}
+					List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, year, pi);
+					if (teams_count == 0 && missingTeams.size() > 0) {
+						updateTeamLeagues(missingTeams, leagueProject);
+					}
+					leagueProject = projectDAO.saveUpdate(leagueProject);
+					updateStartPoints(leagueProject, teamLeagues);
 
-				int teams_count = leagueTeams.size();
-				pi.setTeams_count(teams_count);
-				if (teams_count == 0) {
-					leagueProject.setType(Project.OTHER);
-				} else {
-					leagueProject.setType(Project.REGULAR_LEAGUE);
-				}
-				List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, year, pi);
-				if (teams_count == 0 && missingTeams.size() > 0) {
-					updateTeamLeagues(missingTeams, leagueProject);
-				}
+					leagueProject.setImportStatus(ImportStatus.SUCCESS.getValue());
 
-				leagueProject = projectDAO.saveUpdate(leagueProject);
-				updateStartPoints(leagueProject, teamLeagues);
+				} catch(SocketTimeoutException e){
+					log.warn("Time out for: "+projectMinutId);
+					leagueProject.setImportStatus(ImportStatus.TIME_OUT.getValue());
+				}
+				projectDAO.update(leagueProject);
+
 				pi.setProject(leagueProject);
 			}
 			java.util.Date endDate = new java.util.Date();
@@ -345,6 +357,11 @@ public class ImportMinutProjectLogic {
 					}
 				}
 				matches_count += matchDAO.saveUpdate(roundMatches);
+				for(LeagueMatch lm: roundMatches) {
+					if(lm.getCount_result()) {
+						importLeagueMatchLogic.doImport(lm);
+					}
+				}
 			} else {
 				Elements nowaKolejka = kolejka
 						.select("td[colspan=3]>b>u");

@@ -1,6 +1,8 @@
 package pl.polskieligi.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -11,7 +13,6 @@ public class LeagueMatch {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long match_id;
 	private Integer minut_id;
-/*	private Integer match_number;*/
 	private Integer playground_id;
 	private Timestamp match_date;
 	
@@ -36,7 +37,19 @@ public class LeagueMatch {
 	private String summary;
 	private Timestamp modified;
 
+	private Long referee_id;
+
 	private Long af_id;
+
+	private Integer importStatus;
+
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name="leagueMatch_id")
+	private List<Substitution> substitutions = new ArrayList<Substitution>();
+
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name="leagueMatch_id")
+	private List<LeagueMatchPlayer> leagueMatchPlayers = new ArrayList<LeagueMatchPlayer>();
 
 	public LeagueMatch() {
 		minut_id = 0;
@@ -60,14 +73,6 @@ public class LeagueMatch {
 	public void setMatch_id(Long match_id) {
 		this.match_id = match_id;
 	}
-
-/*	public Integer getMatch_number() {
-		return match_number;
-	}
-
-	public void setMatch_number(Integer match_number) {
-		this.match_number = match_number;
-	}*/
 
 	public Integer getMinut_id() {
 		return minut_id;
@@ -125,110 +130,6 @@ public class LeagueMatch {
 		this.matchpart2_result = matchpart2_result;
 	}
 
-	/*public Integer getMatchpart1_bonus() {
-		return matchpart1_bonus;
-	}
-
-	public void setMatchpart1_bonus(Integer matchpart1_bonus) {
-		this.matchpart1_bonus = matchpart1_bonus;
-	}
-
-	public Integer getMatchpart2_bonus() {
-		return matchpart2_bonus;
-	}
-
-	public void setMatchpart2_bonus(Integer matchpart2_bonus) {
-		this.matchpart2_bonus = matchpart2_bonus;
-	}
-
-	public Float getMatchpart1_legs() {
-		return matchpart1_legs;
-	}
-
-	public void setMatchpart1_legs(Float matchpart1_legs) {
-		this.matchpart1_legs = matchpart1_legs;
-	}
-
-	public Float getMatchpart2_legs() {
-		return matchpart2_legs;
-	}
-
-	public void setMatchpart2_legs(Float matchpart2_legs) {
-		this.matchpart2_legs = matchpart2_legs;
-	}
-
-	public String getMatchpart1_result_split() {
-		return matchpart1_result_split;
-	}
-
-	public void setMatchpart1_result_split(String matchpart1_result_split) {
-		this.matchpart1_result_split = matchpart1_result_split;
-	}
-
-	public String getMatchpart2_result_split() {
-		return matchpart2_result_split;
-	}
-
-	public void setMatchpart2_result_split(String matchpart2_result_split) {
-		this.matchpart2_result_split = matchpart2_result_split;
-	}
-
-	public Boolean getMatch_result_type() {
-		return match_result_type;
-	}
-
-	public void setMatch_result_type(Boolean match_result_type) {
-		this.match_result_type = match_result_type;
-	}
-
-	public Float getMatchpart1_result_ot() {
-		return matchpart1_result_ot;
-	}
-
-	public void setMatchpart1_result_ot(Float matchpart1_result_ot) {
-		this.matchpart1_result_ot = matchpart1_result_ot;
-	}
-
-	public Float getMatchpart2_result_ot() {
-		return matchpart2_result_ot;
-	}
-
-	public void setMatchpart2_result_ot(Float matchpart2_result_ot) {
-		this.matchpart2_result_ot = matchpart2_result_ot;
-	}
-
-	public Boolean getAlt_decision() {
-		return alt_decision;
-	}
-
-	public void setAlt_decision(Boolean alt_decision) {
-		this.alt_decision = alt_decision;
-	}
-
-	public Float getMatchpart1_result_decision() {
-		return matchpart1_result_decision;
-	}
-
-	public void setMatchpart1_result_decision(Float matchpart1_result_decision) {
-		this.matchpart1_result_decision = matchpart1_result_decision;
-	}
-
-	public Float getMatchpart2_result_decision() {
-		return matchpart2_result_decision;
-	}
-
-	public void setMatchpart2_result_decision(Float matchpart2_result_decision) {
-		this.matchpart2_result_decision = matchpart2_result_decision;
-	}
-
-	public String getDecision_info() {
-		return decision_info;
-	}
-
-	public void setDecision_info(String decision_info) {
-		this.decision_info = decision_info;
-	}*/
-
 	public Long getProject_id() {
 		return project_id;
 	}
@@ -269,30 +170,6 @@ public class LeagueMatch {
 		this.crowd = crowd;
 	}
 
-	/*public Integer getReferee_id() {
-		return referee_id;
-	}
-
-	public void setReferee_id(Integer referee_id) {
-		this.referee_id = referee_id;
-	}
-
-	public Integer getChecked_out() {
-		return checked_out;
-	}
-
-	public void setChecked_out(Integer checked_out) {
-		this.checked_out = checked_out;
-	}
-
-	public Timestamp getChecked_out_time() {
-		return checked_out_time;
-	}
-
-	public void setChecked_out_time(Timestamp checked_out_time) {
-		this.checked_out_time = checked_out_time;
-	}*/
-
 	public String getSummary() {
 		return summary;
 	}
@@ -300,22 +177,6 @@ public class LeagueMatch {
 	public void setSummary(String summary) {
 		this.summary = summary;
 	}
-
-	/*public Boolean getShow_report() {
-		return show_report;
-	}
-
-	public void setShow_report(Boolean show_report) {
-		this.show_report = show_report;
-	}
-
-	public String getMatch_result_detail() {
-		return match_result_detail;
-	}
-
-	public void setMatch_result_detail(String match_result_detail) {
-		this.match_result_detail = match_result_detail;
-	}*/
 
 	public Timestamp getModified() {
 		return modified;
@@ -325,36 +186,44 @@ public class LeagueMatch {
 		this.modified = modified;
 	}
 
-	/*public Integer getModified_by() {
-		return modified_by;
-	}
-
-	public void setModified_by(Integer modified_by) {
-		this.modified_by = modified_by;
-	}
-
-	public String getFormation1() {
-		return formation1;
-	}
-
-	public void setFormation1(String formation1) {
-		this.formation1 = formation1;
-	}
-
-	public String getFormation2() {
-		return formation2;
-	}
-
-	public void setFormation2(String formation2) {
-		this.formation2 = formation2;
-	}*/
-
 	public Long getAf_id() {
 		return af_id;
 	}
 
 	public void setAf_id(Long af_id) {
 		this.af_id = af_id;
+	}
+
+	public Long getReferee_id() {
+		return referee_id;
+	}
+
+	public void setReferee_id(Long referee_id) {
+		this.referee_id = referee_id;
+	}
+
+	public Integer getImportStatus() {
+		return importStatus;
+	}
+
+	public void setImportStatus(Integer importStatus) {
+		this.importStatus = importStatus;
+	}
+
+	public List<Substitution> getSubstitutions() {
+		return substitutions;
+	}
+
+	public void addSubstitutions(Substitution substitution) {
+		this.substitutions.add(substitution);
+	}
+
+	public List<LeagueMatchPlayer> getLeagueMatchPlayers() {
+		return leagueMatchPlayers;
+	}
+
+	public void addLeagueMatchPlayers(LeagueMatchPlayer leagueMatchPlayer) {
+		this.leagueMatchPlayers.add(leagueMatchPlayer);
 	}
 
 	@Override public String toString() {

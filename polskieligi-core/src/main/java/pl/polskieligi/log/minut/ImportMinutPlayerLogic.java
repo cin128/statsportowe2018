@@ -31,7 +31,7 @@ import java.net.SocketTimeoutException;
 
 		try {
 			Player oldPlayer = playerDAO.retrievePlayerByMinut(playerMinutId);
-			if (oldPlayer != null && oldPlayer.getImportStatus()== ImportStatus.SUCCESS.getValue()) {
+			if (oldPlayer != null && oldPlayer.getImportStatus()!=null && oldPlayer.getImportStatus()== ImportStatus.SUCCESS.getValue()) {
 				log.info("Player alerady loaded id = "+playerMinutId);
 				result = oldPlayer;
 			} else {

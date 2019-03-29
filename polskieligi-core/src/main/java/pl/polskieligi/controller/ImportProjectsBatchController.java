@@ -24,38 +24,17 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.polskieligi.dto.ImportJob;
 
 @Controller
-public class ImportProjectsBatchController {
+public class ImportProjectsBatchController extends AbstractImportController{
 
 	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);
 
 	@Autowired
-	private JobLauncher launcher;
-	
-	@Autowired
 	@Qualifier("projectImportJob")
 	Job job;
-	
+
 	@RequestMapping("/importProjectsBatch")
-	public ModelAndView importProjectsBatch() {
+	public ModelAndView importPlayersBatch() {
 		log.info("importProjectsBatch start");
-		List<ImportJob> rows = new ArrayList<ImportJob>();
-		JobParameter jp = new JobParameter(new Date());
-		Map<String, JobParameter> map = new HashMap<String, JobParameter>();
-		map.put("startDate", jp);
-		JobParameters params= new JobParameters(map);
-		JobExecution execution = null;
-		try {
-			execution = launcher.run(job, params);
-		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-				| JobParametersInvalidException e) {
-			throw new RuntimeException(e);
-		}
-		ImportJob pij = new ImportJob();
-		pij.setJobExecution(execution);
-		pij.setProgress(Long.valueOf(0));
-		pij.setProcessingTime(Long.valueOf(0));//TODO
-		rows.add(pij);
-		ModelAndView mv = new ModelAndView("views/importStatus", "rows", rows);
-		return mv;
+		return importBatch(job);
 	}
 }

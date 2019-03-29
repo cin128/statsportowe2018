@@ -34,7 +34,7 @@ public class ImportMinutTeamLogic {
 
 		try {
 			Team oldTeam = teamDAO.retrieveTeamByMinut(teamMinutId);
-			if (oldTeam != null && oldTeam.getImportStatus() == ImportStatus.SUCCESS.getValue()) {
+			if (oldTeam != null && oldTeam.getImportStatus()!=null && oldTeam.getImportStatus() == ImportStatus.SUCCESS.getValue()) {
 				log.info("Team alerady loaded id = " + teamMinutId);
 				result = oldTeam;
 			} else {

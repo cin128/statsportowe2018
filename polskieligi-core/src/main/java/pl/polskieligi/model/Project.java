@@ -29,6 +29,8 @@ public class Project {
 	@OneToMany(mappedBy="project")
 	private List<TeamLeague> teamLeagues;
 
+	private Integer importStatus;
+
 	public Project() {
 		minut_id = 0;
 		name = "";
@@ -113,7 +115,15 @@ public class Project {
 	public  List<TeamLeague> getTeamLeagues(){
 		return teamLeagues;
 	}
-	
+
+	public Integer getImportStatus() {
+		return importStatus;
+	}
+
+	public void setImportStatus(Integer importStatus) {
+		this.importStatus = importStatus;
+	}
+
 	@Override
 	public String toString() {
 		return name;
