@@ -80,15 +80,21 @@ public class ImportMinutProjectLogic {
 		java.util.Date startDate = new java.util.Date();
 
 		try {
-			Project oldProject = projectDAO.retrieveProjectByMinut(projectMinutId);
-			if (oldProject != null && (oldProject.getArchive() && oldProject.getPublished()
-					|| oldProject.getType() == Project.OTHER)) {
+			Project leagueProject = projectDAO.retrieveProjectByMinut(projectMinutId);
+			if (leagueProject != null && (leagueProject.getArchive() && leagueProject.getPublished()
+					|| leagueProject.getType() == Project.OTHER)) {
 				log.info("Project alerady loaded id = " + projectMinutId);
-				pi.setProject(oldProject);
+				pi.setProject(leagueProject);
 				pi.setSkipped(true);
 			} else {
 				log.debug("Start parsing... id = " + projectMinutId);
-				Project leagueProject = pi.getProject();
+
+				if(leagueProject==null) {
+					leagueProject = new Project();
+					leagueProject.setMinut_id(projectMinutId);
+				}
+				
+				pi.setProject(leagueProject);
 				try {
 					Document doc = Jsoup.connect(get90minutLink(projectMinutId)).get();
 					Integer year = parseProjectHeader(doc, projectMinutId, pi);
@@ -125,7 +131,13 @@ public class ImportMinutProjectLogic {
 					log.warn("Time out for: "+projectMinutId);
 					leagueProject.setImportStatus(ImportStatus.TIME_OUT.getValue());
 				}
-				projectDAO.update(leagueProject);
+				if(leagueProject.getImportStatus()!=null && 
+						(leagueProject.getImportStatus()==ImportStatus.SUCCESS.getValue() 
+						|| leagueProject.getImportStatus()==ImportStatus.TIME_OUT.getValue())){
+					projectDAO.update(leagueProject);
+				} else {
+					projectDAO.delete(leagueProject);
+				}
 
 				pi.setProject(leagueProject);
 			}
@@ -153,8 +165,7 @@ public class ImportMinutProjectLogic {
 		Project leagueProject = null;
 		for (Element title : titles) {
 			String tmp = title.text();
-			leagueProject = new Project();
-			leagueProject.setMinut_id(projectMinutId);
+			leagueProject = pi.getProject();
 			leagueProject.setName(tmp);
 			int index = tmp.indexOf("/");
 			if (index < 5 || tmp.length() < 12) {
