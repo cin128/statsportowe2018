@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.LeagueMatchDAO;
-import pl.polskieligi.dao.LeagueMatchPlayerDAO;
 import pl.polskieligi.dao.PlayerDAO;
 import pl.polskieligi.dao.RefereeDAO;
 import pl.polskieligi.log.ImportStatus;
@@ -47,14 +46,14 @@ public class ImportLeagueMatchLogic {
 
 	public List<LeagueMatchPlayer> doImport(LeagueMatch lm) {
 		List<LeagueMatchPlayer> result = new ArrayList<LeagueMatchPlayer>();
-		log.info("Importing LeagueMatch = " + lm);
+		log.debug("Importing LeagueMatch = " + lm);
 		java.util.Date startDate = new java.util.Date();
 
 		try {
 			log.debug("Start parsing... id = " + lm);
 
 			if (lm.getImportStatus()!=null && lm.getImportStatus()!=null && lm.getImportStatus()==ImportStatus.SUCCESS.getValue()) {
-				log.info("LeagueMatch alerady loaded = "+lm);
+				log.debug("LeagueMatch alerady loaded = "+lm);
 				result = null;
 			} else {
 				try {
@@ -146,7 +145,7 @@ public class ImportLeagueMatchLogic {
 				matchDAO.update(lm);
 				java.util.Date endDate = new java.util.Date();
 				long diff = endDate.getTime() - startDate.getTime();
-				log.info("End processing id = " + lm + " time = " + (diff / 1000) + " sec");
+				log.debug("End processing id = " + lm + " time = " + (diff / 1000) + " sec");
 			}
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);

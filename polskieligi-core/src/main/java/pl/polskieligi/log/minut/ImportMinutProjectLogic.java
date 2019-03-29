@@ -358,7 +358,7 @@ public class ImportMinutProjectLogic {
 				}
 				matches_count += matchDAO.saveUpdate(roundMatches);
 				for(LeagueMatch lm: roundMatches) {
-					if(lm.getCount_result()) {
+					if(lm.getCount_result() && lm.getMinut_id()>0) {
 						importLeagueMatchLogic.doImport(lm);
 					}
 				}
