@@ -4,8 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
-@Entity
+@Entity  @Table(indexes = {@Index(name = "IDX_ME_LMP", columnList = "leagueMatchplayer_id", unique = false)})
 public class MatchEvent {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)

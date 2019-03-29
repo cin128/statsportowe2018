@@ -4,8 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
-@Entity
+@Entity @Table(indexes = { @Index(name = "IDX_SU_LM", columnList = "leagueMatch_id", unique = false) })
 public class Substitution {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
