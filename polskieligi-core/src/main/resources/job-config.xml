@@ -96,7 +96,7 @@
 				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
 			<value>
 				<![CDATA[
-                    FROM Project where type = 1 AND (published = FALSE OR archive = FALSE)
+                    FROM Project where (type = 1 AND (published = FALSE OR archive = FALSE)) OR importStatus = 1
                 ]]>
 			</value>
 		</property>
@@ -157,7 +157,7 @@
 				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
 			<value>
 				<![CDATA[
-                    FROM Team where name IS NULL
+                    FROM Team where name IS NULL OR importStatus = 1
                 ]]>
 			</value>
 		</property>
@@ -201,7 +201,7 @@
 				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
 			<value>
 				<![CDATA[
-                    FROM Referee where name IS NULL
+                    FROM Referee where name IS NULL OR importStatus = 1
                 ]]>
 			</value>
 		</property>
