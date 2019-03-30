@@ -77,4 +77,14 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 		return query.getResultList();
 		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LeagueMatch> getMatchesByTeamSeason(Long teamId, Long seasonId){
+		Query query = getEntityManager()
+				.createNativeQuery("SELECT lm.* from LeagueMatch lm JOIN Project p on p.id = lm.project_id where ( lm.matchpart1 = :teamId OR lm. matchpart2 = :teamId) AND p.season_id = :seasonId and lm.published = :published order by lm.match_date desc", LeagueMatch.class);
+		query.setParameter("teamId", teamId);
+		query.setParameter("seasonId", seasonId);
+		query.setParameter("published", true);
+		return query.getResultList();
+	}
 }

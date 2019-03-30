@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+
+<body>
+	<div th:fragment="teamLeagueMatches">
+		<table>
+			<thead>
+			</thead>
+			<tbody>
+				<th:block th:each="m,itr : ${leagueMatches}">
+					<tr>
+						<th th:text="${itr.index+1}"></th>
+						<td th:text="${#dates.format(m.match_date, 'dd.MM.yyyy HH:mm')}"></td>
+						<td><b th:text="${m.matchpart1.name}"></b></td>
+						<td><b
+							th:text="${#numbers.formatDecimal(m.matchpart1_result,0,0)}"></b></td>
+						<td><b
+							th:text="${#numbers.formatDecimal(m.matchpart2_result,0,0)}"></b></td>
+						<td><b th:text="${m.matchpart2.name}"></b></td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+<body>
+<body>
+	<div th:fragment="teamContent" id="tabs1" class="flat-tabs">
+		<div id="menu1">
+			<ul class="buttons1">			
+				<li><a href="#tabs-teamLeagues" th:text="#{team.competitions}"></a></li>
+				<li><a href="#tabs-teamLeagueMatches" th:text="#{team.results}"></a></li>
+				<li><a href="#tabs-teamLeaguePlayers" th:text="#{team.players}"></a></li>
+			</ul>
+		</div>
+		<div id="tabs-teamLeagues">
+			<div th:replace="thymeleaf/fragments/teamLeague :: teamLeague"></div>
+		</div>
+		<div id="tabs-teamLeagueMatches">
+			<div th:replace="thymeleaf/fragments/teamLeagueMatches :: teamLeagueMatches"></div>
+		</div>
+		<div id="tabs-teamLeaguePlayers">
+			<div th:replace="thymeleaf/fragments/teamLeaguePlayers :: teamLeaguePlayers"></div>
+		</div>
+	</div>
+	
+</body>
+</html>
