@@ -1,6 +1,7 @@
 package pl.polskieligi.log.minut;
 
 import java.io.IOException;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 
 import org.apache.log4j.Logger;
@@ -70,8 +71,8 @@ public class ImportMinutTeamLogic {
 						team.setImportStatus(ImportStatus.INVALID.getValue());
 					}
 
-				} catch (SocketTimeoutException e) {
-					log.warn("Time out for: " + teamMinutId);
+				} catch (SocketTimeoutException | NoRouteToHostException e) {
+					log.warn("Time out for: " + teamMinutId+" "+ e.getMessage());
 					team.setImportStatus(ImportStatus.TIME_OUT.getValue());
 				}
 				if (team.getImportStatus()==ImportStatus.TIME_OUT.getValue() || team.getImportStatus()==ImportStatus.SUCCESS.getValue()) {

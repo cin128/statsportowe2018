@@ -14,6 +14,7 @@ import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.Player;
 
 import java.io.IOException;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 
 @Component @Transactional public class ImportMinutPlayerLogic {
@@ -93,8 +94,8 @@ import java.net.SocketTimeoutException;
 					} else {
 						player.setImportStatus(ImportStatus.INVALID.getValue());
 					}
-				} catch(SocketTimeoutException e){
-					log.warn("Time out for: "+playerMinutId);
+				} catch(SocketTimeoutException | NoRouteToHostException e){
+					log.warn("Time out for: "+playerMinutId+" "+ e.getMessage());
 					player.setImportStatus(ImportStatus.TIME_OUT.getValue());
 				}
 				if (player.getImportStatus()==ImportStatus.TIME_OUT.getValue() || player.getImportStatus()==ImportStatus.SUCCESS.getValue()) {

@@ -1,6 +1,7 @@
 package pl.polskieligi.log.minut;
 
 import java.io.IOException;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ public class ImportTeamLeaguePlayerLogic {
 			java.util.Date endDate = new java.util.Date();
 			long diff = endDate.getTime() - startDate.getTime();
 			log.info("End processing id = " + teamLeagueId + " time = " + (diff / 1000) + " sec");
-		} catch (SocketTimeoutException e) {
+		} catch (SocketTimeoutException | NoRouteToHostException e) {
 			log.error(e.getMessage());
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);

@@ -1,5 +1,6 @@
 package pl.polskieligi.log.minut;
 
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -127,8 +128,8 @@ public class ImportMinutProjectLogic {
 
 					leagueProject.setImportStatus(ImportStatus.SUCCESS.getValue());
 
-				} catch(SocketTimeoutException e){
-					log.warn("Time out for: "+projectMinutId);
+				} catch(SocketTimeoutException | NoRouteToHostException e){
+					log.warn("Time out for: "+projectMinutId+" "+ e.getMessage());
 					leagueProject.setImportStatus(ImportStatus.TIME_OUT.getValue());
 				}
 				if(leagueProject.getImportStatus()!=null && 

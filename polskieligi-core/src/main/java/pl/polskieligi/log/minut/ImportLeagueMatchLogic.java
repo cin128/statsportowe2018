@@ -1,6 +1,7 @@
 package pl.polskieligi.log.minut;
 
 import java.io.IOException;
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -138,8 +139,8 @@ public class ImportLeagueMatchLogic {
 					parseGoals(doc, playersMap);
 
 					lm.setImportStatus(ImportStatus.SUCCESS.getValue());
-				} catch(SocketTimeoutException e){
-					log.warn("Time out for: "+lm);
+				} catch(SocketTimeoutException | NoRouteToHostException e){
+					log.warn("Time out for: "+lm +" "+ e.getMessage());
 					lm.setImportStatus(ImportStatus.TIME_OUT.getValue());
 				}
 				matchDAO.update(lm);
