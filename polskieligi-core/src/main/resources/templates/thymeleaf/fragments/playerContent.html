@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+<body>
+	<div th:fragment="playerContent" id="tabs1" class="flat-tabs">
+		<div id="menu1">
+			<ul class="buttons1">
+				<li><a href="#tabs-info" th:text="#{player.info}"></a></li>
+			</ul>
+		</div>
+		<div id="tabs-info">
+			<table>
+				<tbody>
+					<tr>
+						<th th:text="#{player.name}"></th>					
+						<td th:text="${player.name}"></td>
+					</tr>
+					<tr>
+						<th th:text="#{player.surname}"></th>					
+						<td th:text="${player.surname}"></td>
+					</tr>
+					<tr>
+						<th th:text="#{player.birthDate}"></th>					
+						<td th:text="${player.birthDate}"></td>
+					</tr>
+					<tr>
+						<th th:text="#{player.position}"></th>					
+						<td th:text="${player.position}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+<body>
+	<div th:fragment="leagueMatchContent" id="tabs1" class="flat-tabs">
+		<div id="tabs-info">
+			<table>
+				<tbody>
+					<tr>
+						<th><b th:text="${leagueMatch.matchpart1.name}"></b></th>
+						<th><b th:text="${leagueMatch.matchpart2.name}"></b></th>
+					</tr>
+					<tr>
+						<td><b
+							th:text="${#numbers.formatDecimal(leagueMatch.matchpart1_result,0,0)}"></b></td>
+						<td><b
+							th:text="${#numbers.formatDecimal(leagueMatch.matchpart2_result,0,0)}"></b></td>
+					</tr>
+					<tr>
+						<td th:text="${leagueMatch.match_date}"></td>
+						<td th:text="${leagueMatch.round.matchcode}"></td>						
+					</tr>
+					<tr>
+						<th>Składy</th>
+					</tr>
+					<th:block th:each="lmp,itr : ${team1Players}">
+					<tr>
+						<td th:text="${lmp.number}"></td>
+						<td th:text="${lmp.player.name}"></td>			
+						<td th:text="${lmp.player.surname}"></td>			
+					</tr>
+					</th:block>
+					<th:block th:each="lmp,itr : ${team2Players}">
+					<tr>
+						<td th:text="${lmp.number}"></td>
+						<td th:text="${lmp.player.name}"></td>		
+						<td th:text="${lmp.player.surname}"></td>				
+					</tr>
+					</th:block>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+</body>
+</html>

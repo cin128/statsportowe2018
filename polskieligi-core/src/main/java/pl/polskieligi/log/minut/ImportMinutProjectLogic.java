@@ -119,7 +119,7 @@ public class ImportMinutProjectLogic {
 					} else {
 						leagueProject.setType(Project.REGULAR_LEAGUE);
 					}
-					List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, year, pi);
+					List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, teamLeagues, year, pi);
 					if (teams_count == 0 && missingTeams.size() > 0) {
 						updateTeamLeagues(missingTeams, leagueProject);
 					}
@@ -254,7 +254,7 @@ public class ImportMinutProjectLogic {
 		}
 	}
 	
-	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Team> leagueTeams, Integer year, ProjectInfo pi) {
+	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Team> leagueTeams, Map<Long, TeamLeague> teamLeagues, Integer year, ProjectInfo pi) {
 		List<Team> missingTeams = new ArrayList<Team>();
 		int teams_count = leagueTeams.size();
 		int matches_count = 0;

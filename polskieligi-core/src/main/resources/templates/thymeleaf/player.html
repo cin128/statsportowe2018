@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" th:src="@{/js/locale.js}"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
+<script>
+        $(document).ready(function() {
+        	 $( "#tabs1" ).tabs();
+        });
+</script>
+</head>
+<body>
+<th:block th:if="${player}">
+    <div th:replace="thymeleaf/fragments/playerContent :: playerContent"></div>
+</th:block>
+</body>
+</html>
