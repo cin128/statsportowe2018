@@ -37,7 +37,9 @@ public class LeagueMatch {
 	private String summary;
 	private Timestamp modified;
 
-	private Long referee_id;
+	@OneToOne
+	@JoinColumn(name = "referee_id")
+	private Referee referee;
 
 	private Long af_id;
 
@@ -194,12 +196,12 @@ public class LeagueMatch {
 		this.af_id = af_id;
 	}
 
-	public Long getReferee_id() {
-		return referee_id;
+	public Referee getReferee() {
+		return referee;
 	}
 
-	public void setReferee_id(Long referee_id) {
-		this.referee_id = referee_id;
+	public void setReferee(Referee referee) {
+		this.referee = referee;
 	}
 
 	public Integer getImportStatus() {

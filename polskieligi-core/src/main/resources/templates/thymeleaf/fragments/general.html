@@ -27,5 +27,6 @@
 				th:attr="title=#{table.form.tooltip}" th:text="#{table.form}"></abbr></th>
 		</tr>
 	</thead>
+	<a th:fragment="player(player)" th:text="${player?.fullName}" th:href="@{/player(playerId=${player.id})}"></a>
 </body>
 </html>

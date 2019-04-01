@@ -161,6 +161,10 @@ public class Player {
 		this.importStatus = importStatus;
 	}
 
+	public String getFullName() {
+		return name+' '+surname;
+	}
+
 	@Override public String toString() {
 		return id + " " + minut_id + " " +name + " " +surname + " " +birthDate + " " +birthTown + " " +birthCountry+ " "
 				+ deathDate+ " " + deatTown+ " " + deatCountry+ " " + nationality + " " +position + " " + weight + " " + height;

@@ -134,7 +134,7 @@ public class ImportLeagueMatchLogic {
 
 					Referee ref = parseReferee(doc);
 					if(ref!=null) {
-						lm.setReferee_id(ref.getId());
+						lm.setReferee(ref);
 					}
 					parseGoals(doc, playersMap);
 

@@ -30,16 +30,28 @@ public class LeagueMatchController {
 				mv.addObject("leagueMatch", leagueMatch);
 				List<LeagueMatchPlayer> team1Players = new ArrayList<LeagueMatchPlayer>();
 				List<LeagueMatchPlayer> team2Players = new ArrayList<LeagueMatchPlayer>();
+				List<LeagueMatchPlayer> team1Subs = new ArrayList<LeagueMatchPlayer>();
+				List<LeagueMatchPlayer> team2Subs = new ArrayList<LeagueMatchPlayer>();
 				for(LeagueMatchPlayer lmp: leagueMatch.getLeagueMatchPlayers()) {
-					if(lmp.getTeam_id()==leagueMatch.getMatchpart1().getId() && lmp.getFirstSquad()) {
-						team1Players.add(lmp);
+					if(lmp.getTeam_id()==leagueMatch.getMatchpart1().getId()) {
+						if(lmp.getFirstSquad()) {
+							team1Players.add(lmp);
+						} else {
+							team1Subs.add(lmp);
+						}
 					}
-					if(lmp.getTeam_id()==leagueMatch.getMatchpart2().getId() && lmp.getFirstSquad()) {
-						team2Players.add(lmp);
+					if(lmp.getTeam_id()==leagueMatch.getMatchpart2().getId()) {
+						if(lmp.getFirstSquad()) {
+							team2Players.add(lmp);
+						} else {
+							team2Subs.add(lmp);
+						}
 					}
 				}
 				mv.addObject("team1Players", team1Players);
 				mv.addObject("team2Players", team2Players);
+				mv.addObject("team1Subs", team1Subs);
+				mv.addObject("team2Subs", team2Subs);
 			}
 		}
 		return mv;
