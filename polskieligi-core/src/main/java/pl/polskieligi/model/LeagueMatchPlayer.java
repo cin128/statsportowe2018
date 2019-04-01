@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_LMP_PL_T_LM", columnList = "player_id,team_id,leagueMatch_id", unique = true) })
-public class LeagueMatchPlayer {
+public class LeagueMatchPlayer{
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
@@ -36,7 +36,6 @@ public class LeagueMatchPlayer {
 	@OneToOne
 	@JoinColumn(name="leagueMatch_id", insertable =  false, updatable = false)
 	private LeagueMatch leagueMatch;
-
 
 	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="leagueMatchplayer_id")

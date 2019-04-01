@@ -191,7 +191,7 @@ public class ImportLeagueMatchLogic {
 					MatchEvent me = new MatchEvent();
 					me.setType(type.getId());
 					me.setTime(time);
-					me.setLeagueMatchplayer_id(lmp.getId());
+					me.setLeagueMatchPlayer(lmp);
 					lmp.addMatchEvent(me);
 				} else {
 					log.error("LeagueMatchPlayer not found: "+txt);
@@ -241,14 +241,14 @@ public class ImportLeagueMatchLogic {
 			switch(alt){
 				case "ŻK":
 					MatchEvent yellow = new MatchEvent();
-					yellow.setLeagueMatchplayer_id(lmp.getId());
+					yellow.setLeagueMatchPlayer(lmp);
 					yellow.setType(MatchEventType.YELLOW_CARD.getId());
 					lmp.addMatchEvent(yellow);
 					parseCards(lmp, next);
 					break;
 				case "CK":
 					MatchEvent red = new MatchEvent();
-					red.setLeagueMatchplayer_id(lmp.getId());
+					red.setLeagueMatchPlayer(lmp);
 					red.setType(MatchEventType.RED_CARD.getId());
 					Integer time = getRedCardTime(p);
 					if(time!=null){
