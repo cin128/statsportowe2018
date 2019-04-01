@@ -29,6 +29,15 @@
             <tr>
                 <td colspan="6" th:text="${leagueMatch?.referee.name + ' ' + leagueMatch?.referee.surname}"></td>
             </tr>
+            <th:block th:if="${#lists.size(team1Goals)&gt;0 OR #lists.size(team1Goals)&gt;0}">
+                <tr>
+                    <th colspan="6" th:text="#{leaguematch.first11}"></th>
+                </tr>
+                <th:block th:each="i: ${#numbers.sequence(0, 10)}">
+                </th:block>
+             </th:block>
+                
+            
             <th:block th:if="${#lists.size(team1Players)&gt;0 OR #lists.size(team2Players)&gt;0}">
                 <tr>
                     <th colspan="6" th:text="#{leaguematch.first11}"></th>

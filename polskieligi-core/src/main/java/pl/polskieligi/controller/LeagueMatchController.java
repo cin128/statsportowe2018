@@ -13,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.model.LeagueMatch;
 import pl.polskieligi.model.LeagueMatchPlayer;
+import pl.polskieligi.model.MatchEvent;
+import pl.polskieligi.model.MatchEventType;
 
 @Controller
 public class LeagueMatchController {
@@ -32,12 +34,20 @@ public class LeagueMatchController {
 				List<LeagueMatchPlayer> team2Players = new ArrayList<LeagueMatchPlayer>();
 				List<LeagueMatchPlayer> team1Subs = new ArrayList<LeagueMatchPlayer>();
 				List<LeagueMatchPlayer> team2Subs = new ArrayList<LeagueMatchPlayer>();
+				List<MatchEvent> team1Goals = new ArrayList<MatchEvent>();
+				List<MatchEvent> team2Goals = new ArrayList<MatchEvent>();
+				
 				for(LeagueMatchPlayer lmp: leagueMatch.getLeagueMatchPlayers()) {
 					if(lmp.getTeam_id().equals(leagueMatch.getMatchpart1().getId())) {
 						if(lmp.getFirstSquad()) {
 							team1Players.add(lmp);
 						} else {
 							team1Subs.add(lmp);
+						}
+						for(MatchEvent me: lmp.getMatchEvents()) {
+							if(me.getType().equals(MatchEventType.SCORE)) {
+								team1Goals.add(me);
+							}
 						}
 					}
 					if(lmp.getTeam_id().equals(leagueMatch.getMatchpart2().getId())) {
@@ -46,12 +56,19 @@ public class LeagueMatchController {
 						} else {
 							team2Subs.add(lmp);
 						}
+						for(MatchEvent me: lmp.getMatchEvents()) {
+							if(me.getType().equals(MatchEventType.SCORE)) {
+								team2Goals.add(me);
+							}
+						}
 					}
 				}
 				mv.addObject("team1Players", team1Players);
 				mv.addObject("team2Players", team2Players);
 				mv.addObject("team1Subs", team1Subs);
 				mv.addObject("team2Subs", team2Subs);
+				mv.addObject("team1Goals", team1Goals);
+				mv.addObject("team2Goals", team2Goals);
 			}
 		}
 		return mv;
