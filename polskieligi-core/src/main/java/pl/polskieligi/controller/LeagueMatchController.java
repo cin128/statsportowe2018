@@ -33,14 +33,14 @@ public class LeagueMatchController {
 				List<LeagueMatchPlayer> team1Subs = new ArrayList<LeagueMatchPlayer>();
 				List<LeagueMatchPlayer> team2Subs = new ArrayList<LeagueMatchPlayer>();
 				for(LeagueMatchPlayer lmp: leagueMatch.getLeagueMatchPlayers()) {
-					if(lmp.getTeam_id()==leagueMatch.getMatchpart1().getId()) {
+					if(lmp.getTeam_id().equals(leagueMatch.getMatchpart1().getId())) {
 						if(lmp.getFirstSquad()) {
 							team1Players.add(lmp);
 						} else {
 							team1Subs.add(lmp);
 						}
 					}
-					if(lmp.getTeam_id()==leagueMatch.getMatchpart2().getId()) {
+					if(lmp.getTeam_id().equals(leagueMatch.getMatchpart2().getId())) {
 						if(lmp.getFirstSquad()) {
 							team2Players.add(lmp);
 						} else {
