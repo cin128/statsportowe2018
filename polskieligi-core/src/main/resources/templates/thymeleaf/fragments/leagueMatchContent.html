@@ -10,58 +10,95 @@
         <table>
             <tbody>
             <tr>
-                <th colspan="3"><b th:text="${leagueMatch.matchpart1.name}"></b></th>
-                <th colspan="3"><b th:text="${leagueMatch.matchpart2.name}"></b></th>
+                <th colspan="4"><b th:text="${leagueMatch.matchpart1.name}"></b></th>
+                <th colspan="4"><b th:text="${leagueMatch.matchpart2.name}"></b></th>
             </tr>
             <tr>
-                <td colspan="3"><b
+                <td colspan="4"><b
                         th:text="${#numbers.formatDecimal(leagueMatch.matchpart1_result,0,0)}"></b></td>
-                <td colspan="3"><b
+                <td colspan="4"><b
                         th:text="${#numbers.formatDecimal(leagueMatch.matchpart2_result,0,0)}"></b></td>
             </tr>
             <tr>
-                <td colspan="3" th:text="${leagueMatch.match_date}"></td>
-                <td colspan="3" th:text="${leagueMatch?.round?.matchcode}"></td>
+                <td colspan="4" th:text="${#dates.format(leagueMatch.match_date, 'dd.MM.yyyy HH:mm')}"></td>
+                <td colspan="4" th:text="${leagueMatch?.round?.matchcode}"></td>
             </tr>
             <tr>
-                <td colspan="6" th:text="${leagueMatch.crowd}"></td>
+                <td colspan="4" th:text="#{leaguematch.crowd}"></td>
+                <td colspan="4" th:text="${leagueMatch.crowd}"></td>
             </tr>
             <tr>
-                <td colspan="6" th:text="${leagueMatch?.referee.name + ' ' + leagueMatch?.referee.surname}"></td>
+                <td colspan="4" th:text="#{leaguematch.referee}"></td>
+                <td colspan="4" th:text="${leagueMatch?.referee.name + ' ' + leagueMatch?.referee.surname}"></td>
             </tr>
-            <th:block th:if="${#lists.size(team1Goals)&gt;0 OR #lists.size(team1Goals)&gt;0}">
+            <th:block th:if="${#lists.size(team1Goals)&gt;0 OR #lists.size(team2Goals)&gt;0}">
                 <tr>
-                    <th colspan="6" th:text="#{leaguematch.first11}"></th>
+                    <th colspan="8" th:text="#{leaguematch.goals}"></th>
                 </tr>
-                <th:block th:each="i: ${#numbers.sequence(0, 10)}">
+                <th:block th:each="i: ${#numbers.sequence(0, goalRows-1)}">
+                    <tr>
+                        <th:block th:if="${#lists.size(team1Goals)&gt;i}">
+                            <td th:text="${team1Goals[i]?.leagueMatchPlayer?.number}"></td>
+                            <td><a
+                                    th:replace="thymeleaf/fragments/general :: player(player=${team1Goals[i]?.leagueMatchPlayer?.player})"></a>
+                            </td>
+                            <td th:text="${team1Goals[i]?.time+''''}"></td>
+                            <td/>
+                        </th:block>
+                        <th:block th:unless="${#lists.size(team1Goals)&gt;i}">
+                            <td colspan="4"/>
+                        </th:block>
+
+                        <th:block th:if="${#lists.size(team2Goals)&gt;i}">
+                            <td/>
+                            <td th:text="${team2Goals[i]?.time+''''}"></td>
+                            <td><a
+                                    th:replace="thymeleaf/fragments/general :: player(player=${team2Goals[i]?.leagueMatchPlayer?.player})"></a>
+                            </td>
+                            <td th:text="${team2Goals[i]?.leagueMatchPlayer?.number}"></td>
+                        </th:block>
+                        <th:block th:unless="${#lists.size(team2Goals)&gt;i}">
+                            <td colspan="4"/>
+                        </th:block>
+                    </tr>
                 </th:block>
              </th:block>
-                
-            
+
+
             <th:block th:if="${#lists.size(team1Players)&gt;0 OR #lists.size(team2Players)&gt;0}">
                 <tr>
-                    <th colspan="6" th:text="#{leaguematch.first11}"></th>
+                    <th colspan="8" th:text="#{leaguematch.first11}"></th>
                 </tr>
-                <th:block th:each="i: ${#numbers.sequence(0, 10)}">
-                    <tr th:if="${#lists.size(team1Players)&gt;i OR #lists.size(team2Players)&gt;i}">
+                <th:block th:each="i: ${#numbers.sequence(0, playerRows-1)}">
+                    <tr>
                         <th:block th:if="${#lists.size(team1Players)&gt;i}">
                             <td th:text="${team1Players[i]?.number}"></td>
                             <td colspan="2"><a
                                     th:replace="thymeleaf/fragments/general :: player(player=${team1Players[i]?.player})"></a>
                             </td>
+                            <td>
+                                <th:block th:each="e: ${team1Players[i].matchEvents}">
+                                    <div th:text="${e.time}"></div>
+                                </th:block>
+                            </td>
                         </th:block>
                         <th:block th:unless="${#lists.size(team1Players)&gt;i}">
-                            <td colspan="3"/>
+                            <td colspan="4"/>
                         </th:block>
 
                         <th:block th:if="${#lists.size(team2Players)&gt;i}">
+                            <td>
+                                <th:block th:each="e: ${team2Players[i].matchEvents}">
+                                    <div th:text="${e.time}"></div>
+                                </th:block>
+                            </td>
                             <td colspan="2"><a
                                     th:replace="thymeleaf/fragments/general :: player(player=${team2Players[i]?.player})"></a>
                             </td>
                             <td th:text="${team2Players[i]?.number}"></td>
                         </th:block>
                         <th:block th:unless="${#lists.size(team2Players)&gt;i}">
-                            <td colspan="3"/>
+                            <td colspan="4"/>
                         </th:block>
                     </tr>
                 </th:block>
@@ -70,27 +107,37 @@
                 <tr>
                     <th colspan="6" th:text="#{leaguematch.substitutes}"></th>
                 </tr>
-                <th:block th:each="i: ${#numbers.sequence(0, 10)}">
-                    <tr th:if="${#lists.size(team1Subs)&gt;i OR #lists.size(team2Subs)&gt;i}">
+                <th:block th:each="i: ${#numbers.sequence(0, subRows-1)}">
+                    <tr>
                         <th:block th:if="${#lists.size(team1Subs)&gt;i}">
-                            <td th:text="${(#lists.size(team1Subs)&gt;i) ? (team1Subs[i]?.number):''}"></td>
+                            <td th:text="${team1Subs[i]?.number}"></td>
                             <td>
                                 <a th:replace="thymeleaf/fragments/general :: player(player=${team1Subs[i]?.player})"></a>
                             </td>
-                            <td th:text="${(#lists.size(team1Subs)&gt;i) ? (team1Subs[i]?.minutIn):''}"></td>
+                            <td th:text="${team1Subs[i]?.minutIn+''''}"></td>
+                            <td>
+                                <th:block th:each="e: ${team1Subs[i].matchEvents}">
+                                    <div th:text="${e.time}"></div>
+                                </th:block>
+                            </td>
                         </th:block>
                         <th:block th:unless="${#lists.size(team1Subs)&gt;i}">
-                            <td colspan="3"/>
+                            <td colspan="4"/>
                         </th:block>
                         <th:block th:if="${#lists.size(team2Subs)&gt;i}">
-                            <td th:text="${(#lists.size(team2Subs)&gt;i) ? (team2Subs[i]?.minutIn):''}"></td>
+                            <td>
+                                <th:block th:each="e: ${team2Subs[i].matchEvents}">
+                                    <div th:text="${e.time}"></div>
+                                </th:block>
+                            </td>
+                            <td th:text="${team2Subs[i]?.minutIn+''''}"></td>
                             <td>
                                 <a th:replace="thymeleaf/fragments/general :: player(player=${team2Subs[i]?.player})"></a>
                             </td>
-                            <td th:text="${(#lists.size(team2Subs)&gt;i) ? (team2Subs[i]?.number):''}"></td>
+                            <td th:text="${team2Subs[i]?.number}"></td>
                         </th:block>
                         <th:block th:unless="${#lists.size(team2Subs)&gt;i}">
-                            <td colspan="3"/>
+                            <td colspan="4"/>
                         </th:block>
                     </tr>
                 </th:block>

@@ -24,7 +24,7 @@
 					</tr>
 					<tr>
 						<th th:text="#{player.birthDate}"></th>					
-						<td th:text="${player.birthDate}"></td>
+						<td th:text="${#dates.format(player.birthDate, 'dd.MM.yyyy')}"></td>
 					</tr>
 					<tr>
 						<th th:text="#{player.position}"></th>					

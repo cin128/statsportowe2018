@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication//(exclude = BatchAutoConfiguration.class)
 @ImportResource("classpath:job-config.xml")
-//@PropertySource(value={"file:/liga/application-prod.properties"})
+@PropertySource(value={"file:/liga/application-prod.properties"}, ignoreResourceNotFound = true)
 public class Main extends SpringBootServletInitializer {
 	@Override protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Main.class);

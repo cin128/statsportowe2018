@@ -17,9 +17,9 @@
 						<td class="team_name"><b><a
 								th:href="@{/table(projectId=${tl.project.id})}"
 								th:text="${tl.project.name}"></a></b></td>
-						<td th:text="${tl.project.season.name}"></td>
-						<td th:text="${tl.project.league.name}"></td>
-						<td th:text="${tl.project.league.groupName}"></td>
+						<td th:text="${tl.project?.season?.name}"></td>
+						<td th:text="${tl.project?.league?.name}"></td>
+						<td th:text="${tl.project?.league?.groupName}"></td>
 					</tr>
 			</tbody>
 		</table>

@@ -51,6 +51,7 @@ public class LeagueMatch {
 
 	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="leagueMatch_id")
+	@OrderBy("number ASC")
 	private List<LeagueMatchPlayer> leagueMatchPlayers = new ArrayList<LeagueMatchPlayer>();
 
 	public LeagueMatch() {

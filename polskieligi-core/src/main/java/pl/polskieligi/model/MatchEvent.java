@@ -1,19 +1,16 @@
 package pl.polskieligi.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity  @Table(indexes = {@Index(name = "IDX_ME_LMP", columnList = "leagueMatchplayer_id", unique = false)})
-public class MatchEvent {
+public class MatchEvent implements Comparable{
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
 
-	private Long leagueMatchplayer_id;
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="leagueMatchplayer_id")
+	private LeagueMatchPlayer leagueMatchPlayer;
 
 	private Integer time;
 
@@ -27,12 +24,12 @@ public class MatchEvent {
 		this.id = id;
 	}
 
-	public Long getLeagueMatchplayer_id() {
-		return leagueMatchplayer_id;
+	public LeagueMatchPlayer getLeagueMatchPlayer() {
+		return leagueMatchPlayer;
 	}
 
-	public void setLeagueMatchplayer_id(Long leagueMatchplayer_id) {
-		this.leagueMatchplayer_id = leagueMatchplayer_id;
+	public void setLeagueMatchPlayer(LeagueMatchPlayer leagueMatchPlayer) {
+		this.leagueMatchPlayer = leagueMatchPlayer;
 	}
 
 	public Integer getTime() {
@@ -43,11 +40,15 @@ public class MatchEvent {
 		this.time = time;
 	}
 
-	public Integer getType() {
-		return type;
+	public MatchEventType getType() {
+		return MatchEventType.getById(type);
 	}
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	@Override public int compareTo(Object o) {
+		return this.getTime()-((MatchEvent)o).getTime();
 	}
 }

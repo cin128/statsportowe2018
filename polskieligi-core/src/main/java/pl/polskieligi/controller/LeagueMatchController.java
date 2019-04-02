@@ -1,6 +1,7 @@
 package pl.polskieligi.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,7 +37,7 @@ public class LeagueMatchController {
 				List<LeagueMatchPlayer> team2Subs = new ArrayList<LeagueMatchPlayer>();
 				List<MatchEvent> team1Goals = new ArrayList<MatchEvent>();
 				List<MatchEvent> team2Goals = new ArrayList<MatchEvent>();
-				
+
 				for(LeagueMatchPlayer lmp: leagueMatch.getLeagueMatchPlayers()) {
 					if(lmp.getTeam_id().equals(leagueMatch.getMatchpart1().getId())) {
 						if(lmp.getFirstSquad()) {
@@ -45,8 +46,10 @@ public class LeagueMatchController {
 							team1Subs.add(lmp);
 						}
 						for(MatchEvent me: lmp.getMatchEvents()) {
-							if(me.getType().equals(MatchEventType.SCORE)) {
+							if(me.getType().equals(MatchEventType.SCORE) || me.getType().equals(MatchEventType.SCORE_PANELTY)) {
 								team1Goals.add(me);
+							} else if(me.getType().equals(MatchEventType.SCORE_OWN)) {
+								team2Goals.add(me);
 							}
 						}
 					}
@@ -57,8 +60,10 @@ public class LeagueMatchController {
 							team2Subs.add(lmp);
 						}
 						for(MatchEvent me: lmp.getMatchEvents()) {
-							if(me.getType().equals(MatchEventType.SCORE)) {
+							if(me.getType().equals(MatchEventType.SCORE) || me.getType().equals(MatchEventType.SCORE_PANELTY)) {
 								team2Goals.add(me);
+							} else if(me.getType().equals(MatchEventType.SCORE_OWN)) {
+								team1Goals.add(me);
 							}
 						}
 					}
@@ -67,8 +72,14 @@ public class LeagueMatchController {
 				mv.addObject("team2Players", team2Players);
 				mv.addObject("team1Subs", team1Subs);
 				mv.addObject("team2Subs", team2Subs);
+				Collections.sort(team1Goals);
 				mv.addObject("team1Goals", team1Goals);
+				Collections.sort(team2Goals);
 				mv.addObject("team2Goals", team2Goals);
+				mv.addObject("playerRows", Integer.max(team1Players.size(), team2Players.size()));
+				mv.addObject("subRows", Integer.max(team1Subs.size(), team2Subs.size()));
+				mv.addObject("goalRows", Integer.max(team1Goals.size(), team2Goals.size()));
+
 			}
 		}
 		return mv;
