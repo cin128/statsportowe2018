@@ -78,7 +78,7 @@
                             </td>
                             <td>
                                 <th:block th:each="e: ${team1Players[i].matchEvents}">
-                                    <div th:text="${e.time}"></div>
+                                    <div th:replace="thymeleaf/fragments/general :: matchEvent(me=${e})"></div>
                                 </th:block>
                             </td>
                         </th:block>
@@ -89,7 +89,7 @@
                         <th:block th:if="${#lists.size(team2Players)&gt;i}">
                             <td>
                                 <th:block th:each="e: ${team2Players[i].matchEvents}">
-                                    <div th:text="${e.time}"></div>
+                                    <div th:replace="thymeleaf/fragments/general :: matchEvent(me=${e})"></div>
                                 </th:block>
                             </td>
                             <td colspan="2"><a
@@ -117,7 +117,7 @@
                             <td th:text="${team1Subs[i]?.minutIn+''''}"></td>
                             <td>
                                 <th:block th:each="e: ${team1Subs[i].matchEvents}">
-                                    <div th:text="${e.time}"></div>
+                                	<div th:replace="thymeleaf/fragments/general :: matchEvent(me=${e})"></div>
                                 </th:block>
                             </td>
                         </th:block>
@@ -127,7 +127,7 @@
                         <th:block th:if="${#lists.size(team2Subs)&gt;i}">
                             <td>
                                 <th:block th:each="e: ${team2Subs[i].matchEvents}">
-                                    <div th:text="${e.time}"></div>
+                                    <div th:replace="thymeleaf/fragments/general :: matchEvent(me=${e})"></div>
                                 </th:block>
                             </td>
                             <td th:text="${team2Subs[i]?.minutIn+''''}"></td>
