@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import pl.polskieligi.model.League;
 import pl.polskieligi.model.Project;
+import pl.polskieligi.model.Season;
 import pl.polskieligi.web.TableSessionBean;
 
 @Controller
@@ -36,9 +38,15 @@ public class TableController {
 			tableSessionBean.calculateTable(projectId);
 			Project p = tableSessionBean.getProject();
 			if(p!=null) {
-				tf.leagueType = p.getLeague().getLeagueType().getId();
-				tf.region = p.getLeague().getRegion().getId();
-				tf.season = p.getSeason().getId();
+				League l = p.getLeague();
+				if(l!=null) {
+					tf.leagueType = l.getLeagueType().getId();
+					tf.region = l.getRegion().getId();
+				}
+				Season s = p.getSeason();
+				if(s!=null) {
+					tf.season = s.getId();
+				}
 			} else {
 				log.warn("Project not found: "+projectId);
 			}
