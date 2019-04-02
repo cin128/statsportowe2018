@@ -162,7 +162,13 @@ public class Player {
 	}
 
 	public String getFullName() {
-		return name+' '+surname;
+		return getPseudo(name)+' '+getPseudo(surname);
+	}
+	private static String getPseudo(String text) {
+		if(text !=null && text.contains("(") && text.contains(")")) {
+			return text.substring(text.indexOf("(")+1, text.indexOf(")"));
+		} 
+		return text;
 	}
 
 	@Override public String toString() {
