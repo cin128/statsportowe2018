@@ -103,17 +103,20 @@ public class TableDAOImpl implements TableDAO {
 		List<Team> allTeams = teamLeagueDAO.getTeams(projectId);
 		java.util.Date date = new java.util.Date();
 		log.debug("Point B1: " + (date.getTime() - startDate.getTime()));
-		List<Long> allTeamsIds = new ArrayList<Long>();
+		Map<Long, Team> allTeamsIds = new HashMap<Long, Team>();
 		for (Team t : allTeams) {
-			allTeamsIds.add(t.getId());
+			allTeamsIds.put(t.getId(), t);
 		}
-		List<TableRow> firstResult = calculateTable(projectId, allTeamsIds, true, detailed);
+		List<TableRow> firstResult = calculateTable(projectId, new ArrayList<Long>(allTeamsIds.keySet()), true, detailed);
 		if(!detailed) {
 			return firstResult;
 		}
 		int i = 0;
 		for (TableRow tr1 : firstResult) {
 			tr1.setSequence(i++);
+			if(tr1.getTeamName()==null ||tr1.getTeamName().equals("")) {
+				tr1.setTeamName(allTeamsIds.get(tr1.getTeam_id()).getName());
+			}
 		}
 		date = new java.util.Date();
 		log.debug("Point B2: " + (date.getTime() - startDate.getTime()));
