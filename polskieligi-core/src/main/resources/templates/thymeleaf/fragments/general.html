@@ -38,5 +38,7 @@
 	    <div class="yellow-card" th:case="${T(pl.polskieligi.model.MatchEventType).YELLOW_CARD}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
 	    <div class="red-card" th:case="${T(pl.polskieligi.model.MatchEventType).RED_CARD}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
 	</th:block>
+
+	<div th:fragment="sub(player, time)"  th:if="${player}" th:attr="title=${time +''' '+player?.fullName}" class="substitution"></div>
 </body>
 </html>

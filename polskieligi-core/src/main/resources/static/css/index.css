@@ -115,10 +115,11 @@ div.match_draw {
 }
 
 
-.score, .score-panelty, .panelty-missed, .score-own, .yellow-card, .red-card{
+.score, .score-panelty, .panelty-missed, .score-own, .yellow-card, .red-card, .substitution{
     height: 16px;
+    display: inline-block;
 }
-.score, .score-panelty, .panelty-missed, .score-own{
+.score, .score-panelty, .panelty-missed, .score-own, .substitution{
     width: 16px;
 }
 
@@ -144,4 +145,13 @@ div.match_draw {
 .red-card {
     background-image: url('../img/red-16x12.png');
 }
+.substitution {
+    background-image: url('../img/sub-16x16.png');
+}
 
+.team1Player {
+    text-align: left;
+}
+.team2Player {
+    text-align: right;
+}

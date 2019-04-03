@@ -1,14 +1,10 @@
 package pl.polskieligi.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity @Table(indexes = { @Index(name = "IDX_SU_LM", columnList = "leagueMatch_id", unique = false) })
-public class Substitution {
+public class Substitution implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
@@ -22,6 +18,14 @@ public class Substitution {
 	private Long playerOut_id;
 
 	private Integer time;
+
+	@OneToOne
+	@JoinColumn(name="playerIn_id", insertable =  false, updatable = false)
+	private Player playerIn;
+
+	@OneToOne
+	@JoinColumn(name="playerOut_id", insertable =  false, updatable = false)
+	private Player playerOut;
 
 	public Long getId() {
 		return id;
@@ -69,5 +73,21 @@ public class Substitution {
 
 	public void setTime(Integer time) {
 		this.time = time;
+	}
+
+	public Player getPlayerIn() {
+		return playerIn;
+	}
+
+	public Player getPlayerOut() {
+		return playerOut;
+	}
+
+	public void setPlayerIn(Player playerIn) {
+		this.playerIn = playerIn;
+	}
+
+	public void setPlayerOut(Player playerOut) {
+		this.playerOut = playerOut;
 	}
 }

@@ -41,6 +41,20 @@ public class LeagueMatchPlayer{
 	@JoinColumn(name="leagueMatchplayer_id")
 	private List<MatchEvent> matchEvents = new ArrayList<MatchEvent>();
 
+	@OneToOne(optional=true)
+	@JoinColumns(value ={
+			@JoinColumn(updatable=false,insertable=false, name="leagueMatch_id", referencedColumnName="leagueMatch_id"),
+			@JoinColumn(updatable=false,insertable=false, name="player_id", referencedColumnName="playerIn_id")
+	}, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+	private Substitution substitutionIn;
+
+	@OneToOne(optional=true)
+	@JoinColumns(value ={
+			@JoinColumn(updatable=false,insertable=false, name="leagueMatch_id", referencedColumnName="leagueMatch_id"),
+			@JoinColumn(updatable=false,insertable=false, name="player_id", referencedColumnName="playerOut_id")
+	}, foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+	private Substitution substitutionOut;
+
 	public Long getId() {
 		return id;
 	}
@@ -135,6 +149,14 @@ public class LeagueMatchPlayer{
 
 	public void setFirstSquad(Boolean firstSquad) {
 		this.firstSquad = firstSquad;
+	}
+
+	public Substitution getSubstitutionIn() {
+		return substitutionIn;
+	}
+
+	public Substitution getSubstitutionOut() {
+		return substitutionOut;
 	}
 
 	@Override public String toString() {
