@@ -1,5 +1,7 @@
 package pl.polskieligi.model;
 
+import pl.polskieligi.log.DisplayUtils;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -162,14 +164,9 @@ public class Player {
 	}
 
 	public String getFullName() {
-		return getPseudo(name)+' '+getPseudo(surname);
+		return DisplayUtils.getPseudo(name)+' '+DisplayUtils.getPseudo(surname);
 	}
-	private static String getPseudo(String text) {
-		if(text !=null && text.contains("(") && text.contains(")")) {
-			return text.substring(text.indexOf("(")+1, text.indexOf(")"));
-		} 
-		return text;
-	}
+
 
 	@Override public String toString() {
 		return id + " " + minut_id + " " +name + " " +surname + " " +birthDate + " " +birthTown + " " +birthCountry+ " "

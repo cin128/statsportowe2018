@@ -27,26 +27,16 @@
 				th:attr="title=#{table.form.tooltip}" th:text="#{table.form}"></abbr></th>
 		</tr>
 	</thead>
+
 	<a th:fragment="player(player)" th:text="${player?.fullName}" th:href="@{/player(playerId=${player.id})}"></a>
+
 	<th:block th:fragment="matchEvent(me)" th:switch="${me.type}">
-		<div th:case="${T(pl.polskieligi.model.MatchEventType).SCORE}" th:attr="title=${me.time!=null} ? ${me.time+''''}">
-		G
-	    </div>
-	    <div th:case="${T(pl.polskieligi.model.MatchEventType).SCORE_PANELTY}" th:attr="title=${me.time!=null} ? ${me.time+''''}">
-	    K
-	    </div>
-	    <div th:case="${T(pl.polskieligi.model.MatchEventType).PANELTY_MISSED}" th:attr="title=${me.time!=null} ? ${me.time+''''}">
-	    KM
-	    </div>
-	    <div th:case="${T(pl.polskieligi.model.MatchEventType).SCORE_OWN}" th:attr="title=${me.time!=null} ? ${me.time+''''}">
-	    S
-	    </div>
-	    <div th:case="${T(pl.polskieligi.model.MatchEventType).YELLOW_CARD}" th:attr="title=${me.time!=null} ? ${me.time+''''}">
-	    ŻK
-	    </div>
-	    <div th:case="${T(pl.polskieligi.model.MatchEventType).RED_CARD}" th:attr="title=${me.time!=null} ? ${me.time+''''}">
-	    CK
-	    </div>
+		<div class="score" th:case="${T(pl.polskieligi.model.MatchEventType).SCORE}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
+	    <div class="score-panelty" th:case="${T(pl.polskieligi.model.MatchEventType).SCORE_PANELTY}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
+	    <div class="panelty-missed" th:case="${T(pl.polskieligi.model.MatchEventType).PANELTY_MISSED}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
+	    <div class="score-own" th:case="${T(pl.polskieligi.model.MatchEventType).SCORE_OWN}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
+	    <div class="yellow-card" th:case="${T(pl.polskieligi.model.MatchEventType).YELLOW_CARD}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
+	    <div class="red-card" th:case="${T(pl.polskieligi.model.MatchEventType).RED_CARD}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
 	</th:block>
 </body>
 </html>

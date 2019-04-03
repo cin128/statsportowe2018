@@ -12,6 +12,7 @@
 				<li th:if="${ts.project.type == 1}"><a class="active" href="#tabs-table"
 					th:text="#{table.table}"></a></li>
 				<li th:if="${#lists.size(ts.matches)&gt;0}"><a href="#tabs-results" th:text="#{table.results}"></a></li>
+				<li th:if="${#lists.size(scorers)&gt;0}"><a href="#tabs-scorers" th:text="#{table.scorers}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-table" th:if="${ts.project.type == 1}">
@@ -153,6 +154,23 @@
 							<td><a th:if="${m.importStatus==0}" th:href="@{/leagueMatch(leagueMatchId=${m.match_id})}">link</a></td>
 						</tr>
 					</th:block>
+				</tbody>
+			</table>
+		</div>
+		<div id="tabs-scorers">
+			<table>
+				<thead>
+				<tr>
+				</tr>
+				</thead>
+				<tbody>
+				<th:block th:each="row,itr : ${scorers}">
+					<tr>
+                        <td th:text="${row.goals}"></td>
+                        <td><a
+                                th:replace="thymeleaf/fragments/general :: player(player=${row})"></a></td>
+					</tr>
+				</th:block>
 				</tbody>
 			</table>
 		</div>

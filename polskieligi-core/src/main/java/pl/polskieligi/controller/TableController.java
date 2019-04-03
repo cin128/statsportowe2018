@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import pl.polskieligi.dao.ProjectDAO;
+import pl.polskieligi.dto.Scorer;
 import pl.polskieligi.model.League;
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Season;
 import pl.polskieligi.web.TableSessionBean;
+
+import java.util.List;
 
 @Controller
 public class TableController {
@@ -21,6 +25,9 @@ public class TableController {
 
 	@Autowired
 	private TableSessionBean tableSessionBean;
+
+	@Autowired
+	private ProjectDAO projectDAO;
 
 	@RequestMapping("/table")
 	public ModelAndView showTable(@RequestParam(value = "season", required = false) Long season,
@@ -47,6 +54,8 @@ public class TableController {
 				if(s!=null) {
 					tf.season = s.getId();
 				}
+				List<Scorer> scorers = projectDAO.retrieveScorers(p.getId());
+				mv.addObject("scorers", scorers);
 			} else {
 				log.warn("Project not found: "+projectId);
 			}

@@ -113,3 +113,35 @@ div.match_draw {
     color: #FFFFFF;
     background-color: #656565;
 }
+
+
+.score, .score-panelty, .panelty-missed, .score-own, .yellow-card, .red-card{
+    height: 16px;
+}
+.score, .score-panelty, .panelty-missed, .score-own{
+    width: 16px;
+}
+
+.yellow-card, .red-card{
+    width: 12px;
+}
+
+.score {
+    background-image: url('../img/goal-16x16.png');
+}
+.score-panelty {
+    background-image: url('../img/goal-16x16.png');
+}
+.panelty-missed {
+    background-image: url('../img/goal-own-16x16.png');
+}
+.score-own {
+    background-image: url('../img/goal-own-16x16.png');
+}
+.yellow-card {
+    background-image: url('../img/yellow-16x12.png');
+}
+.red-card {
+    background-image: url('../img/red-16x12.png');
+}
+

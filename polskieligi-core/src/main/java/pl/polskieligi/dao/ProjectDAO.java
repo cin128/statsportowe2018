@@ -2,6 +2,7 @@ package pl.polskieligi.dao;
 
 import java.util.List;
 
+import pl.polskieligi.dto.Scorer;
 import pl.polskieligi.model.Project;
 
 public interface ProjectDAO extends AbstractDAO<Project>{
@@ -9,4 +10,5 @@ public interface ProjectDAO extends AbstractDAO<Project>{
 	public Project getLastProjectForTeam(Integer teamId);
 	public Long getOpenProjectsCount();
 	public List<Project> findProjects(Long season, Integer leagueType, Integer region);
+	public List<Scorer> retrieveScorers(Long projectId);
 }
