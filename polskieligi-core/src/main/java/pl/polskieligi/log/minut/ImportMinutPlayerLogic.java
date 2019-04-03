@@ -56,6 +56,9 @@ import java.net.SocketTimeoutException;
 								case "Nazwisko":
 									player.setSurname(value.text());
 									break;
+								case "Przydomek":
+									player.setPseudo(value.text());
+									break;
 								case "Kraj":
 									player.setNationality(value.text());
 									break;

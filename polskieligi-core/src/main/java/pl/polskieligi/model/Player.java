@@ -14,6 +14,7 @@ public class Player {
 
 	private String name;
 	private String surname;
+	private String pseudo;
 	private Date birthDate;
 	private String birthTown;
 	private String birthCountry;
@@ -171,5 +172,13 @@ public class Player {
 	@Override public String toString() {
 		return id + " " + minut_id + " " +name + " " +surname + " " +birthDate + " " +birthTown + " " +birthCountry+ " "
 				+ deathDate+ " " + deatTown+ " " + deatCountry+ " " + nationality + " " +position + " " + weight + " " + height;
+	}
+
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
 	}
 }
