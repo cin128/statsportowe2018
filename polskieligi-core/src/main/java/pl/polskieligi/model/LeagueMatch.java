@@ -29,6 +29,10 @@ public class LeagueMatch {
 	private Long project_id;
 	
 	@OneToOne
+	@JoinColumn(name="project_id", insertable =  false, updatable = false)
+	private Project project;
+	
+	@OneToOne
     @JoinColumn(name = "round_id")
 	private Round round;
 	private Boolean count_result;
@@ -227,6 +231,11 @@ public class LeagueMatch {
 
 	public void addLeagueMatchPlayers(LeagueMatchPlayer leagueMatchPlayer) {
 		this.leagueMatchPlayers.add(leagueMatchPlayer);
+	}
+	
+
+	public Project getProject() {
+		return project;
 	}
 
 	@Override public String toString() {

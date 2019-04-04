@@ -16,6 +16,8 @@ import pl.polskieligi.model.LeagueMatch;
 import pl.polskieligi.model.LeagueMatchPlayer;
 import pl.polskieligi.model.MatchEvent;
 import pl.polskieligi.model.MatchEventType;
+import pl.polskieligi.model.Project;
+import pl.polskieligi.model.Season;
 
 @Controller
 public class LeagueMatchController {
@@ -31,6 +33,13 @@ public class LeagueMatchController {
 			LeagueMatch leagueMatch = leagueMatchDAO.find(leagueMatchId);
 			if(leagueMatch!=null) {
 				mv.addObject("leagueMatch", leagueMatch);
+				Project p = leagueMatch.getProject();
+				if(p!=null) {
+					Season s = p.getSeason();
+					if(s!=null) {
+						mv.addObject("seasonId", s.getId());
+					}
+				}
 				List<LeagueMatchPlayer> team1Players = new ArrayList<LeagueMatchPlayer>();
 				List<LeagueMatchPlayer> team2Players = new ArrayList<LeagueMatchPlayer>();
 				List<LeagueMatchPlayer> team1Subs = new ArrayList<LeagueMatchPlayer>();

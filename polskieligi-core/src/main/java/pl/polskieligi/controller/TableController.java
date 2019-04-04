@@ -53,6 +53,7 @@ public class TableController {
 				Season s = p.getSeason();
 				if(s!=null) {
 					tf.season = s.getId();
+					mv.addObject("seasonId", s.getId());
 				}
 				List<Scorer> scorers = projectDAO.retrieveScorers(p.getId());
 				mv.addObject("scorers", scorers);
