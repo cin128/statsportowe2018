@@ -168,7 +168,7 @@
 					<tr>
                         <td th:text="${row.goals}"></td>
                         <td><a
-                                th:replace="thymeleaf/fragments/general :: player(player=${row})"></a></td>
+                                th:replace="thymeleaf/fragments/general :: player(player=${row}, seasonId=${seasonId})"></a></td>
 					</tr>
 				</th:block>
 				</tbody>

@@ -42,7 +42,7 @@
                         <th:block th:if="${#lists.size(team1Goals)&gt;i}">
                             <td th:text="${team1Goals[i]?.leagueMatchPlayer?.number}"></td>
                             <td class="team1Player"><a
-                                    th:replace="thymeleaf/fragments/general :: player(player=${team1Goals[i]?.leagueMatchPlayer?.player})"></a>
+                                    th:replace="thymeleaf/fragments/general :: player(player=${team1Goals[i]?.leagueMatchPlayer?.player}, seasonId=${seasonId})"></a>
                             </td>
                             <td th:text="${team1Goals[i]?.time+''''}"></td>
                         </th:block>
@@ -53,7 +53,7 @@
                         <th:block th:if="${#lists.size(team2Goals)&gt;i}">
                             <td th:text="${team2Goals[i]?.time+''''}"></td>
                             <td class="team2Player"><a
-                                    th:replace="thymeleaf/fragments/general :: player(player=${team2Goals[i]?.leagueMatchPlayer?.player})"></a>
+                                    th:replace="thymeleaf/fragments/general :: player(player=${team2Goals[i]?.leagueMatchPlayer?.player}, seasonId=${seasonId})"></a>
                             </td>
                             <td th:text="${team2Goals[i]?.leagueMatchPlayer?.number}"></td>
                         </th:block>
@@ -74,7 +74,7 @@
                         <th:block th:if="${#lists.size(team1Players)&gt;i}">
                             <td th:text="${team1Players[i]?.number}"></td>
                             <td class="team1Player"><a
-                                    th:replace="thymeleaf/fragments/general :: player(player=${team1Players[i]?.player})"></a>
+                                    th:replace="thymeleaf/fragments/general :: player(player=${team1Players[i]?.player}, seasonId=${seasonId})"></a>
                             </td>
                             <td>
                                 <th:block th:each="e: ${team1Players[i].matchEvents}">
@@ -95,7 +95,7 @@
                                 </th:block>
                             </td>
                             <td class="team2Player"><a
-                                    th:replace="thymeleaf/fragments/general :: player(player=${team2Players[i]?.player})"></a>
+                                    th:replace="thymeleaf/fragments/general :: player(player=${team2Players[i]?.player}, seasonId=${seasonId})"></a>
                             </td>
                             <td th:text="${team2Players[i]?.number}"></td>
                         </th:block>
@@ -116,7 +116,7 @@
                         <th:block th:if="${#lists.size(team1Subs)&gt;i}">
                             <td th:text="${team1Subs[i]?.number}"></td>
                             <td class="team1Player">
-                                <a th:replace="thymeleaf/fragments/general :: player(player=${team1Subs[i]?.player})"></a>
+                                <a th:replace="thymeleaf/fragments/general :: player(player=${team1Subs[i]?.player}, seasonId=${seasonId})"></a>
                             </td>
                             <td>
                                 <div th:if="${team1Subs[i]?.substitutionIn}" th:replace="thymeleaf/fragments/general :: sub(player=${team1Subs[i]?.substitutionIn?.playerOut}, time=${team1Subs[i]?.substitutionIn?.time})"></div>
@@ -138,7 +138,7 @@
                                 <div th:if="${team2Subs[i]?.substitutionIn}" th:replace="thymeleaf/fragments/general :: sub(player=${team2Subs[i]?.substitutionIn?.playerOut}, time=${team2Subs[i]?.substitutionIn?.time})"></div>
                             </td>
                             <td class="team2Player">
-                                <a th:replace="thymeleaf/fragments/general :: player(player=${team2Subs[i]?.player})"></a>
+                                <a th:replace="thymeleaf/fragments/general :: player(player=${team2Subs[i]?.player}, seasonId=${seasonId})"></a>
                             </td>
                             <td th:text="${team2Subs[i]?.number}"></td>
                         </th:block>

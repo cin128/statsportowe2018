@@ -28,7 +28,7 @@
 		</tr>
 	</thead>
 
-	<a th:fragment="player(player)" th:text="${player?.fullName}" th:href="@{/player(playerId=${player.id})}"></a>
+	<a th:fragment="player(player, seasonId)" th:text="${player?.fullName}" th:href="@{/player(playerId=${player.id}, seasonId=${seasonId})}"></a>
 
 	<th:block th:fragment="matchEvent(me)" th:switch="${me.type}">
 		<div class="score" th:case="${T(pl.polskieligi.model.MatchEventType).SCORE}" th:attr="title=${me.time!=null} ? ${me.time+''''}"></div>
