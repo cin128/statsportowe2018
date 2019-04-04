@@ -9,7 +9,7 @@
 		<div id="menu1">
 			<ul class="buttons1">
 				<li><a href="#tabs-info" th:text="#{player.info}"></a></li>
-				<li><a href="#tabs-matches" th:text="#{player.info}"></a></li>
+				<li><a href="#tabs-matches" th:text="#{player.leaguematches}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-info">
@@ -50,7 +50,11 @@
 						<td th:text="${lmp.leagueMatch.matchpart1_result}"></td>
 						<td th:text="${lmp.leagueMatch.matchpart2_result}"></td>
 						<td th:text="${lmp.leagueMatch.matchpart2.name}"></td>
-						
+						<td>
+						<th:block th:each="me : ${lmp.matchEvents}">
+							<div th:replace="thymeleaf/fragments/general :: matchEvent(me=${me})"></div>
+						</th:block>
+						</td>
 					</tr>
 				</tbody>
 			</table>

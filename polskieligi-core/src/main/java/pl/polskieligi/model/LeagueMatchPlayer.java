@@ -39,6 +39,7 @@ public class LeagueMatchPlayer{
 
 	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="leagueMatchplayer_id")
+	@OrderBy("time DESC")
 	private List<MatchEvent> matchEvents = new ArrayList<MatchEvent>();
 
 	@OneToOne(optional=true)
