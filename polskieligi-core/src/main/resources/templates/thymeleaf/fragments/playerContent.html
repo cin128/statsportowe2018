@@ -9,6 +9,7 @@
 		<div id="menu1">
 			<ul class="buttons1">
 				<li><a href="#tabs-info" th:text="#{player.info}"></a></li>
+				<li><a href="#tabs-matches" th:text="#{player.info}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-info">
@@ -29,6 +30,27 @@
 					<tr>
 						<th th:text="#{player.position}"></th>					
 						<td th:text="${player.position}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="tabs-matches">
+			<table>
+				<tbody>
+				<th:block th:each="lmp,itr : ${leagueMatches}">
+					<tr>
+					    <th th:text="${itr.index+1}"></th>	
+						<td th:text="${lmp.number}"></td>					
+						<td th:text="${lmp.minutIn}"></td>
+						<td th:text="${lmp.minutOut}"></td>
+						
+						<td th:text="${lmp.leagueMatch.match_date}"></td>
+						
+						<td th:text="${lmp.leagueMatch.matchpart1.name}"></td>
+						<td th:text="${lmp.leagueMatch.matchpart1_result}"></td>
+						<td th:text="${lmp.leagueMatch.matchpart2_result}"></td>
+						<td th:text="${lmp.leagueMatch.matchpart2.name}"></td>
+						
 					</tr>
 				</tbody>
 			</table>
