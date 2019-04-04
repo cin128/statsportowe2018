@@ -76,21 +76,28 @@
                 <db.groupId>org.mariadb.jdbc</db.groupId>
                 <db.artifactId>mariadb-java-client</db.artifactId>
                 <db.version>2.3.0</db.version>
+                <tomcat.scope>provided</tomcat.scope>
             </properties>
         </profile>
         <profile>
             <id>dev-pg</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
-                    <db.groupId>org.postgresql</db.groupId>
-                    <db.artifactId>postgresql</db.artifactId>
-                    <db.version>42.2.5</db.version>
+                <db.groupId>org.postgresql</db.groupId>
+                <db.artifactId>postgresql</db.artifactId>
+                <db.version>42.2.5</db.version>
+                <tomcat.scope>compile</tomcat.scope>
             </properties>
         </profile>
         <profile>
             <id>dev-h2</id>
             <properties>
-                    <db.groupId>com.h2database</db.groupId>
-                    <db.artifactId>h2</db.artifactId>
+                <db.groupId>com.h2database</db.groupId>
+                <db.artifactId>h2</db.artifactId>
+                <db.version>1.4.199</db.version>
+                <tomcat.scope>compile</tomcat.scope>
             </properties>
         </profile>
     </profiles>
