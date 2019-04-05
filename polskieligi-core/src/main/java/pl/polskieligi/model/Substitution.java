@@ -19,11 +19,11 @@ public class Substitution implements Serializable {
 
 	private Integer time;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="playerIn_id", insertable =  false, updatable = false)
 	private Player playerIn;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="playerOut_id", insertable =  false, updatable = false)
 	private Player playerOut;
 

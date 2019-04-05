@@ -11,6 +11,7 @@ import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.model.LeagueMatch;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -68,10 +69,10 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
+
 	public List<LeagueMatch> getMatchesByProjectId(Long projectId) {
-		Query query = getEntityManager()
-				.createQuery("SELECT lm from LeagueMatch lm where project_id = :project_id and published = :published order by round.matchcode desc, match_date desc");
+		TypedQuery<LeagueMatch> query = getEntityManager()
+				.createQuery("SELECT lm from LeagueMatch lm JOIN FETCH lm.round r where lm.project_id = :project_id and lm.published = :published order by r.matchcode desc, lm.match_date desc", LeagueMatch.class);
 		query.setParameter("project_id", projectId);
 		query.setParameter("published", true);
 		return query.getResultList();

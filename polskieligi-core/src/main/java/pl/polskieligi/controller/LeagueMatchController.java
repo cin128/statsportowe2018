@@ -1,8 +1,6 @@
 package pl.polskieligi.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import pl.polskieligi.dao.LeagueMatchDAO;
-import pl.polskieligi.model.LeagueMatch;
-import pl.polskieligi.model.LeagueMatchPlayer;
-import pl.polskieligi.model.MatchEvent;
-import pl.polskieligi.model.MatchEventType;
-import pl.polskieligi.model.Project;
-import pl.polskieligi.model.Season;
+import pl.polskieligi.dao.SubstitutionDAO;
+import pl.polskieligi.model.*;
 
 @Controller
 public class LeagueMatchController {
 	final static Logger log = Logger.getLogger(LeagueMatchController.class);
 	
 	@Autowired LeagueMatchDAO leagueMatchDAO;
+	@Autowired SubstitutionDAO substitutionDAO;
 	
 	@RequestMapping("/leagueMatch")
 	public ModelAndView showLeagueMatch(@RequestParam(value = "leagueMatchId", required = false) Long leagueMatchId) {
@@ -77,6 +72,8 @@ public class LeagueMatchController {
 						}
 					}
 				}
+				setSubstitutions(team1Players, team2Players, team1Subs, team2Subs, substitutionDAO.getSubstitutionsForLeagueMatch(leagueMatchId));
+
 				mv.addObject("team1Players", team1Players);
 				mv.addObject("team2Players", team2Players);
 				mv.addObject("team1Subs", team1Subs);
@@ -92,5 +89,32 @@ public class LeagueMatchController {
 			}
 		}
 		return mv;
+	}
+
+	private void setSubstitutions(List<LeagueMatchPlayer> team1Players, List<LeagueMatchPlayer> team2Players, List<LeagueMatchPlayer> team1Subs, List<LeagueMatchPlayer> team2Subs, List<Substitution> subs){
+		Map<Long, Substitution> subsIn = new HashMap<Long, Substitution>();
+		Map<Long, Substitution> subsOut = new HashMap<Long, Substitution>();
+		for(Substitution s: subs){
+			subsIn.put(s.getPlayerIn_id(), s);
+			subsOut.put(s.getPlayerOut_id(), s);
+		}
+		setSubstitutionsOut(subsOut, team1Players);
+		setSubstitutionsOut(subsOut, team2Players);
+		setSubstitutionsIn(subsIn, team1Subs);
+		setSubstitutionsIn(subsIn, team2Subs);
+	}
+	private void setSubstitutionsIn(Map<Long, Substitution> subsIn, List<LeagueMatchPlayer> teamSubs){
+		for(LeagueMatchPlayer lmp: teamSubs){
+			if(subsIn.containsKey(lmp.getPlayer_id())){
+				lmp.setSubstitutionIn(subsIn.get(lmp.getPlayer_id()));
+			}
+		}
+	}
+	private void setSubstitutionsOut(Map<Long, Substitution> subsOut, List<LeagueMatchPlayer> teamPlayers){
+		for(LeagueMatchPlayer lmp: teamPlayers){
+			if(subsOut.containsKey(lmp.getPlayer_id())){
+				lmp.setSubstitutionOut(subsOut.get(lmp.getPlayer_id()));
+			}
+		}
 	}
 }

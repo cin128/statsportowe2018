@@ -16,11 +16,11 @@ public class LeagueMatch {
 	private Integer playground_id;
 	private Timestamp match_date;
 	
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matchpart1")
     private Team matchpart1;
     
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matchpart2")
     private Team matchpart2;
 
@@ -28,11 +28,11 @@ public class LeagueMatch {
 	private Float matchpart2_result;
 	private Long project_id;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="project_id", insertable =  false, updatable = false)
 	private Project project;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "round_id")
 	private Round round;
 	private Boolean count_result;
@@ -41,7 +41,7 @@ public class LeagueMatch {
 	private String summary;
 	private Timestamp modified;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "referee_id")
 	private Referee referee;
 
