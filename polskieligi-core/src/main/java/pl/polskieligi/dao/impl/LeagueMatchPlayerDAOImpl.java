@@ -26,7 +26,7 @@ public class LeagueMatchPlayerDAOImpl extends AbstractDAOImpl<LeagueMatchPlayer>
 	@Override
 	public List<LeagueMatchPlayer> getPlayerMatchesForSeason(Long playerId, Long seasonId) {
 		TypedQuery<LeagueMatchPlayer> query = getEntityManager()
-				.createQuery("SELECT lmp from LeagueMatchPlayer lmp LEFT JOIN FETCH lmp.matchEvents me JOIN FETCH lmp.leagueMatch lm JOIN FETCH lm.matchpart1 t1 JOIN FETCH lm.matchpart2 t2 JOIN lm.project p JOIN p.season s where lmp.player_id = :playerId and s.id = :seasonId order by lm.match_date desc", LeagueMatchPlayer.class);
+				.createQuery("SELECT DISTINCT lmp from LeagueMatchPlayer lmp LEFT JOIN FETCH lmp.matchEvents me JOIN FETCH lmp.leagueMatch lm JOIN FETCH lm.matchpart1 t1 JOIN FETCH lm.matchpart2 t2 JOIN lm.project p JOIN p.season s where lmp.player_id = :playerId and s.id = :seasonId order by lm.match_date desc", LeagueMatchPlayer.class);
 		query.setParameter("playerId", playerId);
 		query.setParameter("seasonId", seasonId);
 		return query.getResultList();

@@ -5,8 +5,10 @@ import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -63,7 +65,7 @@ public class ImportLeagueMatchLogic {
 					Elements playersRow = doc.select(
 							"table[class=main][width=480][border=0][cellspacing=0][cellpadding=0][align=center]>tbody>tr[height=20][valign=middle][align=center]");
 					Map<String, LeagueMatchPlayer> playersMap = new HashMap<String, LeagueMatchPlayer>();
-
+					Set<Integer> allPlayers = new HashSet<Integer>();
 					for (Element row : playersRow) {
 						Elements players = row.select("td[width=45%]");
 						for (int i = 0; i < 2; i++) {
@@ -75,6 +77,11 @@ public class ImportLeagueMatchLogic {
 								String href = p.attr("href");
 								String playerId = href.replace("/wystepy.php?id=", "").split("&id_sezon=")[0];
 								Integer playerMinutId = Integer.parseInt(playerId);
+								if(allPlayers.contains(playerMinutId)) {
+									lastPlayer = null;
+									continue;
+								}
+								allPlayers.add(playerMinutId);
 								Player player = playerDAO.retrievePlayerByMinut(playerMinutId);
 								if (player == null) {
 									player = importMinutPlayerLogic.doImport(playerMinutId);
