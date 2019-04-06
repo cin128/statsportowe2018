@@ -13,6 +13,7 @@ import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dto.Scorer;
 import pl.polskieligi.model.League;
 import pl.polskieligi.model.Project;
+import pl.polskieligi.model.Region;
 import pl.polskieligi.model.Season;
 import pl.polskieligi.web.TableSessionBean;
 
@@ -41,8 +42,18 @@ public class TableController {
 		tf.region=region;
 		tf.season=season;
 		ModelAndView mv = new ModelAndView("thymeleaf/table");
-		if (projectId != null) {
-			tableSessionBean.calculateTable(projectId);
+		if (tf.season!=null && tf.leagueType!=null) {
+			if(tf.region==null) {
+				tf.region=Region.UNDEFINED.getId();
+			}
+			List<Project> projects = tableSessionBean.findProjects(tf.season, tf.leagueType, tf.region);
+			if(projects!=null && projects.size()==1) {
+				tf.projectId = projects.get(0).getId();
+			}
+			mv.addObject("projects", projects);
+		}
+		if (tf.projectId != null) {
+			tableSessionBean.calculateTable(tf.projectId);
 			Project p = tableSessionBean.getProject();
 			if(p!=null) {
 				League l = p.getLeague();
@@ -60,9 +71,6 @@ public class TableController {
 			} else {
 				log.warn("Project not found: "+projectId);
 			}
-		}
-		if (tf.season!=null && tf.leagueType!=null && tf.region!=null) {
-			mv.addObject("projects", tableSessionBean.findProjects(tf.season, tf.leagueType, tf.region));
 		}
 		
 		mv.addObject("ts", tableSessionBean);

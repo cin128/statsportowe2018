@@ -13,6 +13,25 @@
 
 <script>
         $(document).ready(function() {
+        	$('#season').on('change', function() {
+        		$("#leagueType").val("");
+        		$("#region").val("");
+        		$("#projectId").val("");
+        		$("#form1").submit();
+        		});
+        	$('#leagueType').on('change', function() {
+        		$("#region").val("");
+        		$("#projectId").val("");
+        		$("#form1").submit();
+        		});
+        	$('#region').on('change', function() {
+        		$("#projectId").val("");
+        		$("#form1").submit();
+        		});
+        	$('#projectId').on('change', function() {
+        		$("#form1").submit();
+        		});
+            
         	 $( "#tabs1" ).tabs();
              $( "#tabs2" ).tabs();
              $(document).tooltip();
@@ -59,7 +78,7 @@
 		<option value="pl">PL</option>
 		<option value="en">EN</option>
 	</select>
-	<form action="#" th:action="@{/table}" th:object="${tableForm}"
+	<form id="form1" action="#" th:action="@{/table}" th:object="${tableForm}"
 		method="get">
 		<select th:field="*{season}">
 			<option
@@ -76,7 +95,7 @@
 		</select> <select th:field="*{projectId}">
 			<option th:each="p : ${projects}" th:value="${p.id}"
 				th:text="${p.name}"></option>
-		</select> <input type="submit" value="Button" />
+		</select> <input id="formSubmit" type="submit" value="Button" style="display: none;"/>
 	</form>
 	<th:block th:if="${ts.project}">
 		<div th:replace="thymeleaf/fragments/tableContent :: tableContent"></div>

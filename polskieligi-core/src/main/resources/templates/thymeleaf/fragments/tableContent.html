@@ -12,7 +12,7 @@
 				<li th:if="${ts.project.type == 1}"><a class="active" href="#tabs-table"
 					th:text="#{table.table}"></a></li>
 				<li th:if="${#lists.size(ts.matches)&gt;0}"><a href="#tabs-results" th:text="#{table.results}"></a></li>
-				<li th:if="${#lists.size(scorers)&gt;0}"><a href="#tabs-scorers" th:text="#{table.scorers}"></a></li>
+				<li th:if="${scorers!=null AND #lists.size(scorers)&gt;0}"><a href="#tabs-scorers" th:text="#{table.scorers}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-table" th:if="${ts.project.type == 1}">
