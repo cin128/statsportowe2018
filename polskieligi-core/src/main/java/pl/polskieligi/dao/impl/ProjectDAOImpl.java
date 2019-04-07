@@ -121,7 +121,9 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 						"select new pl.polskieligi.dto.Scorer(p.id, p.name, p.surname, COUNT(*)) from MatchEvent me JOIN me.leagueMatchPlayer lmp JOIN lmp.player p join lmp.leagueMatch lm where lm.project_id = :projectId AND me.type IN (1, 2) GROUP BY p.id, p.name, p.surname ORDER BY COUNT(*) DESC, p.surname DESC", Scorer.class);
 
 		List<Scorer> result = query.setParameter("projectId", projectId).getResultList();
-		updateScorers(result, projectId);
+		if(!result.isEmpty()) {
+			updateScorers(result, projectId);
+		}
 		return result;
 	}
 

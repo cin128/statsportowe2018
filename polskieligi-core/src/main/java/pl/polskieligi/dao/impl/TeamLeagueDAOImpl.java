@@ -23,7 +23,11 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	@Override
 	public TeamLeague findByProjectAndTeam(Long projectId, Long teamId) {
 		Query query = getRetrieveQuery(projectId, teamId);
-		return (TeamLeague)query.getSingleResult();
+		List l = query.getResultList();
+		if(l.size()>0) {
+			return (TeamLeague)l.get(0);
+		}
+		return null;
 	}
 	
 	@Override
