@@ -4,6 +4,7 @@ import pl.polskieligi.log.DisplayUtils;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Entity @Table(indexes = {@Index(name = "IDX_PL_MINUT_ID", columnList = "minut_id", unique = false)})
 public class Player {
@@ -27,6 +28,10 @@ public class Player {
 	private Float height;
 
 	private Integer importStatus;
+	
+	@OneToMany
+	@JoinColumn(name = "player_id")
+	private List<TeamLeaguePlayer> teamleaguePlayers; 
 
 	public Player() {
 		minut_id = 0;
@@ -181,4 +186,10 @@ public class Player {
 	public void setPseudo(String pseudo) {
 		this.pseudo = pseudo;
 	}
+
+	public List<TeamLeaguePlayer> getTeamleaguePlayers() {
+		return teamleaguePlayers;
+	}
+	
+	
 }

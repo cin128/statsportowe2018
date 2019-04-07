@@ -10,6 +10,7 @@
 			<ul class="buttons1">
 				<li><a href="#tabs-info" th:text="#{player.info}"></a></li>
 				<li><a href="#tabs-matches" th:text="#{player.leaguematches}"></a></li>
+				<li><a href="#tabs-career" th:text="#{player.career}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-info">
@@ -55,6 +56,25 @@
 							<div th:replace="thymeleaf/fragments/general :: matchEvent(me=${me})"></div>
 						</th:block>
 						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="tabs-career">
+			<table>
+				<thead>
+				<tr>
+					<th th:text="#{player.season}"></th>
+					<th th:text="#{player.league}"></th>
+					<th th:text="#{player.team}"></th>
+				</tr>
+				</thead>
+				<tbody>
+				<th:block th:each="tlp,itr : ${player.teamleaguePlayers}">
+					<tr>	
+						<td th:text="${tlp.teamLeague.project.season.name}"></td>
+						<td th:text="${tlp.teamLeague.project.league.name}"></td>					
+						<td th:text="${tlp.teamLeague.team.name}"></td>
 					</tr>
 				</tbody>
 			</table>

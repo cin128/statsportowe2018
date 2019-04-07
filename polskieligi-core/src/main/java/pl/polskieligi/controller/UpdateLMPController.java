@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ImportPlayersBatchController extends AbstractImportController{
+public class UpdateLMPController extends AbstractImportController{
 
-	final static Logger log = Logger.getLogger(ImportPlayersBatchController.class);
+	final static Logger log = Logger.getLogger(UpdateLMPController.class);
 
 	@Autowired
-	@Qualifier("playerImportJob") Job job;
-
-	@RequestMapping("/importPlayersBatch")
-	public ModelAndView importPlayersBatch() {
-		log.info("importPlayersBatch start");
-		return importBatch(job);
+	@Qualifier("LMPUpdateJob") Job job;
+	
+	@RequestMapping("/updateLMP")
+	public ModelAndView UpdateLMP() {
+		log.info("UpdateLMPBatch start");
+		return importBatch(job);	
 	}
 }
+
