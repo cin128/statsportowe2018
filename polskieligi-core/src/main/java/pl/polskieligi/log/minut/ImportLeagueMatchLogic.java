@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.polskieligi.dao.LeagueMatchDAO;
 import pl.polskieligi.dao.PlayerDAO;
 import pl.polskieligi.dao.RefereeDAO;
+import pl.polskieligi.dao.TeamLeagueDAO;
+import pl.polskieligi.dao.TeamLeaguePlayerDAO;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.*;
 
@@ -40,7 +42,13 @@ public class ImportLeagueMatchLogic {
 
 	@Autowired
 	private LeagueMatchDAO matchDAO;
+	
+	@Autowired
+	private TeamLeagueDAO teamLegueDAO;
 
+	@Autowired
+	private TeamLeaguePlayerDAO teamLeguePlayerDAO;
+	
 	@Autowired
 	ImportMinutPlayerLogic importMinutPlayerLogic;
 
@@ -61,7 +69,15 @@ public class ImportLeagueMatchLogic {
 			} else {
 				try {
 					Document doc = Jsoup.connect(get90minutLink(lm.getMinut_id())).get();
-
+					
+					TeamLeague tl1 = teamLegueDAO.findByProjectAndTeam(lm.getProject_id(), lm.getMatchpart1().getId());
+					if(tl1==null) {
+						log.error("TeamLeague not found for ptrojectId: "+lm.getProject_id()+" teamId: "+lm.getMatchpart1().getId());
+					}
+					TeamLeague tl2 = teamLegueDAO.findByProjectAndTeam(lm.getProject_id(), lm.getMatchpart2().getId());
+					if(tl2==null) {
+						log.error("TeamLeague not found for ptrojectId: "+lm.getProject_id()+" teamId: "+lm.getMatchpart2().getId());
+					}
 					Elements playersRow = doc.select(
 							"table[class=main][width=480][border=0][cellspacing=0][cellpadding=0][align=center]>tbody>tr[height=20][valign=middle][align=center]");
 					Map<String, LeagueMatchPlayer> playersMap = new HashMap<String, LeagueMatchPlayer>();
@@ -131,6 +147,9 @@ public class ImportLeagueMatchLogic {
 										lm.addSubstitutions(sb);
 									}
 									lm.addLeagueMatchPlayers(lmp);
+									
+									updateTeamLeaguePlayer(tl1, tl2, i, lmp.getPlayer_id());
+									
 									lastPlayer = lmp;
 								} else {
 									lastPlayer = null;
@@ -161,6 +180,22 @@ public class ImportLeagueMatchLogic {
 
 
 		return result;
+	}
+	
+	private void updateTeamLeaguePlayer(TeamLeague tl1, TeamLeague tl2, int i, Long playerId) {
+
+		Long teamLeagueId = null;
+		if (i == 0 &&tl1!=null) {
+			teamLeagueId = tl1.getId();
+		} else if(i == 1 && tl2!=null){
+			teamLeagueId = tl2.getId();
+		}
+		if(teamLeagueId!=null) {
+			TeamLeaguePlayer tlp = new TeamLeaguePlayer();	
+			tlp.setTeamLeague_id(teamLeagueId);
+			tlp.setPlayer_id(playerId);
+			teamLeguePlayerDAO.saveUpdate(tlp);
+		}
 	}
 
 	private void parseGoals(Document doc, Map<String, LeagueMatchPlayer> playersMap) {

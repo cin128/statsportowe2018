@@ -1,6 +1,7 @@
 package pl.polskieligi.dao.impl;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.persistence.Query;
 
@@ -55,6 +56,9 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 
 	public List<T> findAll() {
 		return getEntityManager().createQuery("from " + clazz.getName(), clazz).getResultList();
+	}
+	public Stream<T> streamAll() {
+		return getEntityManager().createQuery("from " + clazz.getName(), clazz).getResultStream();
 	}
 
 	public void save(T entity) {

@@ -10,4 +10,6 @@ public interface TeamLeagueDAO extends AbstractDAO<TeamLeague>{
 	public void updateTeams(Long projectId,
 			Collection<Long> teamIds);
 	public List<Team> getTeams(Long projectId);
+	
+	public TeamLeague findByProjectAndTeam(Long projectId, Long teamId);
 }

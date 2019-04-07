@@ -1,5 +1,8 @@
 package pl.polskieligi.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pl.polskieligi.log.DisplayUtils;
 
 public class Scorer {
@@ -7,6 +10,8 @@ public class Scorer {
 	private String name;
 	private String surname;
 	private Long goals;
+	private List<String> teams = new ArrayList<String>();
+	
 
 	public Scorer(Long id, String name, String surname, Long goals) {
 		this.id = id;
@@ -45,6 +50,10 @@ public class Scorer {
 
 	public void setGoals(Long goals) {
 		this.goals = goals;
+	}
+
+	public List<String> getTeams() {
+		return teams;
 	}
 
 	public String getFullName() {

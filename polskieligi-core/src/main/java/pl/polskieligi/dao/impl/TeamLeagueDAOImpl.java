@@ -21,12 +21,21 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	}
 	
 	@Override
+	public TeamLeague findByProjectAndTeam(Long projectId, Long teamId) {
+		Query query = getRetrieveQuery(projectId, teamId);
+		return (TeamLeague)query.getSingleResult();
+	}
+	
+	@Override
 	protected Query getRetrieveQuery(TeamLeague teamLeague) {
-		Query query = getEntityManager()
-				.createQuery("select tl from TeamLeague tl "
-						+ "where tl.team_id = :team_id and tl.project_id = :project_id");
-		query.setParameter("project_id", teamLeague.getProject_id());
-		query.setParameter("team_id", teamLeague.getTeam_id());
+		return getRetrieveQuery(teamLeague.getProject_id(),  teamLeague.getTeam_id());
+	}
+	
+	protected Query getRetrieveQuery(Long projectId, Long teamId) {
+		Query query = getEntityManager().createQuery(
+				"select tl from TeamLeague tl " + "where tl.team_id = :team_id and tl.project_id = :project_id", TeamLeague.class);
+		query.setParameter("project_id", projectId);
+		query.setParameter("team_id", teamId);
 		return query;
 	}
 

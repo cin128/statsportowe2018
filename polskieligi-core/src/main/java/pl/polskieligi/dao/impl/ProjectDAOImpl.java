@@ -1,7 +1,10 @@
 package pl.polskieligi.dao.impl;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -117,7 +120,30 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 				.createQuery(
 						"select new pl.polskieligi.dto.Scorer(p.id, p.name, p.surname, COUNT(*)) from MatchEvent me JOIN me.leagueMatchPlayer lmp JOIN lmp.player p join lmp.leagueMatch lm where lm.project_id = :projectId AND me.type IN (1, 2) GROUP BY p.id, p.name, p.surname ORDER BY COUNT(*) DESC, p.surname DESC", Scorer.class);
 
+		List<Scorer> result = query.setParameter("projectId", projectId).getResultList();
+		updateScorers(result, projectId);
+		return result;
+	}
+
+	@SuppressWarnings({ "unused", "unchecked" })
+	private void updateScorers(List<Scorer> scorers, Long projectId) {
+		
+		List<Long> players = new ArrayList<Long>();
+		Map<Long, Scorer> scorersMap = new HashMap<Long, Scorer>();
+		for(Scorer s:scorers) {
+			players.add(s.getId());
+			scorersMap.put(s.getId(), s);
+		}
+		Query query = getEntityManager()
+				.createQuery("select tlp.player_id, t.name from TeamLeaguePlayer tlp JOIN tlp.teamLeague tl JOIN tl.team t where tlp.player_id in :players and tl.project_id = :projectId");
 		query.setParameter("projectId", projectId);
-		return query.getResultList();
+		query.setParameter("players", players);
+		
+		List<Object[]> list = query.getResultList();
+		for(Object[] row: list) {
+			Long playerId = (Long)row[0];
+			String teamName = (String)row[1];
+			scorersMap.get(playerId).getTeams().add(teamName);
+		}
 	}
 }

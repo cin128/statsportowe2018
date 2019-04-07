@@ -161,6 +161,10 @@
 			<table>
 				<thead>
 				<tr>
+					<th><abbr th:attr="title=#{table.g.tooltip}"
+						th:text="#{table.g}"></abbr></th>
+					<th th:text="#{table.player}"></th>
+					<th th:text="#{table.team}"></th>
 				</tr>
 				</thead>
 				<tbody>
@@ -169,6 +173,11 @@
                         <td th:text="${row.goals}"></td>
                         <td><a
                                 th:replace="thymeleaf/fragments/general :: player(player=${row}, seasonId=${seasonId})"></a></td>
+                        <td>
+                        	<th:block th:each="s : ${row.teams}">
+                        		<div th:text="${s}"></div>
+                        	</th:block>
+                        </td>        
 					</tr>
 				</th:block>
 				</tbody>
