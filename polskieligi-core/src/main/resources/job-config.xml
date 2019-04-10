@@ -96,7 +96,7 @@
 				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
 			<value>
 				<![CDATA[
-                    FROM Project where (type = 1 AND (published = FALSE OR archive = FALSE)) OR importStatus = 1
+                    FROM Project where (type = 1 AND (archive = FALSE)) OR importStatus = 1
                 ]]>
 			</value>
 		</property>
