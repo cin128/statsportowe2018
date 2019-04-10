@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ImportRefereesBatchController extends AbstractImportController{
+public class UpdateProjectsBatchController extends AbstractImportController{
 
-	final static Logger log = Logger.getLogger(ImportRefereesBatchController.class);
+	final static Logger log = Logger.getLogger(UpdateProjectsBatchController.class);
 
 	@Autowired
-	@Qualifier("refereeImportJob") Job job;
+	@Qualifier("projectUpdateJob") Job job;
 
-	@RequestMapping("/importRefereesBatch")
-	public ModelAndView importPlayersBatch() {
-		log.info("importRefereesBatch start");
+	@RequestMapping("/updateProjectsBatch")
+	public ModelAndView updateProjectsBatch() {
+		log.info("updateProjectsBatch start");
 		return importBatch(job);
 	}
 }
