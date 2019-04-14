@@ -368,10 +368,11 @@ public class ImportMinutProjectLogic {
 						}
 					}
 				}
-				matches_count += matchDAO.saveUpdate(roundMatches);
 				for(LeagueMatch lm: roundMatches) {
-					if(lm.getCount_result() && lm.getMinut_id()>0) {
-						importLeagueMatchLogic.doImport(lm);
+					matches_count++;
+					LeagueMatch m = matchDAO.saveUpdate(lm);
+					if(m.getCount_result() && m.getMinut_id()>0) {
+						importLeagueMatchLogic.doImport(m);
 					}
 				}
 			} else {

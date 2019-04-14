@@ -35,6 +35,16 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 		return getRetrieveQuery(teamLeague.getProject_id(),  teamLeague.getTeam_id());
 	}
 	
+	@Override
+	protected boolean updateData(TeamLeague source, TeamLeague target) {
+		boolean update = false;
+		if(!source.getStartPoints().equals(target.getStartPoints())) {
+			target.setStartPoints(source.getStartPoints());
+			update = true;
+		}
+		return update;
+	}
+	
 	protected Query getRetrieveQuery(Long projectId, Long teamId) {
 		Query query = getEntityManager().createQuery(
 				"select tl from TeamLeague tl " + "where tl.team_id = :team_id and tl.project_id = :project_id", TeamLeague.class);

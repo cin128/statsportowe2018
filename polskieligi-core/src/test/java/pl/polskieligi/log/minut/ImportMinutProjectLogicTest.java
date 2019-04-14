@@ -1,18 +1,21 @@
 package pl.polskieligi.log.minut;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.polskieligi.dao.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
+import pl.polskieligi.dao.LeagueDAO;
+import pl.polskieligi.dao.LeagueMatchDAO;
+import pl.polskieligi.dao.ProjectDAO;
+import pl.polskieligi.dao.RoundDAO;
+import pl.polskieligi.dao.SeasonDAO;
+import pl.polskieligi.dao.TeamDAO;
+import pl.polskieligi.dao.TeamLeagueDAO;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImportMinutProjectLogicTest {
@@ -58,7 +61,7 @@ public class ImportMinutProjectLogicTest {
 		when(teamLeagueDAO.saveUpdate(any())).thenAnswer(i->i.getArgument(0));
 
 		logic.setMatchDAO(matchDAO);
-		when(matchDAO.saveUpdate(anyList())).thenAnswer(i->((List)i.getArgument(0)).size());
+		when(matchDAO.saveUpdate(any())).thenAnswer(i->i.getArgument(0));
 
 		logic.setRoundDAO(roundDAO);
 		when(roundDAO.saveUpdate(any())).thenAnswer(i->i.getArgument(0));
