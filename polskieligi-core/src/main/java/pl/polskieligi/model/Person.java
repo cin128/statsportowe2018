@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 import java.sql.Date;
 
 @MappedSuperclass
-public abstract class Person {
+public abstract class Person implements MinutObject{
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

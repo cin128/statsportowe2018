@@ -6,6 +6,7 @@ import pl.polskieligi.dao.TeamLeaguePlayerDAO;
 import pl.polskieligi.model.TeamLeaguePlayer;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -14,8 +15,8 @@ public class TeamLeaguePlayerDAOImpl extends AbstractDAOImpl<TeamLeaguePlayer> i
 		super(TeamLeaguePlayer.class);
 	}
 	@Override
-	protected Query getRetrieveQuery(TeamLeaguePlayer tlp) {
-		Query query = getEntityManager().createQuery("SELECT tlp from TeamLeaguePlayer tlp where player_id = :player_id AND teamLeague_id = :teamLeague_id");
+	protected TypedQuery<TeamLeaguePlayer> getRetrieveQuery(TeamLeaguePlayer tlp) {
+		TypedQuery<TeamLeaguePlayer> query = getEntityManager().createQuery("SELECT tlp from TeamLeaguePlayer tlp where player_id = :player_id AND teamLeague_id = :teamLeague_id", TeamLeaguePlayer.class);
 		query.setParameter("player_id", tlp.getPlayer_id());
 		query.setParameter("teamLeague_id", tlp.getTeamLeague_id());
 		return query;

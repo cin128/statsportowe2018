@@ -9,6 +9,7 @@ import pl.polskieligi.model.LeagueType;
 import pl.polskieligi.model.Region;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -19,8 +20,8 @@ public class LeagueDAOImpl extends AbstractDAOImpl<League> implements LeagueDAO 
 	}
 
 	@Override
-	protected Query getRetrieveQuery(League league) {
-		Query query = getEntityManager().createQuery("SELECT l from League l where name = :name");
+	protected TypedQuery<League> getRetrieveQuery(League league) {
+		TypedQuery<League> query = getEntityManager().createQuery("SELECT l from League l where name = :name", League.class);
 		query.setParameter("name", league.getName());
 		return query;
 	}

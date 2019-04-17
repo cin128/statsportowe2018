@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 @Table(indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false),
 		 @Index(name = "IDX_TE_NAME", columnList = "name", unique = false)})
-public class Team {
+public class Team implements MinutObject{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

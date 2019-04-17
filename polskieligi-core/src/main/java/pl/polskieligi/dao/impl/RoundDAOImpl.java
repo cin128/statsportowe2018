@@ -9,6 +9,7 @@ import pl.polskieligi.dao.RoundDAO;
 import pl.polskieligi.model.Round;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -18,8 +19,8 @@ public class RoundDAOImpl extends AbstractDAOImpl<Round> implements RoundDAO {
 	}
 
 	@Override
-	protected Query getRetrieveQuery(Round round) {
-		Query query = getEntityManager().createQuery("SELECT r from Round r where project_id = :project_id and matchcode = :matchcode");
+	protected TypedQuery<Round> getRetrieveQuery(Round round) {
+		TypedQuery<Round> query = getEntityManager().createQuery("SELECT r from Round r where project_id = :project_id and matchcode = :matchcode", Round.class);
 		query.setParameter("project_id", round.getProject_id());
 		query.setParameter("matchcode", round.getMatchcode());
 		return query;

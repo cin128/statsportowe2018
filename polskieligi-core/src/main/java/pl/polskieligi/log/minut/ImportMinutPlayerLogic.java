@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 
-@Component @Transactional public class ImportMinutPlayerLogic {
+@Component @Transactional public class ImportMinutPlayerLogic implements ImportMinutLogic<Player>{
 	private static final String MINUT_URL = "http://www.90minut.pl";
 
 	final static Logger log = Logger.getLogger(ImportMinutPlayerLogic.class);

@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity @Table(indexes = {@Index(name = "IDX_PL_MINUT_ID", columnList = "minut_id", unique = false)})
-public class Player extends  Person {
+public class Player extends Person {
 
 	private String pseudo;
 	private String position;

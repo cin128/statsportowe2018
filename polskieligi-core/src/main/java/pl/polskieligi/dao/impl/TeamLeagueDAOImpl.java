@@ -12,6 +12,7 @@ import pl.polskieligi.model.Team;
 import pl.polskieligi.model.TeamLeague;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Repository
 @Transactional
@@ -31,7 +32,7 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	}
 	
 	@Override
-	protected Query getRetrieveQuery(TeamLeague teamLeague) {
+	protected TypedQuery<TeamLeague> getRetrieveQuery(TeamLeague teamLeague) {
 		return getRetrieveQuery(teamLeague.getProject_id(),  teamLeague.getTeam_id());
 	}
 	
@@ -45,8 +46,8 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 		return update;
 	}
 	
-	protected Query getRetrieveQuery(Long projectId, Long teamId) {
-		Query query = getEntityManager().createQuery(
+	protected TypedQuery<TeamLeague> getRetrieveQuery(Long projectId, Long teamId) {
+		TypedQuery<TeamLeague> query = getEntityManager().createQuery(
 				"select tl from TeamLeague tl " + "where tl.team_id = :team_id and tl.project_id = :project_id", TeamLeague.class);
 		query.setParameter("project_id", projectId);
 		query.setParameter("team_id", teamId);

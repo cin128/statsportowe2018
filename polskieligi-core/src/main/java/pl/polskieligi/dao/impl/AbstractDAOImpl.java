@@ -1,15 +1,15 @@
 package pl.polskieligi.dao.impl;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.persistence.Query;
-
 import pl.polskieligi.dao.AbstractDAO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Stream;
 
+@Transactional
 public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 
 	@PersistenceContext
@@ -26,9 +26,8 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 	}
 
 	public T saveUpdate(T obj) {
-		Query query = getRetrieveQuery(obj);
+		TypedQuery<T> query = getRetrieveQuery(obj);
 		T oldObj = null;
-		@SuppressWarnings("unchecked")
 		List<T> objs = query.getResultList();
 		for (T t : objs) {
 			oldObj = t;
@@ -44,7 +43,9 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 		return obj;
 	}
 
-	protected abstract Query getRetrieveQuery(T obj);
+	protected TypedQuery<T> getRetrieveQuery(T obj){
+		return null;
+	};
 
 	protected boolean updateData(T source, T target) {
 		return false;

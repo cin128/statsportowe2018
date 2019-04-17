@@ -16,10 +16,6 @@ public class SubstitutionDAOImpl extends AbstractDAOImpl<Substitution> implement
 		super(Substitution.class);
 	}
 
-	@Override protected Query getRetrieveQuery(Substitution obj) {
-		return null;
-	}
-
 	@Override public List<Substitution> getSubstitutionsForLeagueMatch(Long leagueMatchId) {
 		TypedQuery<Substitution> query = getEntityManager()
 				.createQuery(

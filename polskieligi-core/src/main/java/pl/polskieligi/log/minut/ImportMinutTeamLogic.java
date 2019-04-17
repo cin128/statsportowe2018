@@ -19,7 +19,7 @@ import pl.polskieligi.model.Team;
 
 @Component
 @Transactional
-public class ImportMinutTeamLogic {
+public class ImportMinutTeamLogic  implements ImportMinutLogic<Team>{
 
 	private static final String MINUT_URL = "http://www.90minut.pl";
 

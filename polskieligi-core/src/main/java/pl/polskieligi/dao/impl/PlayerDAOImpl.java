@@ -6,6 +6,7 @@ import pl.polskieligi.dao.PlayerDAO;
 import pl.polskieligi.model.Player;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -31,8 +32,9 @@ public class PlayerDAOImpl extends AbstractDAOImpl<Player> implements PlayerDAO 
 	}
 
 
-	@Override protected Query getRetrieveQuery(Player player) {
-		Query query = getEntityManager().createQuery("SELECT p from Player p where minut_id = :minut_id");
+	@Override protected TypedQuery<Player> getRetrieveQuery(Player player) {
+		TypedQuery<Player>
+				query = getEntityManager().createQuery("SELECT p from Player p where minut_id = :minut_id", Player.class);
 		query.setParameter("minut_id", player.getMinut_id());
 		return query;
 	}

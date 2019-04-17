@@ -21,9 +21,9 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 	}
 
 	@Override
-	protected Query getRetrieveQuery(LeagueMatch match) {
-		Query query = getEntityManager().createQuery(
-				"SELECT lm from LeagueMatch lm where project_id = :project_id and round = :round and matchpart1 = :matchpart1 and matchpart2 = :matchpart2");
+	protected TypedQuery<LeagueMatch> getRetrieveQuery(LeagueMatch match) {
+		TypedQuery<LeagueMatch> query = getEntityManager().createQuery(
+				"SELECT lm from LeagueMatch lm where project_id = :project_id and round = :round and matchpart1 = :matchpart1 and matchpart2 = :matchpart2", LeagueMatch.class);
 		query.setParameter("project_id", match.getProject_id());
 		query.setParameter("round", match.getRound());
 		query.setParameter("matchpart1", match.getMatchpart1());

@@ -1,11 +1,7 @@
-package pl.polskieligi.batch.project;
-
-import java.util.HashMap;
-import java.util.Map;
+package pl.polskieligi.batch;
 
 import org.apache.log4j.Logger;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -14,29 +10,31 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-public class ProjectUpdateScheduler {
+import java.util.HashMap;
+import java.util.Map;
 
-	final static Logger log = Logger.getLogger(ProjectUpdateScheduler.class);
+public class DefaultUpdateScheduler {
+
+	final static Logger log = Logger.getLogger(DefaultUpdateScheduler.class);
 
 	@Autowired
 	private JobLauncher launcher;
-	
-	@Autowired
-	@Qualifier("projectUpdateJob")
-	private Job job;
 
-	private JobExecution execution;	
+	private final Job job;
+
+	public DefaultUpdateScheduler(Job job){
+		this.job=job;
+	}
 
 	public void run() {
-		log.info("Run");
+		log.info("Run "+job.getName());
 		try {
 			Map<String,JobParameter> parameters = new HashMap<String,JobParameter>();
 			parameters.put("time",new JobParameter(System.currentTimeMillis()));
 			JobParameters jobParameters =
 					new JobParameters(parameters);
-			execution = launcher.run(job, jobParameters);
+			launcher.run(job, jobParameters);
 		} catch (JobExecutionAlreadyRunningException e) {
 			log.error(e.getMessage(), e);
 		} catch (JobRestartException e) {
@@ -46,5 +44,5 @@ public class ProjectUpdateScheduler {
 		} catch (JobParametersInvalidException e) {
 			log.error(e.getMessage(), e);
 		}
-	}	
+	}
 }
