@@ -1,5 +1,7 @@
 package pl.polskieligi.batch.config;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -7,11 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
-import pl.polskieligi.log.minut.ImportMinutPlayerLogic;
+import pl.polskieligi.batch.DefaultScheduler;
 import pl.polskieligi.log.minut.ImportMinutRefereeLogic;
 import pl.polskieligi.model.Config;
-import pl.polskieligi.model.Player;
 import pl.polskieligi.model.Referee;
+
+import javax.persistence.EntityManagerFactory;
 
 @Configuration
 public class RefereeJobConfig extends AbstractJobConfig<Referee>{
@@ -31,7 +34,26 @@ public class RefereeJobConfig extends AbstractJobConfig<Referee>{
 		return getImportReader(defaultMaxValue);
 	}
 
-	@Bean public DefaultJobExecutionListener refereeUpdateJobExecutionListener(@Qualifier("refereeImportReader") DefaultItemReader refereeImportReader) {
-		return getUpdateJobExecutionListener(refereeImportReader);
+	@Bean public DefaultJobExecutionListener refereeImportJobExecutionListener(@Qualifier("refereeImportReader") DefaultItemReader refereeImportReader) {
+		return getImportJobExecutionListener(refereeImportReader);
+	}
+
+	@Bean
+	public JpaPagingItemReader refereeUpdateReader(EntityManagerFactory entityManagerFactory){
+		return  getUpdateReader(entityManagerFactory);
+	}
+
+	protected String getUpdateQuery(){
+		return super.getUpdateQuery()+" OR (name IS NULL)";
+	}
+
+	@Bean
+	public DefaultScheduler refereeImportScheduler(@Qualifier("refereeImportJob")Job job){
+		return getScheduler(job);
+	}
+
+	@Bean
+	public DefaultScheduler refereeUpdateScheduler(@Qualifier("refereeUpdateJob")Job job){
+		return getScheduler(job);
 	}
 }

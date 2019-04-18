@@ -1,5 +1,7 @@
 package pl.polskieligi.batch.config;
 
+import org.springframework.batch.core.Job;
+import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -7,9 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
+import pl.polskieligi.batch.DefaultScheduler;
 import pl.polskieligi.log.minut.ImportMinutPlayerLogic;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.Player;
+
+import javax.persistence.EntityManagerFactory;
 
 @Configuration
 public class PlayerJobConfig extends AbstractJobConfig<Player>{
@@ -30,7 +35,26 @@ public class PlayerJobConfig extends AbstractJobConfig<Player>{
 		return getImportReader(defaultMaxValue);
 	}
 
-	@Bean public DefaultJobExecutionListener playerUpdateJobExecutionListener(@Qualifier("playerImportReader") DefaultItemReader<Player> playerImportReader) {
-		return getUpdateJobExecutionListener(playerImportReader);
+	@Bean public DefaultJobExecutionListener playerImportJobExecutionListener(@Qualifier("playerImportReader") DefaultItemReader<Player> playerImportReader) {
+		return getImportJobExecutionListener(playerImportReader);
+	}
+
+	@Bean
+	public JpaPagingItemReader playerUpdateReader(EntityManagerFactory entityManagerFactory){
+		return  getUpdateReader(entityManagerFactory);
+	}
+
+	protected String getUpdateQuery(){
+		return super.getUpdateQuery()+" OR (name IS NULL)";
+	}
+
+	@Bean
+	public DefaultScheduler playerImportScheduler(@Qualifier("playerImportJob")Job job){
+		return getScheduler(job);
+	}
+
+	@Bean
+	public DefaultScheduler playerUpdateScheduler(@Qualifier("playerUpdateJob")Job job){
+		return getScheduler(job);
 	}
 }

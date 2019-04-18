@@ -48,10 +48,11 @@
 
 	<bean id="projectProcessor" class="pl.polskieligi.batch.project.ProjectProcessor" />
 
-	<!--Import JOB-->
-
 	<job id="projectImportJob" xmlns="http://www.springframework.org/schema/batch"
 		 restartable="true">
+		<listeners>
+			<listener ref="projectImportJobExecutionListener" />
+		</listeners>
 		<step id="projectImportStep" allow-start-if-complete="true">
 			<tasklet transaction-manager="transactionManager">
 				<chunk reader="projectImportReader" processor="projectProcessor"
@@ -59,18 +60,6 @@
 			</tasklet>
 		</step>
 	</job>
-
-	<bean id="projectImportReader" class="pl.polskieligi.batch.project.ProjectImportReader" />
-
-	<!--Update JOB-->
-
-	<task:scheduled-tasks>
-<!-- 		<task:scheduled ref="projectUpdateScheduler" method="run"
-			cron="*/30 * * * * *" />-->
-		<task:scheduled ref="projectUpdateScheduler" method="run"
-			cron="* * 1 ? * WED" />
-	</task:scheduled-tasks>
-
 
 	<job id="projectUpdateJob" xmlns="http://www.springframework.org/schema/batch"
 		restartable="true">
@@ -85,22 +74,6 @@
 		</step>
 	</job>
 
-	<bean id="projectUpdateReader"
-		  class="org.springframework.batch.item.database.JpaPagingItemReader">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-		<property name="queryString">
-			<!-- Why CDATA? because < etc. is not allowed for xml values when you
-				use &lt; xml parser will work, but now the sql won't because of the & spring
-				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
-			<value>
-				<![CDATA[
-                    FROM Project where (type = 1 AND (archive = FALSE)) OR importStatus = 1
-                ]]>
-			</value>
-		</property>
-		<property name="pageSize" value="1000"/>
-	</bean>
-
 	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.project.ProjectUpdateJobExecutionListener" />
 
     <!--Player-->
@@ -108,7 +81,7 @@
     <job id="playerImportJob" xmlns="http://www.springframework.org/schema/batch"
          restartable="true">
 		<listeners>
-			<listener ref="playerUpdateJobExecutionListener" />
+			<listener ref="playerImportJobExecutionListener" />
 		</listeners>
         <step id="playerImportStep" allow-start-if-complete="true">
             <tasklet transaction-manager="transactionManager">
@@ -117,13 +90,23 @@
             </tasklet>
         </step>
     </job>
+
+	<job id="playerUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<step id="playerUpdateStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="playerUpdateReader" processor="playerProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
         
     <!--Team-->
 
     <job id="teamImportJob" xmlns="http://www.springframework.org/schema/batch"
          restartable="true">
 		<listeners>
-			<listener ref="teamUpdateJobExecutionListener" />
+			<listener ref="teamImportJobExecutionListener" />
 		</listeners>
         <step id="teamImportStep" allow-start-if-complete="true">
             <tasklet transaction-manager="transactionManager">
@@ -143,30 +126,13 @@
             </tasklet>
         </step>
     </job>
-    
-    <bean id="teamUpdateReader"
-		  class="org.springframework.batch.item.database.JpaPagingItemReader">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-		<property name="queryString">
-			<!-- Why CDATA? because < etc. is not allowed for xml values when you
-				use &lt; xml parser will work, but now the sql won't because of the & spring
-				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
-			<value>
-				<![CDATA[
-                    FROM Team where name IS NULL OR importStatus = 1
-                ]]>
-			</value>
-		</property>
-		<property name="pageSize" value="1000"/>
-	</bean>
-
 
 	<!--Referee-->
 
 	<job id="refereeImportJob" xmlns="http://www.springframework.org/schema/batch"
 		 restartable="true">
 		<listeners>
-			<listener ref="refereeUpdateJobExecutionListener" />
+			<listener ref="refereeImportJobExecutionListener" />
 		</listeners>
 		<step id="refereeImportStep" allow-start-if-complete="true">
 			<tasklet transaction-manager="transactionManager">
@@ -185,22 +151,6 @@
 			</tasklet>
 		</step>
 	</job>
-
-	<bean id="refereeUpdateReader"
-		  class="org.springframework.batch.item.database.JpaPagingItemReader">
-		<property name="entityManagerFactory" ref="entityManagerFactory"/>
-		<property name="queryString">
-			<!-- Why CDATA? because < etc. is not allowed for xml values when you
-				use &lt; xml parser will work, but now the sql won't because of the & spring
-				assumes a placeholder, see - AbstractSqlPagingQueryProvider.init(...) - JdbcParameterUtils.countParameterPlaceholders(...) -->
-			<value>
-				<![CDATA[
-                    FROM Referee where name IS NULL OR importStatus = 1
-                ]]>
-			</value>
-		</property>
-		<property name="pageSize" value="1000"/>
-	</bean>
 	
 	
 	<!-- LMP -->

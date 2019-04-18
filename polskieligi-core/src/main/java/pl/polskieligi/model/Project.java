@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_PR_MINUT_ID", columnList = "minut_id", unique = false) })
-public class Project {
+public class Project implements MinutObject{
 	public final static Integer REGULAR_LEAGUE = 1;
 	public final static Integer OTHER = 2;
 

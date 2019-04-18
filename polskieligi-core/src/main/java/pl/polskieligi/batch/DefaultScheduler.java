@@ -14,16 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultUpdateScheduler {
+public class DefaultScheduler {
 
-	final static Logger log = Logger.getLogger(DefaultUpdateScheduler.class);
+	final static Logger log = Logger.getLogger(DefaultScheduler.class);
 
 	@Autowired
 	private JobLauncher launcher;
 
 	private final Job job;
 
-	public DefaultUpdateScheduler(Job job){
+	public DefaultScheduler(Job job){
 		this.job=job;
 	}
 
