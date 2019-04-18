@@ -11,10 +11,12 @@
 			<thead>
 			</thead>
 			<tbody>
-				<th:block th:each="m,itr : ${leagueMatches}">
+				<th:block th:each="p,itr : ${players}">
 					<tr>
 						<th th:text="${itr.index+1}"></th>
-						<td th:text="${#dates.format(m.match_date, 'dd.MM.yyyy HH:mm')}"></td>
+						<td><a
+                                    th:replace="thymeleaf/fragments/general :: player(player=${p}, seasonId=${seasonId})"></a>
+                        </td>
 					</tr>
 			</tbody>
 		</table>

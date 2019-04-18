@@ -1,5 +1,8 @@
 package pl.polskieligi.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -22,6 +25,10 @@ public class TeamLeague {
 	private Team team;
 	
 	private Integer startPoints;
+	
+	@OneToMany
+	@JoinColumn(name = "teamLeague_id")
+	private List<TeamLeaguePlayer> teamLeaguePlayers = new ArrayList<>();
 
 	public TeamLeague() {
 		startPoints=0;
@@ -65,5 +72,9 @@ public class TeamLeague {
 
 	public void setStartPoints(Integer startPoints) {
 		this.startPoints = startPoints;
+	}
+	
+	public List<TeamLeaguePlayer> getTeamLeaguePlayers() {
+		return teamLeaguePlayers;
 	}
 }

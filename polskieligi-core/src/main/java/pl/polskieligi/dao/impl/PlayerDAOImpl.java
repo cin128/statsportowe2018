@@ -38,4 +38,13 @@ public class PlayerDAOImpl extends AbstractDAOImpl<Player> implements PlayerDAO 
 		query.setParameter("minut_id", player.getMinut_id());
 		return query;
 	}
+
+	@Override
+	public List<Player> findBySeasonAndTeam(Long seasonId, Long teamId) {
+		TypedQuery<Player>
+		query = getEntityManager().createQuery("SELECT distinct p from Player p join p.teamleaguePlayers tlp join tlp.teamLeague tl join tl.project pr join pr.season s where s.id = :seasonId and tl.team_id = :teamId", Player.class);
+		query.setParameter("seasonId", seasonId);
+		query.setParameter("teamId", teamId);
+		return query.getResultList();
+	}
 }
