@@ -157,7 +157,7 @@
 				</tbody>
 			</table>
 		</div>
-		<div id="tabs-scorers">
+		<div th:if="${scorers!=null AND #lists.size(scorers)&gt;0}" id="tabs-scorers">
 			<table>
 				<thead>
 				<tr>

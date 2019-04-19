@@ -10,17 +10,17 @@
 		<div id="menu1">
 			<ul class="buttons1">			
 				<li><a href="#tabs-teamLeagues" th:text="#{team.competitions}"></a></li>
-				<li><a href="#tabs-teamLeagueMatches" th:text="#{team.results}"></a></li>
-				<li><a href="#tabs-teamLeaguePlayers" th:text="#{team.players}"></a></li>
+				<li th:if="${leagueMatches!=null AND #lists.size(leagueMatches)&gt;0}"><a href="#tabs-teamLeagueMatches" th:text="#{team.results}"></a></li>
+				<li th:if="${players!=null AND #lists.size(players)&gt;0}"><a href="#tabs-teamLeaguePlayers" th:text="#{team.players}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-teamLeagues">
 			<div th:replace="thymeleaf/fragments/teamLeague :: teamLeague"></div>
 		</div>
-		<div id="tabs-teamLeagueMatches">
+		<div th:if="${leagueMatches!=null AND #lists.size(leagueMatches)&gt;0}" id="tabs-teamLeagueMatches">
 			<div th:replace="thymeleaf/fragments/teamLeagueMatches :: teamLeagueMatches"></div>
 		</div>
-		<div id="tabs-teamLeaguePlayers">
+		<div th:if="${players!=null AND #lists.size(players)&gt;0}" id="tabs-teamLeaguePlayers">
 			<div th:replace="thymeleaf/fragments/teamLeaguePlayers :: teamLeaguePlayers"></div>
 		</div>
 	</div>

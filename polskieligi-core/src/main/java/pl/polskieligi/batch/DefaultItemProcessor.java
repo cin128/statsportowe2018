@@ -30,7 +30,7 @@ public class DefaultItemProcessor<T extends MinutObject> implements ItemProcesso
 		if(obj instanceof MinutObject){
 			if(result!=null){
 				MinutObject mo = (MinutObject)result;
-				if(ImportStatus.SUCCESS.getValue()== mo.getImportStatus()) {
+				if(mo.getImportStatus()!=null && mo.getImportStatus()==ImportStatus.SUCCESS.getValue()) {
 					Integer minut_id = mo.getMinut_id();
 					if (minut_id != null && minut_id > 0) {
 						Config conf = configDAO.findByName(propertyName);
