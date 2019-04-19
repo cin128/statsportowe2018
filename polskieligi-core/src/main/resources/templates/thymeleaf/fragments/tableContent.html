@@ -144,14 +144,8 @@
 						</tr>
 
 						<tr>
-							<td th:text="${#dates.format(m.match_date, 'dd.MM.yyyy HH:mm')}"></td>
-							<td><b th:text="${m.matchpart1.name}"></b></td>
-							<td><b
-								th:text="${#numbers.formatDecimal(m.matchpart1_result,0,0)}"></b></td>
-							<td><b
-								th:text="${#numbers.formatDecimal(m.matchpart2_result,0,0)}"></b></td>
-							<td><b th:text="${m.matchpart2.name}"></b></td>
-							<td><a th:if="${m.importStatus==0}" th:href="@{/leagueMatch(leagueMatchId=${m.match_id})}">link</a></td>
+							<th:block th:replace="thymeleaf/fragments/general :: leagueMatch(m=${m})">
+							</th:block>
 						</tr>
 					</th:block>
 				</tbody>

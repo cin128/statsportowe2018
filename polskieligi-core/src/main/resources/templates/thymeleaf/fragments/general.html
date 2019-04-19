@@ -40,5 +40,17 @@
 	</th:block>
 
 	<div th:fragment="sub(player, time)"  th:if="${player}" th:attr="title=${time +''' '+player?.fullName}" class="substitution"></div>
+	
+	<th:block th:fragment="leagueMatch(m)">    
+	    <td th:text="${#dates.format(m.match_date, 'dd.MM.yyyy HH:mm')}"></td>
+		<td><b th:text="${m.matchpart1.name}"></b></td>
+		<td><b
+			th:text="${#numbers.formatDecimal(m.matchpart1_result,0,0)}"></b></td>
+		<td><b
+			th:text="${#numbers.formatDecimal(m.matchpart2_result,0,0)}"></b></td>
+		<td><b th:text="${m.matchpart2.name}"></b></td>
+		<td><a th:if="${m.importStatus==0}"
+			th:href="@{/leagueMatch(leagueMatchId=${m.match_id})}">Szczegóły</a></td>
+	</th:block>
 </body>
 </html>

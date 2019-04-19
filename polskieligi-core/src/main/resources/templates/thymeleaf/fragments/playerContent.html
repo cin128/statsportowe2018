@@ -45,12 +45,9 @@
 						<td th:text="${lmp.minutIn}"></td>
 						<td th:text="${lmp.minutOut}"></td>
 						
-						<td th:text="${lmp.leagueMatch.match_date}"></td>
+						<th:block th:replace="thymeleaf/fragments/general :: leagueMatch(m=${lmp.leagueMatch})">
+						</th:block>
 						
-						<td th:text="${lmp.leagueMatch.matchpart1.name}"></td>
-						<td th:text="${lmp.leagueMatch.matchpart1_result}"></td>
-						<td th:text="${lmp.leagueMatch.matchpart2_result}"></td>
-						<td th:text="${lmp.leagueMatch.matchpart2.name}"></td>
 						<td>
 						<th:block th:each="me : ${lmp.matchEvents}">
 							<div th:replace="thymeleaf/fragments/general :: matchEvent(me=${me})"></div>
