@@ -27,9 +27,9 @@
                 <td colspan="3" th:text="#{leaguematch.crowd}"></td>
                 <td colspan="3" th:text="${leagueMatch.crowd}"></td>
             </tr>
-            <tr>
+            <tr  th:if="${leagueMatch.referee}">
                 <td colspan="3" th:text="#{leaguematch.referee}"></td>
-                <td colspan="3" th:text="${leagueMatch?.referee.name + ' ' + leagueMatch?.referee.surname}"></td>
+                <td colspan="3" th:text="${leagueMatch?.referee?.name + ' ' + leagueMatch?.referee?.surname}"></td>
             </tr>
 
             <!--Goals-->
