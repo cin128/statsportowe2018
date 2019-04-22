@@ -6,6 +6,7 @@ import java.util.Map;
 public enum Region {
 
 	UNDEFINED(0, 0, "Niezdefiniowana", "Niezdefiniowana"),
+	SLA(12, 18, "Śląski ZPN", "Śląski", "śląska", "Bielsko-Biała", "Częstochowa", "Katowice", "Bytom", "Lubliniec", "Racibórz", "Rybnik", "Skoczów", "Sosnowiec", "Tychy", "Zabrze", "Żywiec"),
 	DOL(1, 16, "Dolnośląski ZPN", "Dolnośląski", "dolnośląska", "Jelenia Góra", "Legnica", "Wałbrzych", "Wrocław", "Środa Śląska", "Trzebnica", "Bolesławiec", "Kłodzko", "Lubań", "Oława", "Strzelin", "Zgorzelec", "Świdnica"),
 	POM(11, 10, "Pomorski ZPN", "Pomorski", "pomorska", "Gdańsk", "Słupsk", "Malbork", "Puck"),
 	KUJ(2, 3, "Kujawsko-Pomorski ZPN", "Kujawsko-Pomorski", "kujawsko-pomorska", "Bydgoszcz", "Toruń", "Włocławek"),
@@ -16,8 +17,7 @@ public enum Region {
 	MAL(6, 13, "Małopolski ZPN", "Małopolski", "małopolska", "Chrzanów", "Kraków", "Limanowa", "Myślenice", "Nowy Sącz", "Olkusz", "Oświęcim", "Podhale", "Tarnów", "Wadowice", "Wieliczka", "Gorlice", "Bochnia", "Brzesko", "Miechów", "Nowy Targ", "Żabno"),
 	MAZ(7, 1, "Mazowiecki ZPN", "Mazowiecki", "mazowiecka", "Ciechanów", "Ostrołęka", "Płock", "Radom", "Siedlce", "Warszawa"),
 	POK(9, 14, "Podkarpacki ZPN", "Podkarpacki", "podkarpacka" , "Dębica", "Jarosław", "Krosno", "Rzeszów", "Stalowa Wola", "Lubaczów", "Przemyśl", "Przeworsk"),
-	POL(10, 11, "Podlaski ZPN", "Podlaski", "podlaska"),
-	SLA(12, 18, "Śląski ZPN", "Śląski", "śląska", "Bielsko-Biała", "Częstochowa", "Katowice", "Bytom", "Lubliniec", "Racibórz", "Rybnik", "Skoczów", "Sosnowiec", "Tychy", "Zabrze", "Żywiec"),
+	POL(10, 11, "Podlaski ZPN", "Podlaski", "podlaska"),	
 	SWI(13, 17, "Świętokrzyski ZPN", "Świętokrzyski", "świętokrzyska", "Kielce", "Sandomierz"),
 	WAR(14, 8, "Warmińsko-Mazurski ZPN", "Warmińsko-Mazurski", "warmińsko-mazurska"),
 	WIE(15, 2, "Wielkopolski ZPN", "Wielkopolski", "wielkopolska", "Kalisz", "Konin", "Leszno", "Piła", "Poznań", "Kościan"),

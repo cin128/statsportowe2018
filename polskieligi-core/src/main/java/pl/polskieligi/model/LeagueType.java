@@ -10,12 +10,12 @@ public enum LeagueType {
 	I_LIGA(2, "I liga"),
 	II_LIGA(3, "II liga"),
 	III_LIGA(4, "III liga"),	
-	V_LIGA(6, "V liga"),
+	V_LIGA(6, "V liga", "PIĄTA LIGA"),
 	IV_LIGA(5, "IV liga"),
-	LIGA_OKR(7, "Liga okręgowa", "Klasa okręgowa"),
-	KLASA_A(8, "Klasa A"),
-	KLASA_B(9, "Klasa B"),
-	KLASA_C(10, "Klasa C"),
+	LIGA_OKR(7, "Liga okręgowa", "Klasa okręgowa", "KLASA OKREGOWA", " KL. O ", " KL O ", "Klasa Okr", "Okręgowa "),
+	KLASA_A(8, "Klasa A", "KL A"),
+	KLASA_B(9, "Klasa B", "KL B"),
+	KLASA_C(10, "Klasa C", "KL C"),
 	PUCHAR_POLSKI(11, "Puchar Polski"),
 	EKSTRALIGA_KOBIET(12, "Ekstraliga kobiet"),
 	I_LIGA_KOBIET(13, "I liga kobiet"),
@@ -62,14 +62,19 @@ public enum LeagueType {
 	public static LeagueType getByLeagueName(String leagueName) {
 		LeagueType result = UNDEFINED;
 		if (leagueName != null) {
+			String uLeagueName = leagueName.toUpperCase();
 			for (LeagueType s : values()) {
 				for (String name : s.getNames()) {
-					if (leagueName.toLowerCase().contains(name.toLowerCase())) {
+					if (uLeagueName.contains(name.toUpperCase())) {
 						result = s;
 					}
 				}
 			}
+			if(result==LeagueType.UNDEFINED && uLeagueName.startsWith("LO ")) {
+				result = LIGA_OKR;
+			}
 		}
+
 		return result;
 	}
 
@@ -91,9 +96,20 @@ public enum LeagueType {
 	private String[] getNames() {
 		return names;
 	}
+	
+	public String removeFromProjectName(String projectName) {
+		String uProjectName = projectName.toUpperCase();
+		for (String name : getNames()) {
+			if (uProjectName.contains(name.toUpperCase())) {
+				return uProjectName.replace(name.toUpperCase(), ""); 
+			}
+		}
+		return uProjectName;
+	}
 
 	@Override
 	public String toString() {
 		return getNames()[0];
 	}
+	
 }
