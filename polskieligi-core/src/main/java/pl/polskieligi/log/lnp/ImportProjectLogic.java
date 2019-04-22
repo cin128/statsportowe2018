@@ -160,7 +160,7 @@ public class ImportProjectLogic {
 		String groupId = null;
 		if (projectName.contains(groupTag)) {
 			String[] s = projectName.split(groupTag);
-			if (s.length > 0) {
+			if (s.length > 1) {
 				String groupName = s[1];
 				if (groupName.contains(" ")) {
 					groupName = groupName.split(" ")[0];
