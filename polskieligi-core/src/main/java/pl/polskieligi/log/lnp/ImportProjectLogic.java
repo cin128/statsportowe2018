@@ -159,16 +159,19 @@ public class ImportProjectLogic {
 	private String getGroupId(String projectName, String groupTag, boolean romanAllowed) {
 		String groupId = null;
 		if (projectName.contains(groupTag)) {
-			String groupName = projectName.split(groupTag)[1];
-			if (groupName.contains(" ")) {
-				groupName = groupName.split(" ")[0];
-			}
-			try {
-				Integer groupNumber = Integer.parseInt(groupName);
-				groupId = RomanNumber.toRoman(groupNumber);
-			} catch (NumberFormatException ex) {
-				if (romanAllowed) {
-					groupId = groupName;
+			String[] s = projectName.split(groupTag);
+			if (s.length > 0) {
+				String groupName = s[1];
+				if (groupName.contains(" ")) {
+					groupName = groupName.split(" ")[0];
+				}
+				try {
+					Integer groupNumber = Integer.parseInt(groupName);
+					groupId = RomanNumber.toRoman(groupNumber);
+				} catch (NumberFormatException ex) {
+					if (romanAllowed) {
+						groupId = groupName;
+					}
 				}
 			}
 		}
