@@ -26,6 +26,8 @@ public class Project extends AbstractObject{
 	private Boolean archive;
 	private Integer type;
 	
+	private String lnpName;
+	
 	@OneToMany(mappedBy="project")
 	private List<TeamLeague> teamLeagues;
 
@@ -105,6 +107,14 @@ public class Project extends AbstractObject{
 		return teamLeagues;
 	}
 
+	public String getLnpName() {
+		return lnpName;
+	}
+
+	public void setLnpName(String lnpName) {
+		this.lnpName = lnpName;
+	}
+	
 	@Override
 	public String toString() {
 		return name;

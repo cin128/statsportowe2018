@@ -45,17 +45,11 @@ public class ImportProjectLogic {
 	private SeasonDAO seasonDAO;
 
 	public void assignLnpIdToProjects() {
-		/*
-		 * for (Season season : seasonDAO.findAll()) { for (Region r : Region.values())
-		 * { assignLnpIdToProjects(season, r); } }
-		 */
-		Season season = new Season();
-		season.setName("2008/2009");
-		season.setId(new Long(39));
-		for (Region r : Region.values()) {
-			assignLnpIdToProjects(season, r);
+		for (Season season : seasonDAO.findAll()) {
+			for (Region r : Region.values()) {
+				assignLnpIdToProjects(season, r);
+			}
 		}
-
 	}
 
 	private void assignLnpIdToProjects(Season season, Region region) {
@@ -98,13 +92,14 @@ public class ImportProjectLogic {
 							} else if (uProjectName.endsWith("KA")) {
 								uProjectName = uProjectName.substring(0, uProjectName.length() - 2);
 							}
-							regionName2 = uProjectName.replaceAll("[^A-ZŻŹĆĄŚĘŁÓŃ ]+", "");;
+							regionName2 = uProjectName.replaceAll("[^A-ZŻŹĆĄŚĘŁÓŃ ]+", "");
+							;
 						}
 						Project p = findProject(season, region, lt, groupId, regionName);
-						if(p==null && !StringUtils.isEmpty(regionName2)) {
-							for(String rn: regionName2.split(" ")) {
+						if (p == null && !StringUtils.isEmpty(regionName2)) {
+							for (String rn : regionName2.split(" ")) {
 								p = findProject(season, region, lt, groupId, rn);
-								if(p!=null) {
+								if (p != null) {
 									break;
 								}
 							}
@@ -113,10 +108,11 @@ public class ImportProjectLogic {
 							ok++;
 							p.setLnp_id(lnpId);
 							p.setLnpIdName("nizsze-ligi");
+							p.setLnpName(e.getValue());
 							projectDAO.update(p);
 						} else {
-							log.debug(
-									"Project not found: " + lt.getName() + " " + region.getName() + " " + projectName+ "'"+regionName2+"'");
+							log.debug("Project not found: " + lt.getName() + " " + region.getName() + " " + projectName
+									+ "'" + regionName2 + "'");
 							blad++;
 						}
 					}
