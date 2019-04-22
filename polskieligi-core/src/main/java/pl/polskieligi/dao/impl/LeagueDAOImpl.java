@@ -8,7 +8,6 @@ import pl.polskieligi.model.League;
 import pl.polskieligi.model.LeagueType;
 import pl.polskieligi.model.Region;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 @Repository
@@ -36,6 +35,15 @@ public class LeagueDAOImpl extends AbstractDAOImpl<League> implements LeagueDAO 
 		for(League l: findAll()) {
 			l.setLeagueType(LeagueType.getByLeagueName(l.getName()).getId());
 			update(l);
+		}
+	}
+	
+	public void updateGroups() {
+		for(League l: findAll()) {
+			if(l.getName().contains("grupa: ")){
+				l.setGroupName(l.getName().split("grupa: ")[1]);
+				update(l);
+			}
 		}
 	}
 	

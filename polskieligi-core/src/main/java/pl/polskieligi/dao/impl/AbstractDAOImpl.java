@@ -77,6 +77,37 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 	public void deleteById(Long entityId) {
 		T entity = find(entityId);
 		delete(entity);
+	
+	
+	}
+	
+	
+	public T retrieveByMinut(Integer minutId) {
+		T result = null;
+
+		TypedQuery<T> query = getEntityManager().createQuery("SELECT p from "+clazz.getSimpleName()+" p where minut_id = :minut_id", clazz);
+		query.setParameter("minut_id", minutId);
+		query.setMaxResults(1);
+		List<T> projects = query.getResultList();
+		for (T p : projects) {
+			result = p;
+		}
+
+		return result;
+	}
+	
+	public T retrieveByLnp(Integer lnpId) {
+		T result = null;
+
+		TypedQuery<T> query = getEntityManager().createQuery("SELECT p from "+clazz.getSimpleName()+" p where lnp_id = :lnpId", clazz);
+		query.setParameter("lnpId", lnpId);
+		query.setMaxResults(1);
+		List<T> projects = query.getResultList();
+		for (T p : projects) {
+			result = p;
+		}
+
+		return result;
 	}
 
 }

@@ -14,28 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dto.Scorer;
+import pl.polskieligi.model.LeagueType;
 import pl.polskieligi.model.Project;
+import pl.polskieligi.model.Region;
+import pl.polskieligi.model.Season;
 
 @Repository
 @Transactional
 public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectDAO {
 	public ProjectDAOImpl() {
 		super(Project.class);
-	}
-
-	public Project retrieveProjectByMinut(Integer minutId) {
-		Project result = null;
-
-		Query query = getEntityManager().createQuery("SELECT p from Project p where minut_id = :minut_id");
-		query.setParameter("minut_id", minutId);
-		query.setMaxResults(1);
-		@SuppressWarnings("unchecked")
-		List<Project> projects = query.getResultList();
-		for (Project p : projects) {
-			result = p;
-		}
-
-		return result;
 	}
 
 	@Override
@@ -147,5 +135,19 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 			String teamName = (String)row[1];
 			scorersMap.get(playerId).getTeams().add(teamName);
 		}
+	}
+
+	@Override
+	public Project findProject(Season season, Region region, LeagueType lt, String groupName) {
+		TypedQuery<Project> query = getEntityManager().createQuery("SELECT p FROM Project p JOIN p.season s JOIN p.league l WHERE s.id = :season and l.leagueType = :leagueType and l.region = :region and l.groupName like :groupName", Project.class);
+		query.setParameter("season", season.getId());
+		query.setParameter("leagueType", lt.getId());
+		query.setParameter("region", region.getId());
+		query.setParameter("groupName", groupName);
+		List<Project> list = query.getResultList();
+		if(list!=null && list.size()==1) {
+			return list.get(0);
+		}
+		return null;
 	}
 }

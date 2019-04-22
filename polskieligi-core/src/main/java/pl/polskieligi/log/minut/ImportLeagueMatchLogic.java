@@ -98,7 +98,7 @@ public class ImportLeagueMatchLogic {
 									continue;
 								}
 								allPlayers.add(playerMinutId);
-								Player player = playerDAO.retrievePlayerByMinut(playerMinutId);
+								Player player = playerDAO.retrieveByMinut(playerMinutId);
 								if (player == null) {
 									player = importMinutPlayerLogic.doImport(playerMinutId);
 								}
@@ -265,7 +265,7 @@ public class ImportLeagueMatchLogic {
 			String refId = href.replace("/sedzia.php?id=", "").split("&id_sezon=")[0];
 			try{
 				Integer id = Integer.parseInt(refId);
-				result = refereeDAO.retrieveRefereeByMinut(id);
+				result = refereeDAO.retrieveByMinut(id);
 				if(result==null){
 					result = importMinutRefereeLogic.doImport(id);
 				}

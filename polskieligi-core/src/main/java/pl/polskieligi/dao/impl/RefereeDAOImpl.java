@@ -18,22 +18,6 @@ public class RefereeDAOImpl extends AbstractDAOImpl<Referee> implements RefereeD
 		super(Referee.class);
 	}
 
-	@Override
-	public Referee retrieveRefereeByMinut(Integer minutId) {
-		Referee result = null;
-
-		Query query = getEntityManager().createQuery("SELECT p from Referee p where minut_id = :minut_id");
-		query.setParameter("minut_id", minutId);
-		query.setMaxResults(1);
-		@SuppressWarnings("unchecked") List<Referee> referees = query.getResultList();
-		for (Referee p : referees) {
-			result = p;
-		}
-
-		return result;
-	}
-
-
 	@Override protected TypedQuery<Referee> getRetrieveQuery(Referee player) {
 		TypedQuery<Referee> query = getEntityManager().createQuery("SELECT p from Referee p where minut_id = :minut_id", Referee.class);
 		query.setParameter("minut_id", player.getMinut_id());

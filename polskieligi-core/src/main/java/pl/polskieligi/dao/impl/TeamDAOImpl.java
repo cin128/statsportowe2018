@@ -44,19 +44,6 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 
 		return query.getResultList();
 	}
-	
-	@Override
-	public Team retrieveTeamByMinut(Integer minutId) {
-		Team result = null;
-		Query query = getEntityManager().createQuery("SELECT t from Team t where minut_id = :minut_id");
-		query.setParameter("minut_id", minutId);
-		query.setMaxResults(1);
-		@SuppressWarnings("unchecked") List<Team> teams = query.getResultList();
-		for (Team t : teams) {
-			result = t;
-		}
-		return result;
-	}
 
 	@Override
 	public Team retrieveTeamByName(String name) {

@@ -1,11 +1,14 @@
 package pl.polskieligi.batch.config;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
@@ -13,8 +16,6 @@ import pl.polskieligi.batch.DefaultScheduler;
 import pl.polskieligi.log.minut.ImportMinutPlayerLogic;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.Player;
-
-import javax.persistence.EntityManagerFactory;
 
 @Configuration
 public class PlayerJobConfig extends AbstractJobConfig<Player>{
@@ -28,7 +29,7 @@ public class PlayerJobConfig extends AbstractJobConfig<Player>{
 	}
 
 	@Bean public DefaultItemProcessor<Player> playerProcessor(ImportMinutPlayerLogic importPlayerLogic) {
-		return getProcessor(importPlayerLogic);
+		return getProcessor(importPlayerLogic, Player::getMinut_id);
 	}
 
 	@Bean public DefaultItemReader<Player> playerImportReader( @Value("${minut.player.end}")Integer defaultMaxValue) {

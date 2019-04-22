@@ -29,6 +29,12 @@ public class UpdateController {
 		return new ModelAndView("views/importStatus");
 	}
 	
+	@RequestMapping("/updateGroups")
+	public ModelAndView updateGroups() {
+		leagueDAO.updateGroups();
+		return new ModelAndView("views/importStatus");
+	}
+	
 	//@RequestMapping("/updateTeamLeaguePlayers")
 	//WOLNO DZIALA
 	public ModelAndView updateTeamLeaguePlayers() {

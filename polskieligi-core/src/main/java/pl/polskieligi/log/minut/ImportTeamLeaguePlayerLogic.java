@@ -51,7 +51,7 @@ public class ImportTeamLeaguePlayerLogic {
 				String href = p.attr("href");
 				String playerId = href.replace("/kariera.php?id=", "");
 				Integer playerMinutId = Integer.parseInt(playerId);
-				Player player = playerDAO.retrievePlayerByMinut(playerMinutId);
+				Player player = playerDAO.retrieveByMinut(playerMinutId);
 				if(player==null){
 					player=importMinutPlayerLogic.doImport(playerMinutId);
 				}

@@ -1,11 +1,14 @@
 package pl.polskieligi.batch.config;
 
+import javax.persistence.EntityManagerFactory;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
@@ -13,8 +16,6 @@ import pl.polskieligi.batch.DefaultScheduler;
 import pl.polskieligi.log.minut.ImportMinutTeamLogic;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.Team;
-
-import javax.persistence.EntityManagerFactory;
 
 @Configuration
 public class TeamJobConfig extends AbstractJobConfig<Team>{
@@ -26,8 +27,8 @@ public class TeamJobConfig extends AbstractJobConfig<Team>{
 		return Team.class;
 	}
 
-	@Bean public DefaultItemProcessor teamProcessor(ImportMinutTeamLogic importTeamLogic) {
-		return getProcessor(importTeamLogic);
+	@Bean public DefaultItemProcessor<Team> teamProcessor(ImportMinutTeamLogic importTeamLogic) {
+		return getProcessor(importTeamLogic, Team::getMinut_id);
 	}
 
 	@Bean public DefaultItemReader<Team> teamImportReader( @Value("${minut.team.end}")Integer defaultMaxValue) {
@@ -39,7 +40,7 @@ public class TeamJobConfig extends AbstractJobConfig<Team>{
 	}
 
 	@Bean
-	public JpaPagingItemReader teamUpdateReader(EntityManagerFactory entityManagerFactory){
+	public JpaPagingItemReader<Team> teamUpdateReader(EntityManagerFactory entityManagerFactory){
 		return  getUpdateReader(entityManagerFactory);
 	}
 

@@ -36,8 +36,8 @@ public class ImportMinutLeagueMatchLogicTest {
 		logic.setImportMinutPlayerLogic(importMinutPlayerLogic);
 		logic.setRefereeDAO(refereeDAO);
 		logic.setMatchDAO(matchDAO);
-		when(playerDAO.retrievePlayerByMinut(any())).thenAnswer(i->new Player());
-		when(refereeDAO.retrieveRefereeByMinut(any())).thenAnswer(i->new Referee());
+		when(playerDAO.retrieveByMinut(any())).thenAnswer(i->new Player());
+		when(refereeDAO.retrieveByMinut(any())).thenAnswer(i->new Referee());
 	}
 
 	

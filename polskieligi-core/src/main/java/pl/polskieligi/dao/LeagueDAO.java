@@ -6,4 +6,5 @@ public interface LeagueDAO extends AbstractDAO<League>{
 	
 	public void updateRegions();
 	public void updateLeagueTypes();
+	public void updateGroups();
 }

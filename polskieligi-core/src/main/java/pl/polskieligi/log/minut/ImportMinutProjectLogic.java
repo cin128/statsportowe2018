@@ -81,7 +81,7 @@ public class ImportMinutProjectLogic {
 		java.util.Date startDate = new java.util.Date();
 
 		try {
-			Project leagueProject = projectDAO.retrieveProjectByMinut(projectMinutId);
+			Project leagueProject = projectDAO.retrieveByMinut(projectMinutId);
 			if (leagueProject != null && (leagueProject.getArchive() && leagueProject.getPublished()
 					|| leagueProject.getType() == Project.OTHER)) {
 				log.info("Project alerady loaded id = " + projectMinutId);
@@ -180,7 +180,7 @@ public class ImportMinutProjectLogic {
 				league.setLeagueType(LeagueType.getByLeagueName(leagueName).getId());
 				league.setRegion(Region.getRegionByProjectName(leagueName).getId());
 				if(leagueName.contains("grupa: ")){
-					league.setGroupName(leagueName.split("grupa:")[1]);
+					league.setGroupName(leagueName.split("grupa: ")[1]);
 				}
 				league = leagueDAO.saveUpdate(league);
 				log.info("League " + leagueName + " saved id = " + league.getId());

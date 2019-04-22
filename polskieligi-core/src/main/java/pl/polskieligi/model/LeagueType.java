@@ -12,7 +12,7 @@ public enum LeagueType {
 	III_LIGA(4, "III liga"),	
 	V_LIGA(6, "V liga"),
 	IV_LIGA(5, "IV liga"),
-	LIGA_OKR(7, "Liga okręgowa"),
+	LIGA_OKR(7, "Liga okręgowa", "Klasa okręgowa"),
 	KLASA_A(8, "Klasa A"),
 	KLASA_B(9, "Klasa B"),
 	KLASA_C(10, "Klasa C"),
@@ -28,7 +28,7 @@ public enum LeagueType {
 	PUCHAR_POLSKI_W_FUTSALU(20, "Puchar Polski w futsalu"),
 	CLJ(21, "Centralna Liga Juniorów"),
 	CLJ17(22, "Centralna Liga Juniorów U-17"),
-	KLASA_OKR(23, "Klasa okręgowa"),
+	//KLASA_OKR(23, "Klasa okręgowa"),
 	LIGA_WOJ(24, "Liga wojewódzka"),
 	MLS(25, "Mazowiecka Liga Seniorów"),
 	LIGA_MOKR(26, "Liga międzyokręgowa"),
@@ -43,13 +43,13 @@ public enum LeagueType {
 	
 	
 	private final Integer id;
-	private final String name;
+	private final String[] names;
 
 	private static Map<Integer, LeagueType> idToNameMapping;
 
-	private LeagueType(Integer id, String name) {
+	private LeagueType(Integer id, String ...names) {
 		this.id = id;
-		this.name = name;
+		this.names = names;
 	}
 
 	public static LeagueType getById(Integer id){
@@ -63,8 +63,11 @@ public enum LeagueType {
 		LeagueType result = UNDEFINED;
 		if (leagueName != null) {
 			for (LeagueType s : values()) {
-				if (leagueName.contains(s.getName()))
-					result = s;
+				for (String name : s.getNames()) {
+					if (leagueName.toLowerCase().contains(name.toLowerCase())) {
+						result = s;
+					}
+				}
 			}
 		}
 		return result;
@@ -80,12 +83,17 @@ public enum LeagueType {
 	public Integer getId() {
 		return id;
 	}
+	
 	public String getName() {
-		return name;
+		return names[0];
+	}
+	
+	private String[] getNames() {
+		return names;
 	}
 
 	@Override
 	public String toString() {
-		return getName();
+		return getNames()[0];
 	}
 }

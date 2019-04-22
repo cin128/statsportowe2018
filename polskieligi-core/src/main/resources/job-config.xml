@@ -185,4 +185,15 @@
 	</bean>
     
     
+   	<!-- LNP -->
+   	<job id="lnpProjectUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<step id="lnpProjectUpdateStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="lnpProjectUpdateReader" processor="lnpProjectUpdateProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
+    
 </beans>

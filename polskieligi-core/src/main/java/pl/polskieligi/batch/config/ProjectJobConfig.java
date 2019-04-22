@@ -34,7 +34,7 @@ public class ProjectJobConfig extends AbstractJobConfig<Project>{
 	}
 
 	@Bean
-	public JpaPagingItemReader projectUpdateReader(EntityManagerFactory entityManagerFactory){
+	public JpaPagingItemReader<Project> projectUpdateReader(EntityManagerFactory entityManagerFactory){
 		return  getUpdateReader(entityManagerFactory);
 	}
 

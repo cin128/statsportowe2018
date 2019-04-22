@@ -6,24 +6,24 @@ import java.util.List;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false),
+		 @Index(name = "IDX_TE_LNP_ID", columnList = "lnp_id", unique = false),
 		 @Index(name = "IDX_TE_NAME", columnList = "name", unique = false)})
-public class Team implements MinutObject{
+public class Team extends AbstractObject{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	private Integer minut_id;
 	private String name;
 	private String longName;
-
-	private Integer importStatus;
+	
+	private String lnpName;
 
 	@OneToMany
 	@JoinColumn(name = "team_id")
 	private List<TeamLeague> teamLeagues = new ArrayList<>();
 
-	public Team() {
-		minut_id = 0;
-	}
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="club_id", insertable =  false, updatable = false)
+	private Club club;
 
 	public Long getId() {
 		return id;
@@ -31,14 +31,6 @@ public class Team implements MinutObject{
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Integer getMinut_id() {
-		return minut_id;
-	}
-
-	public void setMinut_id(Integer minut_id) {
-		this.minut_id = minut_id;
 	}
 
 	public String getName() {
@@ -61,16 +53,16 @@ public class Team implements MinutObject{
 		return teamLeagues;
 	}
 
-	public Integer getImportStatus() {
-		return importStatus;
+	public String getLnpName() {
+		return lnpName;
 	}
 
-	public void setImportStatus(Integer importStatus) {
-		this.importStatus = importStatus;
+	public void setLnpName(String lnpName) {
+		this.lnpName = lnpName;
 	}
-
+	
 	@Override
 	public String toString() {
-		return minut_id + " "+ name +" " + longName;
+		return getMinut_id() + " "+ name +" " + longName;
 	}
 }

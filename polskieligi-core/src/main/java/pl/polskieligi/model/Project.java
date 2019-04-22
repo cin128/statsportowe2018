@@ -6,15 +6,15 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-@Table(indexes = { @Index(name = "IDX_PR_MINUT_ID", columnList = "minut_id", unique = false) })
-public class Project implements MinutObject{
+@Table(indexes = { @Index(name = "IDX_PR_MINUT_ID", columnList = "minut_id", unique = false),
+		@Index(name = "IDX_PR_LNP_ID", columnList = "lnp_id", unique = false)})
+public class Project extends AbstractObject{
 	public final static Integer REGULAR_LEAGUE = 1;
 	public final static Integer OTHER = 2;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	private Integer minut_id;
+	private Long id;	
 	private String name;
 	
 	@OneToOne(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
@@ -29,10 +29,7 @@ public class Project implements MinutObject{
 	@OneToMany(mappedBy="project")
 	private List<TeamLeague> teamLeagues;
 
-	private Integer importStatus;
-
 	public Project() {
-		minut_id = 0;
 		name = "";
 		start_date = new Date(0);
 		published = false;
@@ -62,14 +59,6 @@ public class Project implements MinutObject{
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Integer getMinut_id() {
-		return minut_id;
-	}
-
-	public void setMinut_id(Integer minut_id) {
-		this.minut_id = minut_id;
 	}
 
 	public String getName() {
@@ -114,14 +103,6 @@ public class Project implements MinutObject{
 	
 	public  List<TeamLeague> getTeamLeagues(){
 		return teamLeagues;
-	}
-
-	public Integer getImportStatus() {
-		return importStatus;
-	}
-
-	public void setImportStatus(Integer importStatus) {
-		this.importStatus = importStatus;
 	}
 
 	@Override
