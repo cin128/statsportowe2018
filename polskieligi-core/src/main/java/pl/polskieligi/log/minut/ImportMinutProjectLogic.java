@@ -103,6 +103,9 @@ public class ImportMinutProjectLogic {
 					if (leagueProject == null || leagueProject.getId() == null) {
 						throw new IllegalStateException("projecId==null!!!");
 					}
+
+					log.info("Processing project: " + leagueProject.getName());
+
 					Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
 					Map<String, Team> leagueTeams = new HashMap<String, Team>();
 					Map<Long, TeamLeague> teamLeagues = new HashMap<Long, TeamLeague>();
@@ -137,6 +140,7 @@ public class ImportMinutProjectLogic {
 						|| leagueProject.getImportStatus()==ImportStatus.TIME_OUT.getValue())){
 					projectDAO.update(leagueProject);
 				} else {
+					log.warn("Deleting: "+projectMinutId);
 					projectDAO.delete(leagueProject);
 				}
 
@@ -183,11 +187,11 @@ public class ImportMinutProjectLogic {
 					league.setGroupName(leagueName.split("grupa: ")[1]);
 				}
 				league = leagueDAO.saveUpdate(league);
-				log.info("League " + leagueName + " saved id = " + league.getId());
+				log.debug("League " + leagueName + " saved id = " + league.getId());
 				Season season = new Season();
 				season.setName(sezon);
 				season = seasonDAO.saveUpdate(season);
-				log.info("Season " + sezon   + " saved id = " + season.getId());
+				log.debug("Season " + sezon   + " saved id = " + season.getId());
 				leagueProject.setLeague(league);
 				leagueProject.setSeason(season);
 				GregorianCalendar cal = new GregorianCalendar(year, 6,
@@ -448,6 +452,10 @@ public class ImportMinutProjectLogic {
 		if (leagueProject.getType() == Project.REGULAR_LEAGUE) {
 			for (TableRow row : tableDAO.getTableRowsSimple(leagueProject.getId())) {
 				TeamLeague tl = teamLeagues.get(row.getTeam_id());
+				if(tl==null){//drużyna wycofana z rozgrywek w trakcie sezonu
+					tl = teamLeagueDAO.findByProjectAndTeam(leagueProject.getId(), row.getTeam_id());
+				}
+
 				tl.setStartPoints(tl.getStartPoints() - row.getPoints());
 				teamLeagueDAO.update(tl);
 			}
