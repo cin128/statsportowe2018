@@ -223,7 +223,7 @@ public class ImportMinutProjectLogic {
 		Elements druzyny = doc.select("a[href~=/skarb.php\\?id_klub=*]");
 		for (Element druzyna : druzyny) {
 			String tmp = druzyna.toString();
-			String pkt = druzyna.parent().nextElementSibling().nextElementSibling().text();
+			String pkt = druzyna.parent().nextElementSibling().nextElementSibling().select("b").text();
 			int start = tmp.indexOf(TEAM_ID) + TEAM_ID.length();
 			int end = tmp.indexOf(AMP);
 			if (start < 0 || end < 0 || start >= end) {
