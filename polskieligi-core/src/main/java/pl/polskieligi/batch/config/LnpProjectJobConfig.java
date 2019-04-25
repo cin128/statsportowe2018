@@ -33,6 +33,6 @@ public class LnpProjectJobConfig extends AbstractJobConfig<Project>{
 	}
 	
 	protected String getUpdateQueryWhereClause() {
-		return " where lnp_id IS NOT NULL AND (importLnpStatus IS NULL OR importLnpStatus = 1)";
+		return " where lnp_id IS NOT NULL AND lnpIdName IS NOT NULL AND (importLnpStatus IS NULL OR importLnpStatus = 1)";
 	}
 }

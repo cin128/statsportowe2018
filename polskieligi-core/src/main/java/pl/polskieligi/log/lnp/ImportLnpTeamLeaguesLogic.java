@@ -26,6 +26,7 @@ import pl.polskieligi.model.Team;
 
 @Component @Transactional 
 public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
+	private static final Double AVG_DISTANCE_TRESHOLD = 6.0;
 
 	private static final String LNP_PAGE = "/druzyny/{0},{1}.html";
 
@@ -44,7 +45,11 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 	
 	public ImportLnpTeamLeaguesLogic() {
 		super(Project.class);
-	}	
+	}
+
+	@Override protected boolean deleteIfInvalid() {
+		return false;
+	}
 
 	@Override
 	protected void process(Document doc, Project project) {
@@ -60,9 +65,16 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 			}
 			List<LnpTeam> lnpTeams = parseTeams(teams);
 			List<Distance> distances = findMatchingTeam(lnpTeams, teamList);
-			updateTeams(distances);
+
 
 			Double avgDistance = Double.valueOf(distances.stream().mapToInt(d -> d.distance).sum())/distances.size();
+			if(avgDistance<AVG_DISTANCE_TRESHOLD) {
+				updateTeams(distances);
+				result = ImportStatus.SUCCESS;
+			} else {
+				result = ImportStatus.INVALID;
+			}
+
 			log.info("Avg distance: "+avgDistance);
 		}
 		project.setImportLnpStatus(result.getValue());

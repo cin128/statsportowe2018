@@ -50,7 +50,7 @@ final static Logger log = Logger.getLogger(AbstractImportLogic.class);
 					obj = getDAO().saveUpdate(obj);
 					log.info(getObjectName()+" saved: " + obj);
 					result = obj;
-				} else if(oldObj!=null){
+				} else if(deleteIfInvalid() && oldObj!=null){
 					getDAO().delete(oldObj);
 					log.info(getObjectName()+" deleted: " + oldObj);
 					result = null;
@@ -65,6 +65,9 @@ final static Logger log = Logger.getLogger(AbstractImportLogic.class);
 		} 		
 		
 		return result;
+	}
+	protected boolean deleteIfInvalid(){
+		return true;
 	}
 	
 	protected String getObjectName() {
