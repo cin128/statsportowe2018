@@ -195,5 +195,30 @@
 			</tasklet>
 		</step>
 	</job>
+
+	<!--Club-->
+
+	<job id="clubImportJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<listeners>
+			<listener ref="clubImportJobExecutionListener" />
+		</listeners>
+		<step id="clubImportStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="clubImportReader" processor="clubProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
+
+	<job id="clubUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<step id="clubUpdateStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="clubUpdateReader" processor="clubProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
     
 </beans>

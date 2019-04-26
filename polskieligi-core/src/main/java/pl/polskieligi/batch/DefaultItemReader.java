@@ -7,7 +7,10 @@ import pl.polskieligi.dao.ConfigDAO;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.MinutObject;
 
-public class DefaultItemReader<T extends MinutObject>  implements ItemReader<T> {
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
+public class DefaultItemReader<T>  implements ItemReader<T> {
 
 	final static Logger log = Logger.getLogger(DefaultItemReader.class);
 
@@ -22,9 +25,12 @@ public class DefaultItemReader<T extends MinutObject>  implements ItemReader<T> 
 
 	private final Class<T> clazz;
 
-	public DefaultItemReader(String propertyName, Integer defaultMaxValue, Class<T> clazz){
+	private final BiConsumer<T, Integer> setObjectId;
+
+	public DefaultItemReader(String propertyName, Integer defaultMaxValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz){
 		this.propertyName = propertyName;
 		this.defaultMaxValue = defaultMaxValue;
+		this.setObjectId = setObjectId;
 		this.clazz = clazz;
 	}
 
@@ -56,7 +62,7 @@ public class DefaultItemReader<T extends MinutObject>  implements ItemReader<T> 
 		} catch (InstantiationException|IllegalAccessException e) {
 			log.error(e.getMessage(), e);
 		}
-		result.setMinut_id(index++);
+		setObjectId.accept(result, index++);
 		return result;
 	}
 

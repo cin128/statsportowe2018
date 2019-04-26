@@ -10,9 +10,10 @@ import pl.polskieligi.dao.ConfigDAO;
 import pl.polskieligi.log.ImportLogic;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.Config;
+import pl.polskieligi.model.LnpObject;
 import pl.polskieligi.model.MinutObject;
 
-public class DefaultItemProcessor<T extends MinutObject> implements ItemProcessor<T, Object> {
+public class DefaultItemProcessor<T> implements ItemProcessor<T, Object> {
 	final static Logger log = Logger.getLogger(DefaultItemProcessor.class);
 
 	@Autowired
@@ -24,24 +25,27 @@ public class DefaultItemProcessor<T extends MinutObject> implements ItemProcesso
 	
 	private final Function<T, Integer> getObjectId;
 
-	public DefaultItemProcessor(String propertyName, ImportLogic<T> importLogic, Function<T, Integer> getObjectId) {
+	private final Function<T, Integer> getImportStatus;
+
+	public DefaultItemProcessor(String propertyName, ImportLogic<T> importLogic, Function<T, Integer> getObjectId, Function<T, Integer> getImportStatus) {
 		this.propertyName = propertyName;
 		this.importLogic = importLogic;
 		this.getObjectId = getObjectId;
+		this.getImportStatus = getImportStatus;
 	}
 
 	@Override
 	public Object process(T obj) {
 		Object result = processInternal(obj);
-		if(propertyName!=null && obj instanceof MinutObject){
+		if(propertyName!=null && (obj instanceof MinutObject || obj instanceof LnpObject)){
 			if(result!=null){
-				MinutObject mo = (MinutObject)result;
-				if(mo.getImportStatus()!=null && mo.getImportStatus()==ImportStatus.SUCCESS.getValue()) {
-					Integer minut_id = mo.getMinut_id();
-					if (minut_id != null && minut_id > 0) {
+				Integer importStatus = getImportStatus.apply(obj);
+				if(importStatus!=null && importStatus==ImportStatus.SUCCESS.getValue()) {
+					Integer id = getObjectId.apply(obj);
+					if (id != null && id > 0) {
 						Config conf = configDAO.findByName(propertyName);
-						if (minut_id > conf.getValue()) {
-							conf.setValue(minut_id);
+						if (id > conf.getValue()) {
+							conf.setValue(id);
 							configDAO.update(conf);
 						}
 					}
@@ -53,7 +57,7 @@ public class DefaultItemProcessor<T extends MinutObject> implements ItemProcesso
 
 
 	private Object processInternal(T obj) {
-		log.info("Process: " + obj.getMinut_id());
+		log.info("Process: " + getObjectId.apply(obj));
 		T result = importLogic.doImport(getObjectId.apply(obj));
 		return result;
 	}

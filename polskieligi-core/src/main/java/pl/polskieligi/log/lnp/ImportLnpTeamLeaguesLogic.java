@@ -52,13 +52,13 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 	}
 
 	@Override
-	protected void process(Document doc, Project project) {
-		ImportStatus result = ImportStatus.SUCCESS;
+	protected ImportStatus process(Document doc, Project project) {
+		ImportStatus result;
 		Elements teams = doc.select("section>div[class=league-teams-list grid]>div[class=row]>a");
 		List<Team> teamList = teamLeagueDAO.getTeams(project.getId());
 		if(teams.size()==0 || teamList.size()==0) {
 			log.error("Invalid number of teams: count: "+teamList.size()+" lnp count:"+teams.size());
-			result = ImportStatus.INVALID;
+			return ImportStatus.INVALID;
 		} else {
 			if (teams.size() != teamList.size()) {
 				log.error("Different numer of teams for project: " + project.getId() + " " + project.getName());
@@ -76,8 +76,8 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 			}
 
 			log.info("Avg distance: "+avgDistance);
+			return result;
 		}
-		project.setImportLnpStatus(result.getValue());
 	}
 	
 	private List<LnpTeam> parseTeams(Elements teams){

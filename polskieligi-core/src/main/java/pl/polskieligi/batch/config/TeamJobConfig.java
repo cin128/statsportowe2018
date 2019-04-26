@@ -28,11 +28,11 @@ public class TeamJobConfig extends AbstractJobConfig<Team>{
 	}
 
 	@Bean public DefaultItemProcessor<Team> teamProcessor(ImportMinutTeamLogic importTeamLogic) {
-		return getProcessor(importTeamLogic, Team::getMinut_id);
+		return getProcessor(importTeamLogic, Team::getMinut_id, Team::getImportStatus);
 	}
 
 	@Bean public DefaultItemReader<Team> teamImportReader( @Value("${minut.team.end}")Integer defaultMaxValue) {
-		return getImportReader(defaultMaxValue);
+		return getImportReader(defaultMaxValue, Team::setMinut_id);
 	}
 
 	@Bean public DefaultJobExecutionListener teamImportJobExecutionListener(@Qualifier("teamImportReader") DefaultItemReader<Team> teamImportReader) {

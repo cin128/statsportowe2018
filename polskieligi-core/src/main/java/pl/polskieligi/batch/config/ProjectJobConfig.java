@@ -26,7 +26,7 @@ public class ProjectJobConfig extends AbstractJobConfig<Project>{
 	}
 
 	@Bean public DefaultItemReader<Project> projectImportReader( @Value("${minut.project.end}")Integer defaultMaxValue) {
-		return getImportReader(defaultMaxValue);
+		return getImportReader(defaultMaxValue, Project::setMinut_id);
 	}
 
 	@Bean public DefaultJobExecutionListener projectImportJobExecutionListener(@Qualifier("projectImportReader") DefaultItemReader<Project> projectImportReader) {

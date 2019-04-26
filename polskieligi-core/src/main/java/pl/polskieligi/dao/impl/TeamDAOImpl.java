@@ -21,9 +21,7 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 
 	@Override
 	protected TypedQuery<Team> getRetrieveQuery(Team team) {
-		TypedQuery<Team> query = getEntityManager().createQuery("SELECT t from Team t where minut_id = :minut_id", Team.class);
-		query.setParameter("minut_id", team.getMinut_id());
-		return query;
+		return getMinutRetrieveQuery(team.getMinut_id());
 	}
 	@Override
 	protected boolean updateData(Team source, Team target) {

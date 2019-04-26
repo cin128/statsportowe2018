@@ -26,7 +26,7 @@ import pl.polskieligi.model.Referee;
 	}
 	
 	@Override
-	protected void process(Document doc, Referee referee) {
+	protected ImportStatus process(Document doc, Referee referee) {
 		Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr");
 
 		for (int i = 0; i < bios.size() && i < 10; i++) {
@@ -68,11 +68,10 @@ import pl.polskieligi.model.Referee;
 			}
 		}
 		if (!StringUtil.isBlank(referee.getName()) || !StringUtil.isBlank(referee.getSurname())) {
-			referee.setImportStatus(ImportStatus.SUCCESS.getValue());
+			return ImportStatus.SUCCESS;
 		} else {
-			referee.setImportStatus(ImportStatus.INVALID.getValue());
+			return ImportStatus.INVALID;
 		}
-		
 	}
 	
 	@Override

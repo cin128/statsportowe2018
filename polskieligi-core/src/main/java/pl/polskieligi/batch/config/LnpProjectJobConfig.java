@@ -29,7 +29,7 @@ public class LnpProjectJobConfig extends AbstractJobConfig<Project>{
 	}
 	
 	@Bean public DefaultItemProcessor<Project> lnpProjectUpdateProcessor(ImportLnpTeamLeaguesLogic importLnpTeamLeaguesLogic) {
-		return getProcessor(importLnpTeamLeaguesLogic, Project::getLnp_id);
+		return getProcessor(importLnpTeamLeaguesLogic, Project::getLnp_id, Project::getImportLnpStatus);
 	}
 	
 	protected String getUpdateQueryWhereClause() {

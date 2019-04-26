@@ -28,11 +28,11 @@ public class RefereeJobConfig extends AbstractJobConfig<Referee>{
 	}
 
 	@Bean public DefaultItemProcessor<Referee> refereeProcessor(ImportMinutRefereeLogic importRefereeLogic) {
-		return getProcessor(importRefereeLogic, Referee::getMinut_id);
+		return getProcessor(importRefereeLogic, Referee::getMinut_id, Referee::getImportStatus);
 	}
 
 	@Bean public DefaultItemReader<Referee> refereeImportReader( @Value("${minut.referee.end}")Integer defaultMaxValue) {
-		return getImportReader(defaultMaxValue);
+		return getImportReader(defaultMaxValue, Referee::setMinut_id);
 	}
 
 	@Bean public DefaultJobExecutionListener refereeImportJobExecutionListener(@Qualifier("refereeImportReader") DefaultItemReader<Referee> refereeImportReader) {

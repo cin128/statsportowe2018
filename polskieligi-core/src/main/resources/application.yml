@@ -22,7 +22,7 @@ spring:
 
 minut:
   project:
-    start: 68
+    start: 1
     end: 10528
   player:
     start: 1
@@ -33,3 +33,7 @@ minut:
   referee:
     start: 1
     end: 1381
+
+lnp:
+  club:
+    start: 0

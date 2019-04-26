@@ -11,6 +11,8 @@ public class Config {
 	public static final String MINUT_REFEREE_MAX = "MINUT_REFEREE_MAX";
 	public static final String MINUT_TEAM_MAX = "MINUT_TEAM_MAX";
 
+	public static final String LNP_CLUB_MAX = "LNP_CLUB_MAX";
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;

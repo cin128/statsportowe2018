@@ -28,13 +28,7 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 
 	@Override
 	protected TypedQuery<Project> getRetrieveQuery(Project leagueProject) {
-		TypedQuery<Project> query = getEntityManager().createQuery(
-				"SELECT p from Project p where minut_id = :minut_id", Project.class);// or (league_id = :league_id and season_id = :season_id)
-		query.setParameter("minut_id", leagueProject.getMinut_id());
-		
-//		query.setParameter("league_id", leagueProject.getLeague().getId());
-//		query.setParameter("season_id", leagueProject.getSeason().getId());
-		return query;
+		return getMinutRetrieveQuery(leagueProject.getMinut_id());
 	}
 	
 	@Override

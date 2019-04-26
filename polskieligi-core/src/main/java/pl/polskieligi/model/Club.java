@@ -6,15 +6,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Club{
+public class Club implements LnpObject{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	
-	private Long lnpId;
+	private Integer lnp_id;
 	private String lnpIdName;
+	private Integer importLnpStatus;
 	
 	public Long getId() {
 		return id;
@@ -32,12 +33,12 @@ public class Club{
 		this.name = name;
 	}
 
-	public Long getLnpId() {
-		return lnpId;
+	@Override public Integer getLnp_id() {
+		return lnp_id;
 	}
 
-	public void setLnpId(Long lnpId) {
-		this.lnpId = lnpId;
+	@Override public void setLnp_id(Integer lnp_id) {
+		this.lnp_id = lnp_id;
 	}
 
 	public String getLnpIdName() {
@@ -47,5 +48,16 @@ public class Club{
 	public void setLnpIdName(String lnpIdName) {
 		this.lnpIdName = lnpIdName;
 	}
-	
+
+	@Override public Integer getImportLnpStatus() {
+		return importLnpStatus;
+	}
+
+	@Override public void setImportLnpStatus(Integer importLnpStatus) {
+		this.importLnpStatus = importLnpStatus;
+	}
+
+	@Override public String toString() {
+		return name;
+	}
 }

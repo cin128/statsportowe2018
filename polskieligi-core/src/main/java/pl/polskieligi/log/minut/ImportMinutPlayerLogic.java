@@ -26,7 +26,7 @@ import pl.polskieligi.model.Player;
 	}
 	
 	@Override
-	protected void process(Document doc, Player player) {
+	protected ImportStatus process(Document doc, Player player) {
 		Elements bios = doc.select("table[class=main][width=600][border=0]>tbody>tr");
 
 		for (int i = 0; i < bios.size() && i < 10; i++) {
@@ -79,11 +79,10 @@ import pl.polskieligi.model.Player;
 			}
 		}
 		if (!StringUtil.isBlank(player.getName()) || !StringUtil.isBlank(player.getSurname())) {
-			player.setImportStatus(ImportStatus.SUCCESS.getValue());
+			return ImportStatus.SUCCESS;
 		} else {
-			player.setImportStatus(ImportStatus.INVALID.getValue());
+			return ImportStatus.INVALID;
 		}
-		
 	}
 	
 	@Override

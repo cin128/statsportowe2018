@@ -29,11 +29,11 @@ public class PlayerJobConfig extends AbstractJobConfig<Player>{
 	}
 
 	@Bean public DefaultItemProcessor<Player> playerProcessor(ImportMinutPlayerLogic importPlayerLogic) {
-		return getProcessor(importPlayerLogic, Player::getMinut_id);
+		return getProcessor(importPlayerLogic, Player::getMinut_id, Player::getImportStatus);
 	}
 
 	@Bean public DefaultItemReader<Player> playerImportReader( @Value("${minut.player.end}")Integer defaultMaxValue) {
-		return getImportReader(defaultMaxValue);
+		return getImportReader(defaultMaxValue, Player::setMinut_id);
 	}
 
 	@Bean public DefaultJobExecutionListener playerImportJobExecutionListener(@Qualifier("playerImportReader") DefaultItemReader<Player> playerImportReader) {

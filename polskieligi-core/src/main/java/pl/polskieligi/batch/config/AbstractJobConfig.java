@@ -1,5 +1,6 @@
 package pl.polskieligi.batch.config;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import javax.persistence.EntityManagerFactory;
@@ -12,16 +13,15 @@ import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
 import pl.polskieligi.batch.DefaultScheduler;
 import pl.polskieligi.log.ImportLogic;
-import pl.polskieligi.model.MinutObject;
 
-public abstract class AbstractJobConfig<T extends MinutObject> {
+public abstract class AbstractJobConfig<T> {
 
-	protected DefaultItemProcessor<T> getProcessor(ImportLogic<T> importLogic, Function<T, Integer> getObjectId) {
-		return new DefaultItemProcessor<T>(getMaxPropertyName(), importLogic, getObjectId);
+	protected DefaultItemProcessor<T> getProcessor(ImportLogic<T> importLogic, Function<T, Integer> getObjectId, Function<T, Integer> getImportStatus) {
+		return new DefaultItemProcessor<T>(getMaxPropertyName(), importLogic, getObjectId, getImportStatus);
 	}
 
-	protected DefaultItemReader<T> getImportReader(Integer defaultMaxValue) {
-		return new DefaultItemReader<T>(getMaxPropertyName(), defaultMaxValue, getClazz());
+	protected DefaultItemReader<T> getImportReader(Integer defaultMaxValue, BiConsumer<T, Integer> setObjectId) {
+		return new DefaultItemReader<T>(getMaxPropertyName(), defaultMaxValue, setObjectId, getClazz());
 	}
 
 	protected DefaultJobExecutionListener getImportJobExecutionListener(DefaultItemReader<T> importReader) {

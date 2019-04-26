@@ -17,10 +17,7 @@ public class PlayerDAOImpl extends AbstractDAOImpl<Player> implements PlayerDAO 
 	}
 
 	@Override protected TypedQuery<Player> getRetrieveQuery(Player player) {
-		TypedQuery<Player>
-				query = getEntityManager().createQuery("SELECT p from Player p where minut_id = :minut_id", Player.class);
-		query.setParameter("minut_id", player.getMinut_id());
-		return query;
+		return super.getMinutRetrieveQuery(player.getMinut_id());
 	}
 
 	@Override

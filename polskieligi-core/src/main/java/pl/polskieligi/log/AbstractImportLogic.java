@@ -41,7 +41,8 @@ final static Logger log = Logger.getLogger(AbstractImportLogic.class);
 				}				
 				try {
 					Document doc = Jsoup.connect(getLink(obj)).get();
-					process(doc, obj);										
+					ImportStatus status = process(doc, obj);
+					setImportStatus(obj, status.getValue());
 				} catch(SocketTimeoutException | NoRouteToHostException e){
 					log.warn("Time out for: "+id+" "+ e.getMessage());
 					setImportStatus(obj, ImportStatus.TIME_OUT.getValue());
@@ -74,7 +75,7 @@ final static Logger log = Logger.getLogger(AbstractImportLogic.class);
 		return clazz.getSimpleName();
 	}	
 	
-	protected abstract void process(Document doc, T obj);
+	protected abstract ImportStatus process(Document doc, T obj);
 	
 	protected abstract T retrieveById(Integer id);
 	

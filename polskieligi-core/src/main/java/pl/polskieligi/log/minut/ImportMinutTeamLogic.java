@@ -27,7 +27,7 @@ public class ImportMinutTeamLogic extends AbstractImportMinutLogic<Team>{
 	}
 	
 	@Override
-	protected void process(Document doc, Team team) {
+	protected ImportStatus process(Document doc, Team team) {
 		Elements nameElem = doc.select("select[class=main][name=urljump2][onchange=selecturl(this)]>option[selected]");
 		Elements info = doc.select("table[class=main][width=600][border=0][align=center]>tbody>tr>td");
 		String name = nameElem.text();
@@ -53,11 +53,10 @@ public class ImportMinutTeamLogic extends AbstractImportMinutLogic<Team>{
 		team.setLongName(longNameElem.text());
 
 		if (!StringUtil.isBlank(team.getName())) {
-			team.setImportStatus(ImportStatus.SUCCESS.getValue());
+			return ImportStatus.SUCCESS;
 		} else {
-			team.setImportStatus(ImportStatus.INVALID.getValue());
+			return ImportStatus.INVALID;
 		}
-		
 	}
 
 	@Override
