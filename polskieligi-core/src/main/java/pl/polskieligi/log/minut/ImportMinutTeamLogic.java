@@ -37,10 +37,14 @@ public class ImportMinutTeamLogic extends AbstractImportMinutLogic<Team>{
 		}
 		if (StringUtil.isBlank(name)) {
 			String title = doc.select("title").text();
-			name = title.replace("Skarb - ", "");
+			if(title.contains("Skarb - ")) {
+				name = title.replace("Skarb - ", "");
+			}
 		}
-		name = name.replace(" (f)", "");//futsal
-		name = name.replace(" (k)", "");//kobiety
+		if (!StringUtil.isBlank(name)) {
+			name = name.replace(" (f)", "");//futsal
+			name = name.replace(" (k)", "");//kobiety
+		}
 		Elements longNameElem = info.select("font[size=2]>b");
 
 		if (!StringUtil.isBlank(name)) {
