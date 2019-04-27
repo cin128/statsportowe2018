@@ -26,12 +26,12 @@ import pl.polskieligi.model.Team;
 import pl.polskieligi.model.TeamLeague;
 
 @Component @Transactional 
-public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
+public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 	private static final Double AVG_DISTANCE_TRESHOLD = 6.0;
 
 	private static final String LNP_PAGE = "/druzyny/{0},{1}.html";
 
-	final static Logger log = Logger.getLogger(ImportLnpTeamLeaguesLogic.class);
+	final static Logger log = Logger.getLogger(ImportLnpProjectTeamsLogic.class);
 
 	@Autowired
 	ProjectDAO projectDAO;
@@ -44,7 +44,7 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 	
 	private static final LevenshteinDistance levenshteinDistance = LevenshteinDistance.getDefaultInstance();
 	
-	public ImportLnpTeamLeaguesLogic() {
+	public ImportLnpProjectTeamsLogic() {
 		super(Project.class);
 	}
 

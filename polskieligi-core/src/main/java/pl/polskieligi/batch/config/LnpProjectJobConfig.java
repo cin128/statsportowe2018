@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import pl.polskieligi.batch.DefaultItemProcessor;
-import pl.polskieligi.log.lnp.ImportLnpTeamLeaguesLogic;
+import pl.polskieligi.log.lnp.ImportLnpProjectTeamsLogic;
 import pl.polskieligi.model.Project;
 
 @Configuration
@@ -28,8 +28,8 @@ public class LnpProjectJobConfig extends AbstractJobConfig<Project>{
 		return  getUpdateReader(entityManagerFactory);
 	}
 	
-	@Bean public DefaultItemProcessor<Project> lnpProjectUpdateProcessor(ImportLnpTeamLeaguesLogic importLnpTeamLeaguesLogic) {
-		return getProcessor(importLnpTeamLeaguesLogic, Project::getLnp_id, Project::getImportLnpStatus);
+	@Bean public DefaultItemProcessor<Project> lnpProjectUpdateProcessor(ImportLnpProjectTeamsLogic importLnpProjectTeamsLogic) {
+		return getProcessor(importLnpProjectTeamsLogic, Project::getLnp_id, Project::getImportLnpStatus);
 	}
 	
 	protected String getUpdateQueryWhereClause() {

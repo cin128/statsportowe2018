@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import pl.polskieligi.log.lnp.ImportLnpTeamLeaguesLogic;
+import pl.polskieligi.log.lnp.ImportLnpProjectTeamsLogic;
 import pl.polskieligi.log.lnp.ImportProjectLogic;
 
 @Controller
@@ -17,7 +17,7 @@ public class UpdateLnpController {
 	ImportProjectLogic projectLogic;
 	
 	@Autowired
-	ImportLnpTeamLeaguesLogic importLnpTeamLeagues;
+	ImportLnpProjectTeamsLogic importLnpProjectTeamsLogic;
 	
 	@RequestMapping("/updateLnp")
 	public ModelAndView updateLnp() {
@@ -29,7 +29,7 @@ public class UpdateLnpController {
 	@RequestMapping("/updateLnpTeams")
 	public ModelAndView updateLnpTeams() {
 		log.info("updateLnpTeams start");
-		importLnpTeamLeagues.doImport(25929);
+		importLnpProjectTeamsLogic.doImport(25929);
 		return new ModelAndView("views/importStatus");
 	}
 }

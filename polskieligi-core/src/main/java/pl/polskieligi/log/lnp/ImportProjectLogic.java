@@ -1,13 +1,17 @@
 package pl.polskieligi.log.lnp;
 
+import static pl.polskieligi.log.lnp.AbstractImportLnpLogic.LNP_URL;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -29,8 +33,6 @@ import pl.polskieligi.model.LeagueType;
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Region;
 import pl.polskieligi.model.Season;
-
-import static pl.polskieligi.log.lnp.AbstractImportLnpLogic.LNP_URL;
 
 @Component
 @Transactional
