@@ -7,7 +7,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import pl.polskieligi.dao.AbstractDAO;
 import pl.polskieligi.dao.ClubDAO;
 import pl.polskieligi.log.ImportStatus;
@@ -52,7 +51,7 @@ public class ImportClubLogic extends AbstractImportLnpLogic<Club>{
 	}
 
 	@Override protected String getLink(Club obj) {
-		return MessageFormat.format(LNP_CLUB_URL_PATTERN, obj.getLnp_id());
+		return MessageFormat.format(LNP_CLUB_URL_PATTERN, obj.getLnp_id().toString());
 	}
 
 	@Override protected AbstractDAO<Club> getDAO() {

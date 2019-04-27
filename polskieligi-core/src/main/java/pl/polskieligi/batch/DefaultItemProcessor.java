@@ -36,10 +36,10 @@ public class DefaultItemProcessor<T> implements ItemProcessor<T, Object> {
 
 	@Override
 	public Object process(T obj) {
-		Object result = processInternal(obj);
-		if(propertyName!=null && (obj instanceof MinutObject || obj instanceof LnpObject)){
+		T result = processInternal(obj);
+		if(propertyName!=null && (result instanceof MinutObject || result instanceof LnpObject)){
 			if(result!=null){
-				Integer importStatus = getImportStatus.apply(obj);
+				Integer importStatus = getImportStatus.apply(result);
 				if(importStatus!=null && importStatus==ImportStatus.SUCCESS.getValue()) {
 					Integer id = getObjectId.apply(obj);
 					if (id != null && id > 0) {
@@ -56,7 +56,7 @@ public class DefaultItemProcessor<T> implements ItemProcessor<T, Object> {
 	}
 
 
-	private Object processInternal(T obj) {
+	private T processInternal(T obj) {
 		log.info("Process: " + getObjectId.apply(obj));
 		T result = importLogic.doImport(getObjectId.apply(obj));
 		return result;

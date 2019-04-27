@@ -29,8 +29,8 @@ public class LnpClubConfig extends AbstractJobConfig<Club>{
 		return getProcessor(importClubLogic, Club::getLnp_id, Club::getImportLnpStatus);
 	}
 
-	@Bean public DefaultItemReader<Club> clubImportReader( @Value("${lnp.club.start}")Integer defaultMaxValue) {
-		return getImportReader(defaultMaxValue, Club::setLnp_id);
+	@Bean public DefaultItemReader<Club> clubImportReader( @Value("${lnp.club.start}")Integer defaultStartValue, @Value("${lnp.club.end}")Integer defaultEndValue) {
+		return getImportReader(defaultStartValue, defaultEndValue, Club::setLnp_id);
 	}
 
 	@Bean public DefaultJobExecutionListener clubImportJobExecutionListener(@Qualifier("clubImportReader") DefaultItemReader<Club> clubImportReader) {
@@ -38,7 +38,7 @@ public class LnpClubConfig extends AbstractJobConfig<Club>{
 	}
 
 	@Bean
-	public JpaPagingItemReader clubUpdateReader(EntityManagerFactory entityManagerFactory){
+	public JpaPagingItemReader<Club> clubUpdateReader(EntityManagerFactory entityManagerFactory){
 		return  getUpdateReader(entityManagerFactory);
 	}
 

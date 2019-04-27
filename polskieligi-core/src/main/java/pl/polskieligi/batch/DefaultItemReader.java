@@ -5,14 +5,13 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.polskieligi.dao.ConfigDAO;
 import pl.polskieligi.model.Config;
-import pl.polskieligi.model.MinutObject;
-
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class DefaultItemReader<T>  implements ItemReader<T> {
 
-	final static Logger log = Logger.getLogger(DefaultItemReader.class);
+	private final static Logger log = Logger.getLogger(DefaultItemReader.class);
+	
+	private final static int DEFAULT_TRESHOLD = 100;
 
 	@Autowired
 	private ConfigDAO configDAO;
@@ -21,17 +20,25 @@ public class DefaultItemReader<T>  implements ItemReader<T> {
 
 	private final String propertyName;
 
-	private final Integer defaultMaxValue;
+	private final Integer defaultStartValue;
+	
+	private final Integer defaultEndValue;
 
 	private final Class<T> clazz;
 
 	private final BiConsumer<T, Integer> setObjectId;
 
-	public DefaultItemReader(String propertyName, Integer defaultMaxValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz){
+	public DefaultItemReader(String propertyName, Integer defaultStartValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz){		
+		this(propertyName, defaultStartValue, null, setObjectId, clazz);
+
+	}
+	
+	public DefaultItemReader(String propertyName, Integer defaultStartValue, Integer defaultEndValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz){
 		this.propertyName = propertyName;
-		this.defaultMaxValue = defaultMaxValue;
+		this.defaultStartValue = defaultStartValue;
 		this.setObjectId = setObjectId;
 		this.clazz = clazz;
+		this.defaultEndValue = defaultEndValue;
 	}
 
 	public void initService(){
@@ -39,14 +46,18 @@ public class DefaultItemReader<T>  implements ItemReader<T> {
 		if(conf==null){
 			conf = new Config();
 			conf.setName(propertyName);
-			conf.setValue(defaultMaxValue);
+			conf.setValue(defaultStartValue);
 			configDAO.save(conf);
 		}
 		index = conf.getValue();
 	}
 
 	@Override public T read() {
-		Integer end = 5+configDAO.findByName(propertyName).getValue();
+		
+		Integer end = defaultEndValue;
+		if(end==null) {
+			end = configDAO.findByName(propertyName).getValue()+DEFAULT_TRESHOLD;
+		}
 		index++;
 		if (index <= end) {
 			return read(index);
@@ -65,5 +76,4 @@ public class DefaultItemReader<T>  implements ItemReader<T> {
 		setObjectId.accept(result, index++);
 		return result;
 	}
-
 }

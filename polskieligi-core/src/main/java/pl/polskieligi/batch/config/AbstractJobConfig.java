@@ -20,8 +20,13 @@ public abstract class AbstractJobConfig<T> {
 		return new DefaultItemProcessor<T>(getMaxPropertyName(), importLogic, getObjectId, getImportStatus);
 	}
 
-	protected DefaultItemReader<T> getImportReader(Integer defaultMaxValue, BiConsumer<T, Integer> setObjectId) {
-		return new DefaultItemReader<T>(getMaxPropertyName(), defaultMaxValue, setObjectId, getClazz());
+
+	protected DefaultItemReader<T> getImportReader(Integer defaultStartValue, BiConsumer<T, Integer> setObjectId) {
+		return getImportReader(defaultStartValue, null, setObjectId);
+	}
+	
+	protected DefaultItemReader<T> getImportReader(Integer defaultStartValue, Integer defaultEndValue, BiConsumer<T, Integer> setObjectId) {
+		return new DefaultItemReader<T>(getMaxPropertyName(), defaultStartValue, defaultEndValue, setObjectId, getClazz());
 	}
 
 	protected DefaultJobExecutionListener getImportJobExecutionListener(DefaultItemReader<T> importReader) {

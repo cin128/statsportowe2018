@@ -4,8 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
+@Table(indexes = {@Index(name = "IDX_CL_LNP_ID", columnList = "lnp_id", unique = false)})
 public class Club implements LnpObject{
 	
 	@Id
