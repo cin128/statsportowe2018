@@ -23,8 +23,8 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	
 	@Override
 	public TeamLeague findByProjectAndTeam(Long projectId, Long teamId) {
-		Query query = getRetrieveQuery(projectId, teamId);
-		List l = query.getResultList();
+		TypedQuery<TeamLeague> query = getRetrieveQuery(projectId, teamId);
+		List<TeamLeague> l = query.getResultList();
 		if(l.size()>0) {
 			return (TeamLeague)l.get(0);
 		}
@@ -81,14 +81,18 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 			
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Team> getTeams(Long projectId) {
-		List<Team> result = null;
+		TypedQuery<Team> query = getEntityManager().createQuery(
+				"select t from Team t where exists (select tl from TeamLeague tl where t.id = tl.team_id and tl.project_id = :project_id) order by t.name", Team.class);
+		query.setParameter("project_id", projectId);
+		return query.getResultList();
+	}
 
-			Query query = getEntityManager().createQuery("select t from Team t where exists (select tl from TeamLeague tl where t.id = tl.team_id and tl.project_id = :project_id) order by t.name");
-			query.setParameter("project_id", projectId);
-			result = query.getResultList();
-			
-		return result;
+	@Override
+	public List<TeamLeague> getTeamLeagues(Long projectId) {
+		TypedQuery<TeamLeague> query = getEntityManager().createQuery("select tl from TeamLeague tl where tl.project_id = :project_id", TeamLeague.class);
+		query.setParameter("project_id", projectId);
+	
+		return  query.getResultList();
 	}
 }

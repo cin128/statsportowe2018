@@ -111,5 +111,7 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 		query.setMaxResults(1);
 		return query;
 	}
+	
+	
 
 }

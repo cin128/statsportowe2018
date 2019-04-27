@@ -23,6 +23,7 @@ import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Team;
+import pl.polskieligi.model.TeamLeague;
 
 @Component @Transactional 
 public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
@@ -55,16 +56,16 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 	protected ImportStatus process(Document doc, Project project) {
 		ImportStatus result;
 		Elements teams = doc.select("section>div[class=league-teams-list grid]>div[class=row]>a");
-		List<Team> teamList = teamLeagueDAO.getTeams(project.getId());
-		if(teams.size()==0 || teamList.size()==0) {
-			log.error("Invalid number of teams: count: "+teamList.size()+" lnp count:"+teams.size());
+		List<TeamLeague> teamLeagueList = teamLeagueDAO.getTeamLeagues(project.getId());
+		if(teams.size()==0 || teamLeagueList.size()==0) {
+			log.error("Invalid number of teams: count: "+teamLeagueList.size()+" lnp count:"+teams.size());
 			return ImportStatus.INVALID;
 		} else {
-			if (teams.size() != teamList.size()) {
-				log.error("Different numer of teams for project: " + project.getId() + " " + project.getName());
+			if (teams.size() != teamLeagueList.size()) {
+				log.warn("Different numer of teams for project: " + project.getId() + " " + project.getName()+" count: "+teamLeagueList.size()+" lnp count:"+teams.size());
 			}
 			List<LnpTeam> lnpTeams = parseTeams(teams);
-			List<Distance> distances = findMatchingTeam(lnpTeams, teamList);
+			List<Distance> distances = findMatchingTeam(lnpTeams, teamLeagueList);
 
 
 			Double avgDistance = Double.valueOf(distances.stream().mapToInt(d -> d.distance).sum())/distances.size();
@@ -95,8 +96,8 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 		return result;
 	}
 	
-	private List<Distance> findMatchingTeam(List<LnpTeam> lnpTeams, List<Team> teamList) {
-		List<Distance> distances = calculateDistances(lnpTeams, teamList);
+	private List<Distance> findMatchingTeam(List<LnpTeam> lnpTeams, List<TeamLeague> teamLeagueList) {
+		List<Distance> distances = calculateDistances(lnpTeams, teamLeagueList);
 		Set<Long> processedTeams = new HashSet<Long>();
 		Set<Integer> processedLnpTeams = new HashSet<Integer>();
 		
@@ -107,10 +108,10 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 		for(Distance d: distances) {
 			if(currentDistance<d.distance) {
 				for(Distance cd: currentDistances) {
-					processedTeams.add(cd.team.getId());
+					processedTeams.add(cd.teamLeague.getId());
 					processedLnpTeams.add(cd.lnpTeam.lnpId);
 					long countLnpTeam = currentDistances.stream().filter(a->a.lnpTeam.lnpId.equals(cd.lnpTeam.lnpId)).count();
-					long countTeam = currentDistances.stream().filter(a->a.team.getId().equals(cd.team.getId())).count();
+					long countTeam = currentDistances.stream().filter(a->a.teamLeague.getId().equals(cd.teamLeague.getId())).count();
 					if(countLnpTeam==1 && countTeam==1) {
 						result.add(cd);
 					}
@@ -119,14 +120,14 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 				currentDistance = d.distance;
 				currentDistances.clear();				
 			}
-			if(!processedTeams.contains(d.team.getId()) && !processedLnpTeams.contains(d.lnpTeam.lnpId)) {
+			if(!processedTeams.contains(d.teamLeague.getId()) && !processedLnpTeams.contains(d.lnpTeam.lnpId)) {
 				currentDistances.add(d);			
 			}
 		}
 		if(currentDistances.size()>0) {
 			for(Distance cd: currentDistances) {
 				long countLnpTeam = currentDistances.stream().filter(a->a.lnpTeam.lnpId.equals(cd.lnpTeam.lnpId)).count();
-				long countTeam = currentDistances.stream().filter(a->a.team.getId().equals(cd.team.getId())).count();
+				long countTeam = currentDistances.stream().filter(a->a.teamLeague.getId().equals(cd.teamLeague.getId())).count();
 				if(countLnpTeam==1 && countTeam==1) {					
 					result.add(cd);
 				}
@@ -135,12 +136,12 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 		return result;
 	}
 	
-	private List<Distance> calculateDistances(List<LnpTeam> lnpTeams, List<Team> teamList){
+	private List<Distance> calculateDistances(List<LnpTeam> lnpTeams, List<TeamLeague> teamLeagueList){
 		List<Distance> distances = new ArrayList<Distance>();
-		for(Team t: teamList) {
+		for(TeamLeague tl: teamLeagueList) {
 			for(LnpTeam lt: lnpTeams) {
-				Integer distance = levenshteinDistance.apply(lt.teamName.toLowerCase(), t.getName().toLowerCase());
-				distances.add( new Distance(distance, lt, t));
+				Integer distance = levenshteinDistance.apply(lt.teamName.toLowerCase(), tl.getTeam().getName().toLowerCase());
+				distances.add( new Distance(distance, lt, tl));
 				if(distance==0) {
 					continue;
 				}
@@ -152,16 +153,17 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 	
 	private void updateTeams(List<Distance> distances){
 		for(Distance d: distances) {
-			Team t = d.team;
-			if(t.getLnp_id()!=null && t.getLnp_id()>0) {
-				if(!t.getLnp_id().equals(d.lnpTeam.lnpId)){
-					log.error("Niejednoznaczne przypisanie: name:"+t.getName()+" lnpName:"+t.getLnpName()+" "+d.lnpTeam.teamName);
+			TeamLeague tl = d.teamLeague;
+			Team t = tl.getTeam();
+			if(tl.getLnp_id()!=null && tl.getLnp_id()>0) {
+				if(!tl.getLnp_id().equals(d.lnpTeam.lnpId)){
+					log.error("Niejednoznaczne przypisanie: name:"+t.getName()+" lnpName:"+tl.getLnpName()+" "+d.lnpTeam.teamName);
 				}
 			} else {
-				t.setLnp_id(d.lnpTeam.lnpId);
-				t.setLnpIdName(d.lnpTeam.lnpName);
-				t.setLnpName(d.lnpTeam.teamName);
-				teamDAO.update(t);
+				tl.setLnp_id(d.lnpTeam.lnpId);
+				tl.setLnpIdName(d.lnpTeam.lnpName);
+				tl.setLnpName(d.lnpTeam.teamName);
+				teamLeagueDAO.update(tl);
 			}
 		}
 	}
@@ -195,11 +197,11 @@ public class ImportLnpTeamLeaguesLogic extends AbstractImportLnpLogic<Project>{
 	private class Distance{
 		final Integer distance;
 		final LnpTeam lnpTeam;
-		final Team team;
-		Distance(Integer distance, LnpTeam lnpTeam,	Team team){
+		final TeamLeague teamLeague;
+		Distance(Integer distance, LnpTeam lnpTeam,	TeamLeague teamLeague){
 			this.distance = distance;
 			this.lnpTeam = lnpTeam;
-			this.team = team;
+			this.teamLeague = teamLeague;
 		}
 	}
 

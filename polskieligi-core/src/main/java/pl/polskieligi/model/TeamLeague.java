@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_TL_PR_TE", columnList = "project_id,team_id", unique = false) })
-public class TeamLeague {
+public class TeamLeague implements LnpObject{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -15,6 +15,11 @@ public class TeamLeague {
 	private Long project_id;
 
 	private Long team_id;
+	
+	private Integer lnp_id;
+	private String lnpIdName;
+	private String lnpName;
+	private Integer importLnpStatus;
 
 	@OneToOne
 	@JoinColumn(name="project_id", insertable =  false, updatable = false)
@@ -74,6 +79,38 @@ public class TeamLeague {
 		this.startPoints = startPoints;
 	}
 	
+	public Integer getLnp_id() {
+		return lnp_id;
+	}
+
+	public void setLnp_id(Integer lnp_id) {
+		this.lnp_id = lnp_id;
+	}
+
+	public String getLnpIdName() {
+		return lnpIdName;
+	}
+
+	public void setLnpIdName(String lnpIdName) {
+		this.lnpIdName = lnpIdName;
+	}
+
+	public String getLnpName() {
+		return lnpName;
+	}
+
+	public void setLnpName(String lnpName) {
+		this.lnpName = lnpName;
+	}
+
+	public Integer getImportLnpStatus() {
+		return importLnpStatus;
+	}
+
+	public void setImportLnpStatus(Integer importLnpStatus) {
+		this.importLnpStatus = importLnpStatus;
+	}
+
 	public List<TeamLeaguePlayer> getTeamLeaguePlayers() {
 		return teamLeaguePlayers;
 	}

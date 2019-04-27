@@ -6,16 +6,16 @@ import java.util.List;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_TE_MINUT_ID", columnList = "minut_id", unique = false),
-		 @Index(name = "IDX_TE_LNP_ID", columnList = "lnp_id", unique = false),
 		 @Index(name = "IDX_TE_NAME", columnList = "name", unique = false)})
-public class Team extends AbstractObject{
+public class Team implements MinutObject{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String longName;
 	
-	private String lnpName;
+	private Integer minut_id;
+	private Integer importStatus;
 
 	@OneToMany
 	@JoinColumn(name = "team_id")
@@ -52,17 +52,25 @@ public class Team extends AbstractObject{
 	public List<TeamLeague> getTeamLeagues() {
 		return teamLeagues;
 	}
-
-	public String getLnpName() {
-		return lnpName;
-	}
-
-	public void setLnpName(String lnpName) {
-		this.lnpName = lnpName;
-	}
 	
 	@Override
 	public String toString() {
 		return getMinut_id() + " "+ name +" " + longName;
+	}
+
+	public Integer getMinut_id() {
+		return minut_id;
+	}
+
+	public void setMinut_id(Integer minut_id) {
+		this.minut_id = minut_id;
+	}
+
+	public Integer getImportStatus() {
+		return importStatus;
+	}
+
+	public void setImportStatus(Integer importStatus) {
+		this.importStatus = importStatus;
 	}
 }
