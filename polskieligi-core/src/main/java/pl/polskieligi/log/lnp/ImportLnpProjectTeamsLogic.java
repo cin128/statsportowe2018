@@ -182,27 +182,4 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 	protected AbstractDAO<Project> getDAO() {
 		return projectDAO;
 	}
-
-	private class LnpTeam{
-		final String lnpName;
-		final Integer lnpId;
-		final String teamName;
-		LnpTeam(String lnpName, Integer lnpId, String teamName){
-			this.lnpName=lnpName;
-			this.lnpId=lnpId;
-			this.teamName=teamName;
-		}
-	}
-	
-	private class Distance{
-		final Integer distance;
-		final LnpTeam lnpTeam;
-		final TeamLeague teamLeague;
-		Distance(Integer distance, LnpTeam lnpTeam,	TeamLeague teamLeague){
-			this.distance = distance;
-			this.lnpTeam = lnpTeam;
-			this.teamLeague = teamLeague;
-		}
-	}
-
 }

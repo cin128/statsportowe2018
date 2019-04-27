@@ -22,12 +22,17 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 
 	@Override
 	protected TypedQuery<LeagueMatch> getRetrieveQuery(LeagueMatch match) {
+
+		return getRetrieveQuery(match.getProject_id(), match.getRound().getId(), match.getMatchpart1().getId(),  match.getMatchpart2().getId());
+	}
+	
+	protected TypedQuery<LeagueMatch> getRetrieveQuery(Long projectId, Long roundId, Long team1Id, Long team2Id) {
 		TypedQuery<LeagueMatch> query = getEntityManager().createQuery(
-				"SELECT lm from LeagueMatch lm where project_id = :project_id and round = :round and matchpart1 = :matchpart1 and matchpart2 = :matchpart2", LeagueMatch.class);
-		query.setParameter("project_id", match.getProject_id());
-		query.setParameter("round", match.getRound());
-		query.setParameter("matchpart1", match.getMatchpart1());
-		query.setParameter("matchpart2", match.getMatchpart2());
+				"SELECT lm from LeagueMatch lm where project_id = :project_id and round_id = :round and matchpart1_id = :matchpart1 and matchpart2_id = :matchpart2", LeagueMatch.class);
+		query.setParameter("project_id", projectId);
+		query.setParameter("round", roundId);
+		query.setParameter("matchpart1", team1Id);
+		query.setParameter("matchpart2", team2Id);
 		return query;
 	}
 
@@ -78,5 +83,15 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 		query.setParameter("seasonId", seasonId);
 		query.setParameter("published", true);
 		return query.getResultList();
+	}
+
+	@Override
+	public LeagueMatch find(Long projectId, Long roundId, Long team1Id, Long team2Id) {
+		TypedQuery<LeagueMatch> query = getRetrieveQuery( projectId,  roundId,  team1Id,  team2Id);
+		List<LeagueMatch> result = query.getResultList();
+		if(result.size()==1) {
+			return result.get(0);
+		}
+		return null;
 	}
 }

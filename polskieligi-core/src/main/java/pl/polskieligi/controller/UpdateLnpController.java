@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import pl.polskieligi.log.lnp.ImportLnpProjectMatchesLogic;
 import pl.polskieligi.log.lnp.ImportLnpProjectTeamsLogic;
 import pl.polskieligi.log.lnp.ImportProjectLogic;
 
@@ -19,6 +20,9 @@ public class UpdateLnpController {
 	@Autowired
 	ImportLnpProjectTeamsLogic importLnpProjectTeamsLogic;
 	
+	@Autowired
+	ImportLnpProjectMatchesLogic importLnpProjectMatchesLogic;
+	
 	@RequestMapping("/updateLnp")
 	public ModelAndView updateLnp() {
 		log.info("updateLnp start");
@@ -30,6 +34,13 @@ public class UpdateLnpController {
 	public ModelAndView updateLnpTeams() {
 		log.info("updateLnpTeams start");
 		importLnpProjectTeamsLogic.doImport(25929);
+		return new ModelAndView("views/importStatus");
+	}
+	
+	@RequestMapping("/updateLnpTeams2")
+	public ModelAndView updateLnpTeams2() {
+		log.info("updateLnpTeams start");
+		importLnpProjectMatchesLogic.doImport(26967);
 		return new ModelAndView("views/importStatus");
 	}
 }

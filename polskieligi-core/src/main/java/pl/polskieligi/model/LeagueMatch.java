@@ -23,7 +23,12 @@ public class LeagueMatch {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matchpart2")
     private Team matchpart2;
-
+    
+    @Column(name="matchpart1", insertable=false, updatable=false)
+    private Long matchpart1_id;
+    @Column(name="matchpart2", insertable=false, updatable=false)
+    private Long matchpart2_id;
+    
 	private Float matchpart1_result;
 	private Float matchpart2_result;
 	private Long project_id;
@@ -48,6 +53,11 @@ public class LeagueMatch {
 	private Long af_id;
 
 	private Integer importStatus;
+	
+	private String location;
+	private Integer lnp_id;
+	private String lnpIdName;
+	private Integer importLnpStatus;
 
 	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="leagueMatch_id")
@@ -236,6 +246,55 @@ public class LeagueMatch {
 
 	public Project getProject() {
 		return project;
+	}
+	
+
+	public Long getMatchpart1_id() {
+		return matchpart1_id;
+	}
+
+	public void setMatchpart1_id(Long matchpart1_id) {
+		this.matchpart1_id = matchpart1_id;
+	}
+
+	public Long getMatchpart2_id() {
+		return matchpart2_id;
+	}
+
+	public void setMatchpart2_id(Long matchpart2_id) {
+		this.matchpart2_id = matchpart2_id;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public Integer getLnp_id() {
+		return lnp_id;
+	}
+
+	public void setLnp_id(Integer lnp_id) {
+		this.lnp_id = lnp_id;
+	}
+
+	public String getLnpIdName() {
+		return lnpIdName;
+	}
+
+	public void setLnpIdName(String lnpIdName) {
+		this.lnpIdName = lnpIdName;
+	}
+
+	public Integer getImportLnpStatus() {
+		return importLnpStatus;
+	}
+
+	public void setImportLnpStatus(Integer importLnpStatus) {
+		this.importLnpStatus = importLnpStatus;
 	}
 
 	@Override public String toString() {
