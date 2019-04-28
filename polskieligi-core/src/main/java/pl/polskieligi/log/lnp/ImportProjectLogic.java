@@ -1,12 +1,9 @@
 package pl.polskieligi.log.lnp;
 
-import static pl.polskieligi.log.lnp.AbstractImportLnpLogic.LNP_URL;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,10 +34,6 @@ import pl.polskieligi.model.Season;
 @Component
 @Transactional
 public class ImportProjectLogic {
-
-	private static final String LNP_LOWER_URL_PATTERN = LNP_URL+"/league/get_lower?&zpn_id[]={0}&mode=league&season={1}";
-
-	private static final String LNP_THIRD_URL_PATTERN = LNP_URL+"/league/get_third?&zpn_id[]={0}&mode=league&season={1}";
 
 	final static Logger log = Logger.getLogger(ImportProjectLogic.class);
 
@@ -186,7 +179,7 @@ public class ImportProjectLogic {
 	private Map<String, Map<Integer, String>> getProjects(String seasonName, Integer zpn_id) {
 		Map<String, Map<Integer, String>> result = new HashMap<String, Map<Integer, String>>();
 		try {
-			URL url = new URL(getLowerUrl(zpn_id, seasonName));
+			URL url = new URL(LnpUrlHelper.getLowerUrl(zpn_id, seasonName));
 			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
 			JSONParser jsonParser = new JSONParser();
@@ -222,7 +215,7 @@ public class ImportProjectLogic {
 		Set<String> result= new HashSet<String>();
 		for (Region r : Region.values()) {
 			try {
-				URL url = new URL(getThirdUrl(r.getLnpId(), season.getName()));
+				URL url = new URL(LnpUrlHelper.getThirdUrl(r.getLnpId(), season.getName()));
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonobj = (JSONObject) jsonParser.parse(in);
@@ -235,13 +228,5 @@ public class ImportProjectLogic {
 			}
 		}
 		return result;
-	}
-
-	private static String getThirdUrl(Integer zpn_id, String seasonName) {
-		return MessageFormat.format(LNP_THIRD_URL_PATTERN, zpn_id, seasonName);
-	}
-
-	private static String getLowerUrl(Integer zpn_id, String seasonName) {
-		return MessageFormat.format(LNP_LOWER_URL_PATTERN, zpn_id, seasonName);
 	}
 }

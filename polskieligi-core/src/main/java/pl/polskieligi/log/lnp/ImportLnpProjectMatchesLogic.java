@@ -1,7 +1,6 @@
 package pl.polskieligi.log.lnp;
 
 import java.sql.Timestamp;
-import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,9 +41,7 @@ import pl.polskieligi.model.TeamLeague;
 @Transactional
 public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project> {
 
-	private static final Double AVG_DISTANCE_TRESHOLD = 6.0;
-
-	private static final String LNP_PAGE = "/rozgrywki/{0},{1}.html?round=0";
+	private static final Double AVG_DISTANCE_TRESHOLD = 1.3;
 
 	final static Logger log = Logger.getLogger(ImportLnpProjectMatchesLogic.class);
 
@@ -58,10 +55,10 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 
 	@Autowired
 	TeamDAO teamDAO;
-	
+
 	@Autowired
 	RoundDAO roundDAO;
-	
+
 	@Autowired
 	LeagueMatchDAO leagueMatchDAO;
 
@@ -79,78 +76,79 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	@Override
 	protected ImportStatus process(Document doc, Project project) {
 		try {
-		List<LnpMatch> lnpMatches = parseMatches(doc);
-		Set<LnpTeam> lnpTeams = getLnpTeams(lnpMatches);
-		
-		List<TeamLeague> teamLeagueList = teamLeagueDAO.getTeamLeagues(project.getId());
-		if(lnpTeams.size()==0 || teamLeagueList.size()==0) {
-			log.error("Invalid number of teams: count: "+teamLeagueList.size()+" lnp count:"+lnpTeams.size());
-			return ImportStatus.INVALID;
-		} else {
-			if (lnpTeams.size() != teamLeagueList.size()) {
-				log.warn("Different numer of teams for project: " + project.getId() + " " + project.getName()+" count: "+teamLeagueList.size()+" lnp count:"+lnpTeams.size());
-			}
-			List<Distance> minDistances = findMatchingTeam(lnpTeams, teamLeagueList);
+			List<LnpMatch> lnpMatches = parseMatches(doc);
+			Set<LnpTeam> lnpTeams = getLnpTeams(lnpMatches);
 
-			Double avgDistance = Double.valueOf(minDistances.stream().mapToInt(d -> d.distance).sum())/minDistances.size();
-			ImportStatus result;
-			if(avgDistance<AVG_DISTANCE_TRESHOLD) {
-				Map<Integer, Long> teamsIds = updateTeams(minDistances);
-				updateMatches(lnpMatches, teamsIds, project.getId());
-				result = ImportStatus.SUCCESS;
+			List<TeamLeague> teamLeagueList = teamLeagueDAO.getTeamLeagues(project.getId());
+			if (lnpTeams.size() == 0 || teamLeagueList.size() == 0) {
+				log.error("Invalid number of teams: count: " + teamLeagueList.size() + " lnp count:" + lnpTeams.size());
+				return ImportStatus.INVALID;
 			} else {
-				result = ImportStatus.INVALID;
-			}
+				if (lnpTeams.size() != teamLeagueList.size()) {
+					log.warn("Different numer of teams for project: " + project.getId() + " " + project.getName()
+							+ " count: " + teamLeagueList.size() + " lnp count:" + lnpTeams.size());
+				}
+				List<Distance> minDistances = findMatchingTeam(lnpTeams, teamLeagueList);
+				Double avgDistance = Double.valueOf(minDistances.stream().mapToDouble(d -> d.distance).sum())
+						/ minDistances.size();
+				ImportStatus result;
+				if (avgDistance < AVG_DISTANCE_TRESHOLD) {
+					Map<Integer, Long> teamsIds = updateTeams(minDistances);
+					updateMatches(lnpMatches, teamsIds, project.getId());
+					result = ImportStatus.SUCCESS;
+				} else {
+					result = ImportStatus.INVALID;
+				}
 
-			log.info("Avg distance: "+avgDistance);
-			return result;
-		}
-		}catch(Exception e) {
+				log.info("Avg distance: " + avgDistance);
+				return result;
+			}
+		} catch (Exception e) {
 			log.error(e);
-			return ImportStatus.INVALID;			
+			return ImportStatus.INVALID;
 		}
 	}
-	
+
 	private void updateMatches(List<LnpMatch> lnpMatches, Map<Integer, Long> teamsIds, Long projectId) {
-		for(LnpMatch m:lnpMatches) {
+		for (LnpMatch m : lnpMatches) {
 			if (teamsIds.containsKey(m.team1.lnpId) && teamsIds.containsKey(m.team2.lnpId)) {
 				Long team1 = teamsIds.get(m.team1.lnpId);
 				Long team2 = teamsIds.get(m.team2.lnpId);
 				Integer matchcode = Integer.parseInt(m.roundName.split(" ")[0]);
-				
+
 				Round round = roundDAO.findByProjectAndRound(projectId, matchcode);
-				if(round!=null) {
+				if (round != null) {
 					LeagueMatch lm = leagueMatchDAO.find(projectId, round.getId(), team1, team2);
-					if(lm!=null) {
-						lm.setLnpIdName(m.lnpteam1+","+m.lnpteam2);
+					if (lm != null) {
+						lm.setLnpIdName(m.lnpteam1 + "," + m.lnpteam2);
 						lm.setLnp_id(m.matchId);
 						lm.setLocation(m.spot);
-						if(lm.getMatch_date().getHours()==0) {
+						if (lm.getMatch_date().getHours() == 0) {
 							lm.setMatch_date(new Timestamp(m.date.getTime()));
 						}
-						if(lm.getMatchpart1_result()==null) {
+						if (lm.getMatchpart1_result() == null) {
 							lm.setMatchpart1_result(new Float(m.team1goals));
 						}
-						if(lm.getMatchpart2_result()==null) {
+						if (lm.getMatchpart2_result() == null) {
 							lm.setMatchpart2_result(new Float(m.team2goals));
 						}
-						
+
 						leagueMatchDAO.update(lm);
 					} else {
-						log.warn("Match not found: "+projectId+ " "+round.getId()+ " "+team1+ " "+team2);
+						log.warn("Match not found: " + projectId + " " + round.getId() + " " + team1 + " " + team2);
 					}
 				} else {
-					log.warn("Round not found: "+matchcode+ " "+projectId);
+					log.warn("Round not found: " + matchcode + " " + projectId);
 				}
 			}
-		}		
+		}
 	}
 
-	private Set<LnpTeam> getLnpTeams(List<LnpMatch> lnpMatches){
-		return lnpMatches.stream().<LnpTeam>flatMap(m->Stream.of(m.team1, m.team2)).collect(Collectors.toSet());
+	private Set<LnpTeam> getLnpTeams(List<LnpMatch> lnpMatches) {
+		return lnpMatches.stream().<LnpTeam>flatMap(m -> Stream.of(m.team1, m.team2)).collect(Collectors.toSet());
 	}
-	
-	private List<LnpMatch> parseMatches(Document doc){
+
+	private List<LnpMatch> parseMatches(Document doc) {
 		List<LnpMatch> matches = new ArrayList<LnpMatch>();
 		Elements games = doc.select("section[class*=season__games]>article[class=season__game grid]");
 		for (Element g : games) {
@@ -236,7 +234,7 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 		Set<Integer> processedLnpTeams = new HashSet<Integer>();
 
 		List<Distance> result = new ArrayList<Distance>();
-		Integer currentDistance = -1;
+		Double currentDistance = Double.MIN_VALUE;
 		List<Distance> currentDistances = new ArrayList<Distance>();
 		for (Distance d : distances) {
 			if (currentDistance < d.distance) {
@@ -277,8 +275,7 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 		List<Distance> distances = new ArrayList<Distance>();
 		for (TeamLeague tl : teamLeagueList) {
 			for (LnpTeam lt : lnpTeams) {
-				Integer distance = levenshteinDistance.apply(lt.teamName.toLowerCase(),
-						tl.getTeam().getName().toLowerCase());
+				Double distance = getDistance(lt.teamName, tl.getTeam().getName());
 				distances.add(new Distance(distance, lt, tl));
 				if (distance == 0) {
 					continue;
@@ -289,6 +286,19 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 		return distances;
 	}
 
+	private Double getDistance(String t1, String t2) {
+		Double min = new Double(Math.min(t1.length(), t2.length()));
+		Double max = new Double(Math.max(t1.length(), t2.length()));
+		Integer distance = levenshteinDistance.apply(t1.toLowerCase(), t2.toLowerCase());
+		Double result = (distance - (max - min)) / min;
+		if (result == 0) {
+			result = distance / max;
+		} else {
+			result = result + 1;
+		}
+		return result;
+	}
+
 	private Map<Integer, Long> updateTeams(List<Distance> distances) {
 		Map<Integer, Long> result = new HashMap<Integer, Long>();
 		for (Distance d : distances) {
@@ -296,15 +306,15 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 			Team t = tl.getTeam();
 			if (tl.getLnp_id() != null && tl.getLnp_id() > 0) {
 				if (!tl.getLnp_id().equals(d.lnpTeam.lnpId)) {
-					log.error("Niejednoznaczne przypisanie: name:" + t.getName() + " lnpName:" + tl.getLnpName() + " "
+					log.warn("Niejednoznaczne przypisanie: name:" + t.getName() + " lnpName:" + tl.getLnpName() + " "
 							+ d.lnpTeam.teamName);
 				}
-			} else {
-				tl.setLnp_id(d.lnpTeam.lnpId);
-				tl.setLnpIdName(d.lnpTeam.lnpName);
-				tl.setLnpName(d.lnpTeam.teamName);
-				teamLeagueDAO.update(tl);
 			}
+			tl.setLnp_id(d.lnpTeam.lnpId);
+			tl.setLnpIdName(d.lnpTeam.lnpName);
+			tl.setLnpName(d.lnpTeam.teamName);
+			teamLeagueDAO.update(tl);
+
 			result.put(d.lnpTeam.lnpId, d.teamLeague.getTeam_id());
 		}
 		return result;
@@ -317,7 +327,7 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 
 	@Override
 	protected String getLink(Project p) {
-		return MessageFormat.format(LNP_URL + LNP_PAGE, p.getLnpIdName(), p.getLnp_id().toString());
+		return LnpUrlHelper.getProjectUrl(p.getLnpIdName(), p.getLnp_id());
 	}
 
 	@Override

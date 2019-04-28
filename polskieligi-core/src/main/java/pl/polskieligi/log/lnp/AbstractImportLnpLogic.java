@@ -3,8 +3,7 @@ package pl.polskieligi.log.lnp;
 import pl.polskieligi.log.AbstractImportLogic;
 import pl.polskieligi.model.LnpObject;
 
-public abstract class AbstractImportLnpLogic<T extends LnpObject>  extends AbstractImportLogic<T>{
-	protected static final String LNP_URL = "https://www.laczynaspilka.pl";	
+public abstract class AbstractImportLnpLogic<T extends LnpObject>  extends AbstractImportLogic<T>{	
 	
 	public AbstractImportLnpLogic(Class<T> clazz) {
 		super(clazz);

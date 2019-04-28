@@ -76,7 +76,7 @@ import pl.polskieligi.model.Referee;
 	
 	@Override
 	protected String getLink(Referee r) {
-		return MINUT_URL + "/sedzia.php?id=" + r.getMinut_id();
+		return MinutUrlHelper.getRefereeUrl(r.getMinut_id());
 	}
 
 	@Override

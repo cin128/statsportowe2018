@@ -51,6 +51,9 @@
 
 <th:block th:if="${team}">
     <div th:text="${team.name}"></div>
+    <div th:if="${team.minut_id!=null AND team.minut_id&gt;0}">
+		<a th:href="${T(pl.polskieligi.log.minut.MinutUrlHelper).getTeamUrl(team.minut_id)}">90minut</a>
+	</div>
     <div th:replace="thymeleaf/fragments/teamContent :: teamContent"></div>
 </th:block>
 </body>

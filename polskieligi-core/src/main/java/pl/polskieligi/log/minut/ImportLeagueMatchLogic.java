@@ -30,7 +30,6 @@ import pl.polskieligi.model.*;
 @Component
 @Transactional
 public class ImportLeagueMatchLogic {
-	private static final String MINUT_URL = "http://www.90minut.pl";
 
 	final static Logger log = Logger.getLogger(ImportLeagueMatchLogic.class);
 
@@ -68,7 +67,7 @@ public class ImportLeagueMatchLogic {
 				result = null;
 			} else {
 				try {
-					Document doc = Jsoup.connect(get90minutLink(lm.getMinut_id())).get();
+					Document doc = Jsoup.connect(MinutUrlHelper.getMatchUrl(lm.getMinut_id())).get();
 					
 					TeamLeague tl1 = teamLegueDAO.findByProjectAndTeam(lm.getProject_id(), lm.getMatchpart1().getId());
 					if(tl1==null) {
@@ -328,10 +327,6 @@ public class ImportLeagueMatchLogic {
 		} catch(NumberFormatException e){
 			return null;
 		}
-	}
-
-	private String get90minutLink(Integer matchId) {
-		return MINUT_URL + "/mecz.php?id_mecz=" + matchId;
 	}
 
 	public void setPlayerDAO(PlayerDAO playerDAO) {

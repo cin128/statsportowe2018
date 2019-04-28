@@ -61,7 +61,7 @@ public class ImportMinutTeamLogic extends AbstractImportMinutLogic<Team>{
 
 	@Override
 	protected String getLink(Team t) {
-		return MINUT_URL + "/skarb.php?id_klub=" + t.getMinut_id();
+		return MinutUrlHelper.getTeamUrl(t.getMinut_id());
 	}
 
 	@Override

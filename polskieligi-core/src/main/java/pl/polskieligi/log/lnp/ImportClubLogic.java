@@ -7,16 +7,14 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import pl.polskieligi.dao.AbstractDAO;
 import pl.polskieligi.dao.ClubDAO;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.Club;
 
-import java.text.MessageFormat;
-
 @Component @Transactional
 public class ImportClubLogic extends AbstractImportLnpLogic<Club>{
-	private static final String LNP_CLUB_URL_PATTERN = LNP_URL+"/klub/x,{0}.html";
 
 	final static Logger log = Logger.getLogger(ImportClubLogic.class);
 
@@ -51,7 +49,7 @@ public class ImportClubLogic extends AbstractImportLnpLogic<Club>{
 	}
 
 	@Override protected String getLink(Club obj) {
-		return MessageFormat.format(LNP_CLUB_URL_PATTERN, obj.getLnp_id().toString());
+		return LnpUrlHelper.getClubUrl(obj.getLnp_id());
 	}
 
 	@Override protected AbstractDAO<Club> getDAO() {

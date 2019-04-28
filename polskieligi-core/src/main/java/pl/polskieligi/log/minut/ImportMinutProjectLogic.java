@@ -41,7 +41,6 @@ import pl.polskieligi.model.*;
 public class ImportMinutProjectLogic {
 	private static final String TEAM_ID = "id_klub=";
 	private static final String AMP = "&amp;";
-	private static final String MINUT_URL = "http://www.90minut.pl";
 
 	final static Logger log = Logger.getLogger(ImportMinutProjectLogic.class);
 	
@@ -97,7 +96,7 @@ public class ImportMinutProjectLogic {
 				
 				pi.setProject(leagueProject);
 				try {
-					Document doc = Jsoup.connect(get90minutLink(projectMinutId)).get();
+					Document doc = Jsoup.connect(MinutUrlHelper.getProjectUrl(projectMinutId)).get();
 					Integer year = parseProjectHeader(doc, projectMinutId, pi);
 					leagueProject = pi.getProject();
 					if (leagueProject == null || leagueProject.getId() == null) {
@@ -429,14 +428,6 @@ public class ImportMinutProjectLogic {
 				log.warn("Team: " + teamName + " is missing!!!");				
 			}
 		}
-	}
-
-	private String get90minutLink(Integer projectMinutId){
-		String index = "0";
-		if(projectMinutId>=10000){
-			index = "1";
-		}
-		return MINUT_URL+"/liga/"+index+"/liga" + projectMinutId + ".html";
 	}
 	
 	private Float parseFloat(String value) {

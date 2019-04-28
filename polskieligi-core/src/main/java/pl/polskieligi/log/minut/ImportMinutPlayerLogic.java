@@ -87,7 +87,7 @@ import pl.polskieligi.model.Player;
 	
 	@Override
 	protected String getLink(Player p) {
-		return MINUT_URL + "/kariera.php?id=" + p.getMinut_id();
+		return MinutUrlHelper.getPlayerUrl(p.getMinut_id());
 	}
 
 	@Override

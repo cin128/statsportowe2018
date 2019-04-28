@@ -1,6 +1,5 @@
 package pl.polskieligi.log.lnp;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -28,8 +27,6 @@ import pl.polskieligi.model.TeamLeague;
 @Component @Transactional 
 public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 	private static final Double AVG_DISTANCE_TRESHOLD = 6.0;
-
-	private static final String LNP_PAGE = "/druzyny/{0},{1}.html";
 
 	final static Logger log = Logger.getLogger(ImportLnpProjectTeamsLogic.class);
 
@@ -68,7 +65,7 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 			List<Distance> distances = findMatchingTeam(lnpTeams, teamLeagueList);
 
 
-			Double avgDistance = Double.valueOf(distances.stream().mapToInt(d -> d.distance).sum())/distances.size();
+			Double avgDistance = Double.valueOf(distances.stream().mapToDouble(d -> d.distance).sum())/distances.size();
 			if(avgDistance<AVG_DISTANCE_TRESHOLD) {
 				updateTeams(distances);
 				result = ImportStatus.SUCCESS;
@@ -103,7 +100,7 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 		
 		
 		List<Distance> result = new ArrayList<Distance>();
-		Integer currentDistance = -1;
+		Double currentDistance = Double.MIN_VALUE;
 		List<Distance> currentDistances = new ArrayList<Distance>();
 		for(Distance d: distances) {
 			if(currentDistance<d.distance) {
@@ -140,7 +137,7 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 		List<Distance> distances = new ArrayList<Distance>();
 		for(TeamLeague tl: teamLeagueList) {
 			for(LnpTeam lt: lnpTeams) {
-				Integer distance = levenshteinDistance.apply(lt.teamName.toLowerCase(), tl.getTeam().getName().toLowerCase());
+				Double distance = new Double(levenshteinDistance.apply(lt.teamName.toLowerCase(), tl.getTeam().getName().toLowerCase()));
 				distances.add( new Distance(distance, lt, tl));
 				if(distance==0) {
 					continue;
@@ -175,7 +172,7 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 
 	@Override
 	protected String getLink(Project p) {
-		return MessageFormat.format(LNP_URL+LNP_PAGE, p.getLnpIdName(), p.getLnp_id().toString());
+		return LnpUrlHelper.getProjectTeamsUrl(p.getLnpIdName(), p.getLnp_id());
 	}
 
 	@Override

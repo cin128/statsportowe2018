@@ -49,8 +49,9 @@
 		<td><b
 			th:text="${#numbers.formatDecimal(m.matchpart2_result,0,0)}"></b></td>
 		<td><b th:text="${m.matchpart2.name}"></b></td>
-		<td><a th:if="${m.importStatus==0}"
-			th:href="@{/leagueMatch(leagueMatchId=${m.match_id})}">Szczegóły</a></td>
+<!-- 		<td><a th:if="${m.importStatus==0}"
+			th:href="@{/leagueMatch(leagueMatchId=${m.match_id})}">Szczegóły</a></td> -->
+		<td><a th:href="@{/leagueMatch(leagueMatchId=${m.match_id})}">Szczegóły</a></td>
 	</th:block>
 </body>
 </html>

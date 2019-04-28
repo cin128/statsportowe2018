@@ -40,7 +40,7 @@ public class UpdateLnpController {
 	@RequestMapping("/updateLnpTeams2")
 	public ModelAndView updateLnpTeams2() {
 		log.info("updateLnpTeams start");
-		importLnpProjectMatchesLogic.doImport(26967);
+		importLnpProjectMatchesLogic.doImport(9674);
 		return new ModelAndView("views/importStatus");
 	}
 }

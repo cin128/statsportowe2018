@@ -13,6 +13,12 @@
 </head>
 <body>
 <th:block th:if="${leagueMatch}">
+	<div th:if="${leagueMatch.minut_id!=null AND leagueMatch.minut_id&gt;0}">
+		<a th:href="${T(pl.polskieligi.log.minut.MinutUrlHelper).getMatchUrl(leagueMatch.minut_id)}">90minut</a>
+	</div>
+	<div th:if="${leagueMatch.lnp_id!=null AND leagueMatch.lnp_id&gt;0}">
+		<a th:href="${T(pl.polskieligi.log.lnp.LnpUrlHelper).getMatchUrl(leagueMatch.lnpIdName, leagueMatch.lnp_id)}">LNP</a>
+	</div>
     <div th:replace="thymeleaf/fragments/leagueMatchContent :: leagueMatchContent"></div>
 </th:block>
 </body>

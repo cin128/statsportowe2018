@@ -4,9 +4,6 @@ import pl.polskieligi.log.AbstractImportLogic;
 import pl.polskieligi.model.MinutObject;
 
 public abstract class AbstractImportMinutLogic<T extends MinutObject> extends AbstractImportLogic<T>{
-
-	protected static final String MINUT_URL = "http://www.90minut.pl";
-	
 	
 	public AbstractImportMinutLogic(Class<T> clazz) {
 		super(clazz);

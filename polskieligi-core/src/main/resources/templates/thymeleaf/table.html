@@ -98,6 +98,12 @@
 		</select> <input id="formSubmit" type="submit" value="Button" style="display: none;"/>
 	</form>
 	<th:block th:if="${ts.project}">
+		<div th:if="${ts.project.minut_id&gt;0}">
+			<a th:href="${T(pl.polskieligi.log.minut.MinutUrlHelper).getProjectUrl(ts.project.minut_id)}">90minut</a>
+		</div>
+		<div th:if="${ts.project.lnp_id&gt;0}">
+			<a th:href="${T(pl.polskieligi.log.lnp.LnpUrlHelper).getProjectUrl(ts.project.lnpIdName, ts.project.lnp_id)}">LNP</a>
+		</div>
 		<div th:replace="thymeleaf/fragments/tableContent :: tableContent"></div>
 	</th:block>
 </body>
