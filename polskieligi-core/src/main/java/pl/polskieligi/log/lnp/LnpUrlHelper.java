@@ -34,4 +34,8 @@ public class LnpUrlHelper {
 	public static String getMatchUrl(String lnpIdName, Integer lnpId) {
 		return MessageFormat.format(LNP_MATCH_PATTERN, lnpIdName, lnpId.toString());
 	}
+
+	public static String getTeamLeagueUrl(String lnpIdName, Integer lnpId) {
+		return MessageFormat.format(LNP_PROJECT_TEAMS_PATTERN, lnpIdName, lnpId.toString());
+	}
 }
