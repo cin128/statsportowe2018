@@ -20,6 +20,7 @@ import pl.polskieligi.dao.ProjectDAO;
 import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.log.ImportStatus;
+import pl.polskieligi.log.distance.Distance;
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Team;
 import pl.polskieligi.model.TeamLeague;
@@ -38,9 +39,9 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 	
 	@Autowired
 	TeamDAO teamDAO;
-	
-	private static final LevenshteinDistance levenshteinDistance = LevenshteinDistance.getDefaultInstance();
-	
+
+	private static final TeamsDistanceLogic tdl = new TeamsDistanceLogic();
+
 	public ImportLnpProjectTeamsLogic() {
 		super(Project.class);
 	}
@@ -61,11 +62,11 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 			if (teams.size() != teamLeagueList.size()) {
 				log.warn("Different numer of teams for project: " + project.getId() + " " + project.getName()+" count: "+teamLeagueList.size()+" lnp count:"+teams.size());
 			}
-			List<LnpTeam> lnpTeams = parseTeams(teams);
-			List<Distance> distances = findMatchingTeam(lnpTeams, teamLeagueList);
+			Set<LnpTeamDTO> lnpTeams = parseTeams(teams);
+			List<Distance<LnpTeamDTO, TeamLeague>> distances = tdl.findMatchings(lnpTeams, teamLeagueList);
 
 
-			Double avgDistance = Double.valueOf(distances.stream().mapToDouble(d -> d.distance).sum())/distances.size();
+			Double avgDistance = Double.valueOf(distances.stream().mapToDouble(d -> d.getDistance()).sum())/distances.size();
 			if(avgDistance<AVG_DISTANCE_TRESHOLD) {
 				updateTeams(distances);
 				result = ImportStatus.SUCCESS;
@@ -78,8 +79,8 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 		}
 	}
 	
-	private List<LnpTeam> parseTeams(Elements teams){
-		List<LnpTeam> result = new ArrayList<LnpTeam>();
+	private Set<LnpTeamDTO> parseTeams(Elements teams){
+		Set<LnpTeamDTO> result = new HashSet<LnpTeamDTO>();
 		for (Element team: teams) {
 			String href = team.attr("href");
 			href = href.replace("https://www.laczynaspilka.pl/druzyna/", "");
@@ -88,78 +89,25 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project>{
 			String lnpName = split[0];
 			Integer lnpId = Integer.valueOf(split[1]);
 			String teamName = team.select("span[class=name]").get(0).text();
-			result.add(new LnpTeam(lnpName, lnpId, teamName));
+			result.add(new LnpTeamDTO(lnpName, lnpId, teamName));
 		}
 		return result;
 	}
 	
-	private List<Distance> findMatchingTeam(List<LnpTeam> lnpTeams, List<TeamLeague> teamLeagueList) {
-		List<Distance> distances = calculateDistances(lnpTeams, teamLeagueList);
-		Set<Long> processedTeams = new HashSet<Long>();
-		Set<Integer> processedLnpTeams = new HashSet<Integer>();
-		
-		
-		List<Distance> result = new ArrayList<Distance>();
-		Double currentDistance = Double.MIN_VALUE;
-		List<Distance> currentDistances = new ArrayList<Distance>();
-		for(Distance d: distances) {
-			if(currentDistance<d.distance) {
-				for(Distance cd: currentDistances) {
-					processedTeams.add(cd.teamLeague.getId());
-					processedLnpTeams.add(cd.lnpTeam.lnpId);
-					long countLnpTeam = currentDistances.stream().filter(a->a.lnpTeam.lnpId.equals(cd.lnpTeam.lnpId)).count();
-					long countTeam = currentDistances.stream().filter(a->a.teamLeague.getId().equals(cd.teamLeague.getId())).count();
-					if(countLnpTeam==1 && countTeam==1) {
-						result.add(cd);
-					}
-				}
-											
-				currentDistance = d.distance;
-				currentDistances.clear();				
-			}
-			if(!processedTeams.contains(d.teamLeague.getId()) && !processedLnpTeams.contains(d.lnpTeam.lnpId)) {
-				currentDistances.add(d);			
-			}
-		}
-		if(currentDistances.size()>0) {
-			for(Distance cd: currentDistances) {
-				long countLnpTeam = currentDistances.stream().filter(a->a.lnpTeam.lnpId.equals(cd.lnpTeam.lnpId)).count();
-				long countTeam = currentDistances.stream().filter(a->a.teamLeague.getId().equals(cd.teamLeague.getId())).count();
-				if(countLnpTeam==1 && countTeam==1) {					
-					result.add(cd);
-				}
-			}
-		}
-		return result;
-	}
+
 	
-	private List<Distance> calculateDistances(List<LnpTeam> lnpTeams, List<TeamLeague> teamLeagueList){
-		List<Distance> distances = new ArrayList<Distance>();
-		for(TeamLeague tl: teamLeagueList) {
-			for(LnpTeam lt: lnpTeams) {
-				Double distance = new Double(levenshteinDistance.apply(lt.teamName.toLowerCase(), tl.getTeam().getName().toLowerCase()));
-				distances.add( new Distance(distance, lt, tl));
-				if(distance==0) {
-					continue;
-				}
-			}			
-		}
-		distances.sort(Comparator.comparing(a -> a.distance));
-		return distances;
-	}
-	
-	private void updateTeams(List<Distance> distances){
-		for(Distance d: distances) {
-			TeamLeague tl = d.teamLeague;
+	private void updateTeams(List<Distance<LnpTeamDTO, TeamLeague>> distances){
+		for(Distance<LnpTeamDTO, TeamLeague> d: distances) {
+			TeamLeague tl = d.getPersObject();
 			Team t = tl.getTeam();
 			if(tl.getLnp_id()!=null && tl.getLnp_id()>0) {
-				if(!tl.getLnp_id().equals(d.lnpTeam.lnpId)){
-					log.error("Niejednoznaczne przypisanie: name:"+t.getName()+" lnpName:"+tl.getLnpName()+" "+d.lnpTeam.teamName);
+				if(!tl.getLnp_id().equals(d.getWebObject().getLnpId())){
+					log.error("Niejednoznaczne przypisanie: name:"+t.getName()+" lnpName:"+tl.getLnpName()+" "+d.getWebObject().getTeamName());
 				}
 			} else {
-				tl.setLnp_id(d.lnpTeam.lnpId);
-				tl.setLnpIdName(d.lnpTeam.lnpName);
-				tl.setLnpName(d.lnpTeam.teamName);
+				tl.setLnp_id(d.getWebObject().getLnpId());
+				tl.setLnpIdName(d.getWebObject().getLnpName());
+				tl.setLnpName(d.getWebObject().getTeamName());
 				teamLeagueDAO.update(tl);
 			}
 		}

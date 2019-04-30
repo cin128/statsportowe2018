@@ -21,6 +21,14 @@ public class TeamLeaguePlayer {
 	@JoinColumn(name="teamLeague_id", insertable =  false, updatable = false)
 	private TeamLeague teamLeague;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Long getPlayer_id() {
 		return player_id;
 	}
@@ -52,6 +60,4 @@ public class TeamLeaguePlayer {
 	public void setTeamLeague(TeamLeague teamLeague) {
 		this.teamLeague = teamLeague;
 	}
-	
-	
 }
