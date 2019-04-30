@@ -1,4 +1,4 @@
-package pl.polskieligi.batch.config;
+package pl.polskieligi.batch.config.minut;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.item.database.JpaPagingItemReader;
@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
 import pl.polskieligi.batch.DefaultScheduler;
+import pl.polskieligi.batch.config.AbstractJobConfig;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.Project;
 
 import javax.persistence.EntityManagerFactory;
 
 @Configuration
-public class ProjectJobConfig extends AbstractJobConfig<Project>{
+public class ProjectJobConfig extends AbstractJobConfig<Project> {
 
 	@Override protected String getMaxPropertyName() {
 		return Config.MINUT_PROJECT_MAX;

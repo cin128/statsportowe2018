@@ -1,4 +1,4 @@
-package pl.polskieligi.controller;
+package pl.polskieligi.controller.view;
 
 import java.util.List;
 

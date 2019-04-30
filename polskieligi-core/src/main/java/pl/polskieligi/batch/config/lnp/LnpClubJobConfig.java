@@ -1,4 +1,4 @@
-package pl.polskieligi.batch.config;
+package pl.polskieligi.batch.config.lnp;
 
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
+import pl.polskieligi.batch.config.AbstractJobConfig;
 import pl.polskieligi.log.lnp.ImportClubLogic;
 import pl.polskieligi.model.Club;
 import pl.polskieligi.model.Config;
@@ -15,7 +16,7 @@ import pl.polskieligi.model.Config;
 import javax.persistence.EntityManagerFactory;
 
 @Configuration
-public class LnpClubConfig extends AbstractJobConfig<Club>{
+public class LnpClubJobConfig extends AbstractJobConfig<Club> {
 
 	@Override protected String getMaxPropertyName() {
 		return Config.LNP_CLUB_MAX;

@@ -1,4 +1,4 @@
-package pl.polskieligi.batch.config;
+package pl.polskieligi.batch.config.minut;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -13,12 +13,13 @@ import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
 import pl.polskieligi.batch.DefaultScheduler;
+import pl.polskieligi.batch.config.AbstractJobConfig;
 import pl.polskieligi.log.minut.ImportMinutRefereeLogic;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.Referee;
 
 @Configuration
-public class RefereeJobConfig extends AbstractJobConfig<Referee>{
+public class RefereeJobConfig extends AbstractJobConfig<Referee> {
 	@Override protected String getMaxPropertyName() {
 		return Config.MINUT_REFEREE_MAX;
 	}

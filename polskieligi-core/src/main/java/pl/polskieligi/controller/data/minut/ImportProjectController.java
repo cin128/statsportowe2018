@@ -1,4 +1,4 @@
-package pl.polskieligi.controller;
+package pl.polskieligi.controller.data.minut;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

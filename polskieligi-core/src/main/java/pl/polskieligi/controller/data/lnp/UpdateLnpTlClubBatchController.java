@@ -1,4 +1,4 @@
-package pl.polskieligi.controller;
+package pl.polskieligi.controller.data.lnp;
 
 import org.apache.log4j.Logger;
 import org.springframework.batch.core.Job;
@@ -7,18 +7,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import pl.polskieligi.controller.data.AbstractImportController;
+import pl.polskieligi.controller.data.minut.ImportPlayersBatchController;
 
 @Controller
-public class ImportPlayersBatchController extends AbstractImportController{
-
+public class UpdateLnpTlClubBatchController  extends AbstractImportController {
 	final static Logger log = Logger.getLogger(ImportPlayersBatchController.class);
 
 	@Autowired
-	@Qualifier("playerImportJob") Job job;
+	@Qualifier("lnpTlClubUpdateJob") Job job;
 
-	@RequestMapping("/importPlayersBatch")
-	public ModelAndView importPlayersBatch() {
-		log.info("importPlayersBatch start");
+	@RequestMapping("/updateLnpTlClubBatch")
+	public ModelAndView updateLnpTlClubBatch() {
+		log.info("updateLnpTlClubBatch start");
 		return importBatch(job);
 	}
 }

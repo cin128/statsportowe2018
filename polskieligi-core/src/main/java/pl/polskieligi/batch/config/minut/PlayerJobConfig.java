@@ -1,4 +1,4 @@
-package pl.polskieligi.batch.config;
+package pl.polskieligi.batch.config.minut;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -13,12 +13,13 @@ import pl.polskieligi.batch.DefaultItemProcessor;
 import pl.polskieligi.batch.DefaultItemReader;
 import pl.polskieligi.batch.DefaultJobExecutionListener;
 import pl.polskieligi.batch.DefaultScheduler;
+import pl.polskieligi.batch.config.AbstractJobConfig;
 import pl.polskieligi.log.minut.ImportMinutPlayerLogic;
 import pl.polskieligi.model.Config;
 import pl.polskieligi.model.Player;
 
 @Configuration
-public class PlayerJobConfig extends AbstractJobConfig<Player>{
+public class PlayerJobConfig extends AbstractJobConfig<Player> {
 
 	@Override protected String getMaxPropertyName() {
 		return Config.MINUT_PLAYER_MAX;

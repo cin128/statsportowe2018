@@ -45,7 +45,9 @@ public abstract class AbstractJobConfig<T> {
 		return reader;
 	}
 
-	protected abstract String getMaxPropertyName();
+	protected String getMaxPropertyName() {
+		return null;
+	}
 
 	protected abstract Class<T> getClazz();
 

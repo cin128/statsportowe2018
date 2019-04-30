@@ -21,7 +21,7 @@ final static Logger log = Logger.getLogger(AbstractImportLogic.class);
 	
 	public T doImport(Integer id) {
 		T result = null;
-		log.info("Importing id = " + id);
+		log.info("Importing "+getObjectName()+" id = " + id);
 		java.util.Date startDate = new java.util.Date();
 
 		try {
@@ -58,7 +58,7 @@ final static Logger log = Logger.getLogger(AbstractImportLogic.class);
 				}
 				java.util.Date endDate = new java.util.Date();
 				long diff = endDate.getTime() - startDate.getTime();
-				log.info("End processing id = " + id + " time = "+ (diff/1000) +" sec");					
+				log.info("End processing "+getObjectName()+" id = " + id + " time = "+ (diff/1000) +" sec");
 			}
 				
 		} catch (IOException|InstantiationException|IllegalAccessException e) {

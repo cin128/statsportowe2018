@@ -15,6 +15,8 @@ public class TeamLeague implements LnpObject{
 	private Long project_id;
 
 	private Long team_id;
+
+	private Long club__id;
 	
 	private Integer lnp_id;
 	private String lnpIdName;
@@ -109,6 +111,14 @@ public class TeamLeague implements LnpObject{
 
 	public void setImportLnpStatus(Integer importLnpStatus) {
 		this.importLnpStatus = importLnpStatus;
+	}
+
+	public Long getClub__id() {
+		return club__id;
+	}
+
+	public void setClub__id(Long club__id) {
+		this.club__id = club__id;
 	}
 
 	public List<TeamLeaguePlayer> getTeamLeaguePlayers() {

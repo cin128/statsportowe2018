@@ -1,4 +1,4 @@
-package pl.polskieligi.controller;
+package pl.polskieligi.controller.data;
 
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
