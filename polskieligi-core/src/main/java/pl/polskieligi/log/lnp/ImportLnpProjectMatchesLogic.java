@@ -55,8 +55,8 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	
 	public void processMainLeagues() {
 		process("ekstraklasa", 1, new Long(9730), false);	
-		process("i-liga", 2, new Long(9731), false);
-		process("ii-liga", 3, new Long(9732), false);
+		process("trzecia-liga", 25879, new Long(9731), false);//I Liga
+		process("trzecia-liga", 25883, new Long(9732), false);//II Liga
 		process("trzecia-liga", 25885, new Long(9808), true);//I
 		process("trzecia-liga", 25884, new Long(9807), true);//II
 		process("trzecia-liga", 25886, new Long(9810), true);//III
