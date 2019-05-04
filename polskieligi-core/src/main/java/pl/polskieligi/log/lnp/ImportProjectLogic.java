@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -44,17 +46,30 @@ public class ImportProjectLogic {
 	private SeasonDAO seasonDAO;
 
 	public void assignLnpIdToProjects() {
-		for (Season season : seasonDAO.findAll()) {
-			for (Region r : Region.values()) {
-				assignLnpIdToProjects(season, r);
+
+		//for (Season season : seasonDAO.findAll()) {
+			Season season = new Season();
+			season.setId(new Long(49));
+			season.setName("2018/2019");
+			if (season.getId() > 37) {// 37=2006/2007 
+				for (Region r : Region.values()) {
+					if (r != Region.UNDEFINED) {
+						assignLnpIdToProjects(season, r);
+					}
+				}
 			}
-		}
+		//}
 	}
 
 	private void assignLnpIdToProjects(Season season, Region region) {
+
+		Map<String, Map<Integer, String>> map = getProjects(season.getName(), region.getLnpId());
+		processInternal(season, region, map);
+	}
+
+	private void processInternal(Season season, Region region, Map<String, Map<Integer, String>> map) {
 		int ok = 0;
 		int blad = 0;
-		Map<String, Map<Integer, String>> map = getProjects(season.getName(), region.getLnpId());
 		for (Entry<String, Map<Integer, String>> e1 : map.entrySet()) {
 			String leagueType = e1.getKey();
 			LeagueType lt = LeagueType.getByLeagueName(leagueType);
@@ -65,54 +80,67 @@ public class ImportProjectLogic {
 			} else {
 				for (Entry<Integer, String> e : leagues.entrySet()) {
 					Integer lnpId = e.getKey();
-					String projectName = e.getValue().toUpperCase();
-					if (projectName.contains("JUNIOR")) {
-						log.debug("JUNIOR: " + projectName);
+					Project old = projectDAO.retrieveByLnp(lnpId);
+					if (old != null) {
+						log.debug("Projects already assigned: " + old.getName() + " --- " + old.getLnpName());
 					} else {
-						projectName = projectName.replaceAll("\"", "");
-						projectName = projectName.replaceAll("\\.", "");
-						String groupId = getGroupId(projectName);
-
-						String regionName = null;
-						String regionName2 = null;
-						if (projectName.contains(":")) {
-							regionName = projectName.split(":")[0];
+						String projectName = e.getValue().toUpperCase();
+						if (projectName.contains("JUNIOR")) {
+							log.debug("JUNIOR: " + projectName);
+						} else if (projectName.contains("BARAŻ")) {
+							log.debug("BARAŻ: " + projectName);
+						} else if (projectName.contains("HALOWY")) {
+							log.debug("HALOWY: " + projectName);
+						} else if (projectName.contains("OLDBOY")) {
+							log.debug("OLDBOY: " + projectName);
+						} else if (isEmpty(lnpId)) {
+							log.debug("Empty: " + projectName);
 						} else {
-							String uProjectName = lt.removeFromProjectName(projectName);
-							uProjectName = uProjectName.replace("SENIORÓW", "");
-							if (uProjectName.contains(" GRUPA ")) {
-								uProjectName = uProjectName.split(" GRUPA ")[0];
-							} else if (uProjectName.contains(" GR ")) {
-								uProjectName = uProjectName.split(" GR ")[0];
+							projectName = projectName.replaceAll("\"", "");
+							projectName = projectName.replaceAll("\\.", "");
+							String groupId = getGroupId(projectName);
+
+							String regionName = null;
+							String regionName2 = null;
+							if (projectName.contains(":")) {
+								regionName = projectName.split(":")[0];
+							} else {
+								String uProjectName = lt.removeFromProjectName(projectName);
+								uProjectName = uProjectName.replace("SENIORÓW", "");
+								if (uProjectName.contains(" GRUPA ")) {
+									uProjectName = uProjectName.split(" GRUPA ")[0];
+								} else if (uProjectName.contains(" GR ")) {
+									uProjectName = uProjectName.split(" GR ")[0];
+								}
+								uProjectName = uProjectName.trim();
+								if (uProjectName.endsWith("SKA")) {
+									uProjectName = uProjectName.substring(0, uProjectName.length() - 3);
+								} else if (uProjectName.endsWith("KA")) {
+									uProjectName = uProjectName.substring(0, uProjectName.length() - 2);
+								}
+								regionName2 = uProjectName.replaceAll("[^A-ZŻŹĆĄŚĘŁÓŃ ]+", "");
 							}
-							uProjectName = uProjectName.trim();
-							if (uProjectName.endsWith("SKA")) {
-								uProjectName = uProjectName.substring(0, uProjectName.length() - 3);
-							} else if (uProjectName.endsWith("KA")) {
-								uProjectName = uProjectName.substring(0, uProjectName.length() - 2);
-							}
-							regionName2 = uProjectName.replaceAll("[^A-ZŻŹĆĄŚĘŁÓŃ ]+", "");
-							;
-						}
-						Project p = findProject(season, region, lt, groupId, regionName);
-						if (p == null && !StringUtils.isEmpty(regionName2)) {
-							for (String rn : regionName2.split(" ")) {
-								p = findProject(season, region, lt, groupId, rn);
-								if (p != null) {
-									break;
+							Project p = findProject(season, region, lt, groupId, regionName);
+							if (p == null && !StringUtils.isEmpty(regionName2)) {
+								for (String rn : regionName2.split(" ")) {
+									p = findProject(season, region, lt, groupId, rn);
+									if (p != null) {
+										break;
+									}
 								}
 							}
-						}
-						if (p != null) {
-							ok++;
-							p.setLnp_id(lnpId);
-							p.setLnpIdName("nizsze-ligi");
-							p.setLnpName(e.getValue());
-							projectDAO.update(p);
-						} else {
-							log.debug("Project not found: " + lt.getName() + " " + region.getName() + " " + projectName
-									+ "'" + regionName2 + "'");
-							blad++;
+							if (p != null) {
+								ok++;
+								p.setLnp_id(lnpId);
+								p.setLnpIdName("nizsze-ligi");
+								p.setLnpName(e.getValue());
+								projectDAO.update(p);
+								log.debug("Projects found: " + p.getName() + " --- " + p.getLnpName());
+							} else {
+								log.debug("Project not found: " + lt.getName() + " " + region.getName() + " "
+										+ projectName + "'" + regionName2 + "'");
+								blad++;
+							}
 						}
 					}
 
@@ -120,7 +148,15 @@ public class ImportProjectLogic {
 			}
 		}
 		log.info(season.getName() + " " + region.getName() + " ok: " + ok + " blad: " + blad);
+	}
 
+	private boolean isEmpty(Integer lnpId) {
+		List<Integer> emptyList = new ArrayList<Integer>();
+		emptyList.add(27530);
+		emptyList.add(25900);
+		emptyList.add(27376);
+		emptyList.add(27080);
+		return emptyList.contains(lnpId);
 	}
 
 	private Project findProject(Season season, Region region, LeagueType lt, String groupId, String regionName) {
@@ -136,8 +172,20 @@ public class ImportProjectLogic {
 
 		String groupName = sb.toString().toUpperCase();
 		Project p = projectDAO.findProject(season, region, lt, groupName);
-		if (p == null) {
+		if (p == null && (regionName != null || groupId != null)) {
 			p = projectDAO.findProject(season, region, lt, groupName + " %");
+		}
+		if (p == null && regionName != null) {
+			p = projectDAO.findProject(season, region, lt, regionName);
+		}
+		if (p == null && regionName != null) {
+			p = projectDAO.findProject(season, region, lt, "%" + regionName + "%");
+		}
+		if (p == null && regionName == null && groupId != null) {
+			p = projectDAO.findProject(season, region, lt, "%" + groupId + "%");
+		}
+		if ((p == null && "PODHALAŃSKI".equals(regionName))) {
+			p = findProject(season, region, lt, groupId, "PODHALE");
 		}
 		return p;
 
@@ -176,6 +224,7 @@ public class ImportProjectLogic {
 		}
 		return groupId;
 	}
+
 	private Map<String, Map<Integer, String>> getProjects(String seasonName, Integer zpn_id) {
 		Map<String, Map<Integer, String>> result = new HashMap<String, Map<Integer, String>>();
 		try {
@@ -211,8 +260,8 @@ public class ImportProjectLogic {
 		return result;
 	}
 
-	public Set<String> getThirdLeagues(Season season){
-		Set<String> result= new HashSet<String>();
+	public Set<String> getThirdLeagues(Season season) {
+		Set<String> result = new HashSet<String>();
 		for (Region r : Region.values()) {
 			try {
 				URL url = new URL(LnpUrlHelper.getThirdUrl(r.getLnpId(), season.getName()));
@@ -220,7 +269,7 @@ public class ImportProjectLogic {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject jsonobj = (JSONObject) jsonParser.parse(in);
 				String html = (String) jsonobj.get("url");
-				if(!html.endsWith("trzecia-liga,0.html")) {
+				if (!html.endsWith("trzecia-liga,0.html")) {
 					result.add(html);
 				}
 			} catch (IOException | ParseException e) {

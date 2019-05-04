@@ -16,7 +16,7 @@ public class TeamLeague implements LnpObject{
 
 	private Long team_id;
 
-	private Long club__id;
+	private Long club_id;
 	
 	private Integer lnp_id;
 	private String lnpIdName;
@@ -114,11 +114,11 @@ public class TeamLeague implements LnpObject{
 	}
 
 	public Long getClub__id() {
-		return club__id;
+		return club_id;
 	}
 
 	public void setClub__id(Long club__id) {
-		this.club__id = club__id;
+		this.club_id = club__id;
 	}
 
 	public List<TeamLeaguePlayer> getTeamLeaguePlayers() {

@@ -11,7 +11,7 @@ public class DefaultItemReader<T>  implements ItemReader<T> {
 
 	private final static Logger log = Logger.getLogger(DefaultItemReader.class);
 	
-	private final static int DEFAULT_TRESHOLD = 100;
+	private final static int DEFAULT_TRESHOLD = 5;
 
 	@Autowired
 	private ConfigDAO configDAO;

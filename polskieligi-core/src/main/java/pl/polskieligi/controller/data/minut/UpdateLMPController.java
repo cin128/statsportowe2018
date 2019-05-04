@@ -1,4 +1,4 @@
-package pl.polskieligi.controller.data.lnp;
+package pl.polskieligi.controller.data.minut;
 
 import org.apache.log4j.Logger;
 import org.springframework.batch.core.Job;

@@ -6,8 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import pl.polskieligi.controller.data.minut.UpdateLMPController;
 import pl.polskieligi.log.lnp.ImportLnpProjectMatchesLogic;
 import pl.polskieligi.log.lnp.ImportLnpProjectTeamsLogic;
+import pl.polskieligi.log.lnp.ImportLnpTeamLeaguePlayersLogic;
 import pl.polskieligi.log.lnp.ImportProjectLogic;
 
 @Controller
@@ -23,6 +25,9 @@ public class UpdateLnpController {
 	@Autowired
 	ImportLnpProjectMatchesLogic importLnpProjectMatchesLogic;
 	
+	@Autowired
+	ImportLnpTeamLeaguePlayersLogic importLnpTeamLeaguePlayersLogic;
+	
 	@RequestMapping("/updateLnp")
 	public ModelAndView updateLnp() {
 		log.info("updateLnp start");
@@ -37,10 +42,17 @@ public class UpdateLnpController {
 		return new ModelAndView("views/importStatus");
 	}
 	
-	@RequestMapping("/updateLnpTeams2")
-	public ModelAndView updateLnpTeams2() {
-		log.info("updateLnpTeams start");
-		importLnpProjectMatchesLogic.doImport(9674);
+	@RequestMapping("/updateLnpMainLeagues")
+	public ModelAndView updateLnpMainLeagues() {
+		log.info("updateLnpMainLeagues start");
+		importLnpProjectMatchesLogic.processMainLeagues();
+		return new ModelAndView("views/importStatus");
+	}
+	
+	@RequestMapping("/updateLnpPlayers")
+	public ModelAndView updateLnpPlayers() {
+		log.info("updateLnpPlayers start");
+		importLnpTeamLeaguePlayersLogic.doImport(257437);
 		return new ModelAndView("views/importStatus");
 	}
 }

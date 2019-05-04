@@ -1,6 +1,7 @@
 package pl.polskieligi.log.lnp;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -13,6 +14,7 @@ import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.log.distance.Distance;
 import pl.polskieligi.model.*;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +26,7 @@ import java.util.stream.Stream;
 @Transactional
 public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project> {
 
-	private static final Double AVG_DISTANCE_TRESHOLD = 1.3;
+	private static final Double AVG_DISTANCE_TRESHOLD = 1.0;
 
 	final static Logger log = Logger.getLogger(ImportLnpProjectMatchesLogic.class);
 
@@ -55,7 +57,32 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	protected boolean deleteIfInvalid() {
 		return false;
 	}
+	
+	public void processMainLeagues() {
+		process("ekstraklasa", 1, new Long(9730), false);	
+		process("i-liga", 2, new Long(9731), false);
+		process("ii-liga", 3, new Long(9732), false);
+		process("trzecia-liga", 25885, new Long(9808), true);//I
+		process("trzecia-liga", 25884, new Long(9807), true);//II
+		process("trzecia-liga", 25886, new Long(9810), true);//III
+		process("trzecia-liga", 25888, new Long(9809), true);//IV
+	}
 
+	private void process(String lnpIdName, Integer lnp_id, Long projectId, boolean setLnpId) {
+		try {			
+			Document doc = Jsoup.connect(LnpUrlHelper.getProjectUrl(lnpIdName, lnp_id)).get();
+			Project p = projectDAO.find(projectId);
+			if(setLnpId) {
+				p.setLnp_id(lnp_id);
+				p.setLnpIdName(lnpIdName);
+			}
+			process(doc, p);
+		} catch (IOException e) {
+			log.error(e);
+		}
+
+	}
+	
 	@Override
 	protected ImportStatus process(Document doc, Project project) {
 		try {
@@ -72,6 +99,7 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 							+ " count: " + teamLeagueList.size() + " lnp count:" + lnpTeams.size());
 				}
 				List<Distance<LnpTeamDTO, TeamLeague>> minDistances = tdl.findMatchings(lnpTeams, teamLeagueList);
+				//minDistances.stream().forEach(d->System.out.println(d.getPersObject().getTeam().getName()+" = "+d.getWebObject().getTeamName()+" "+d.getDistance()));
 				Double avgDistance = Double.valueOf(minDistances.stream().mapToDouble(d -> d.getDistance()).sum())
 						/ minDistances.size();
 				ImportStatus result;
@@ -92,6 +120,7 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void updateMatches(List<LnpMatch> lnpMatches, Map<Integer, Long> teamsIds, Long projectId) {
 		for (LnpMatch m : lnpMatches) {
 			if (teamsIds.containsKey(m.team1.getLnpId()) && teamsIds.containsKey(m.team2.getLnpId())) {

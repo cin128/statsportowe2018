@@ -69,8 +69,8 @@
 				<tbody>
 				<th:block th:each="tlp,itr : ${player.teamleaguePlayers}">
 					<tr>	
-						<td th:text="${tlp.teamLeague.project.season.name}"></td>
-						<td th:text="${tlp.teamLeague.project.league.name}"></td>					
+						<td th:text="${tlp.teamLeague.project?.season?.name}"></td>
+						<td th:text="${tlp.teamLeague.project?.league?.name}"></td>					
 						<td th:text="${tlp.teamLeague.team.name}"></td>
 					</tr>
 				</tbody>

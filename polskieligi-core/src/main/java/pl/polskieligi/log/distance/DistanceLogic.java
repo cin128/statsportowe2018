@@ -2,6 +2,7 @@ package pl.polskieligi.log.distance;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import java.text.Normalizer;
 import java.util.*;
 
 public abstract class DistanceLogic<W, P> {
@@ -34,7 +35,7 @@ public abstract class DistanceLogic<W, P> {
 				currentDistance = d.getDistance();
 				currentDistances.clear();
 			}
-			if(!processedTeams.contains(getWebId(d.getWebObject())) && !processedLnpTeams.contains(getWebId(d.getWebObject()))) {
+			if(!processedTeams.contains(getPersId(d.getPersObject())) && !processedLnpTeams.contains(getWebId(d.getWebObject()))) {
 				currentDistances.add(d);
 			}
 		}
@@ -55,7 +56,7 @@ public abstract class DistanceLogic<W, P> {
 		for(P tl: teamLeagueList) {
 			for(W lt: lnpTeams) {
 				Double distance = getDistance(lt, tl);
-				distances.add(new Distance(distance, lt, tl));
+				distances.add(new Distance<W, P>(distance, lt, tl));
 				if (distance == 0) {
 					continue;
 				}
@@ -71,7 +72,7 @@ public abstract class DistanceLogic<W, P> {
 	protected Double getDistance(String t1, String t2) {
 		Double min = new Double(Math.min(t1.length(), t2.length()));
 		Double max = new Double(Math.max(t1.length(), t2.length()));
-		Integer distance = levenshteinDistance.apply(t1.toLowerCase(), t2.toLowerCase());
+		Integer distance = levenshteinDistance.apply(normalize(t1), normalize(t2));
 		Double result = (distance - (max - min)) / min;
 		if (result == 0) {
 			result = distance / max;
@@ -79,5 +80,11 @@ public abstract class DistanceLogic<W, P> {
 			result = result + 1;
 		}
 		return result;
+	}
+	
+	private String normalize(String s) {
+		return  Normalizer
+		           .normalize(s.toLowerCase(), Normalizer.Form.NFD)
+		           .replaceAll("[^\\p{ASCII}]", "");
 	}
 }

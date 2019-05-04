@@ -11,6 +11,9 @@ public class LnpUrlHelper {
 	private static final String LNP_PROJECT_TEAMS_PATTERN = LNP_URL+"/druzyny/{0},{1}.html";
 	private static final String LNP_MATCH_PATTERN = LNP_URL+"/rozgrywki/mecz/{0},{1}.html";
 	private static final String LNP_TEAM_LEAGUE_PATTERN = LNP_URL+"/druzyna/{0},{1}.html";
+	private static final String LNP_PLAYER_PATTERN = LNP_URL+"/zawodnik/{0},{1}.html";
+	
+	
 	
 	public static String getThirdUrl(Integer zpn_id, String seasonName) {
 		return MessageFormat.format(LNP_THIRD_URL_PATTERN, zpn_id.toString(), seasonName);
@@ -38,5 +41,9 @@ public class LnpUrlHelper {
 
 	public static String getTeamLeagueUrl(String lnpIdName, Integer lnpId) {
 		return MessageFormat.format(LNP_TEAM_LEAGUE_PATTERN, lnpIdName, lnpId.toString());
+	}
+	
+	public static String getPlayerUrl(String lnpIdName, Integer lnpId) {
+		return MessageFormat.format(LNP_PLAYER_PATTERN, lnpIdName, lnpId.toString());
 	}
 }

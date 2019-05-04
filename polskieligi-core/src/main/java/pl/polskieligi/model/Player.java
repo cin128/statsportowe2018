@@ -13,6 +13,9 @@ public class Player extends Person {
 	private Float weight;
 	private Float height;
 	
+	private Integer lnp_id;
+	private String lnpIdName;
+	
 	@OneToMany
 	@JoinColumn(name = "player_id")
 	private List<TeamLeaguePlayer> teamleaguePlayers; 
@@ -64,6 +67,22 @@ public class Player extends Person {
 
 	public void setPseudo(String pseudo) {
 		this.pseudo = pseudo;
+	}
+
+	public Integer getLnp_id() {
+		return lnp_id;
+	}
+
+	public void setLnp_id(Integer lnp_id) {
+		this.lnp_id = lnp_id;
+	}
+
+	public String getLnpIdName() {
+		return lnpIdName;
+	}
+
+	public void setLnpIdName(String lnpIdName) {
+		this.lnpIdName = lnpIdName;
 	}
 
 	public List<TeamLeaguePlayer> getTeamleaguePlayers() {

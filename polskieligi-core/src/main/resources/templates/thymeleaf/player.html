@@ -18,6 +18,12 @@
 </head>
 <body>
 <th:block th:if="${player}">
+    <div th:if="${player.minut_id!=null AND player.minut_id&gt;0}">
+		<a th:href="${T(pl.polskieligi.log.minut.MinutUrlHelper).getPlayerUrl(player.minut_id)}">90minut</a>
+	</div>
+	<div th:if="${player.lnp_id!=null AND player.lnp_id&gt;0}">
+		<a th:href="${T(pl.polskieligi.log.lnp.LnpUrlHelper).getPlayerUrl(player.lnpIdName, player.lnp_id)}">LNP</a>
+	</div>
     <div th:replace="thymeleaf/fragments/playerContent :: playerContent"></div>
 </th:block>
 </body>

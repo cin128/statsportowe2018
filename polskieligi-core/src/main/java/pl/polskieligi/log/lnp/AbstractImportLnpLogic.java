@@ -20,4 +20,9 @@ public abstract class AbstractImportLnpLogic<T extends LnpObject>  extends Abstr
 	protected void setObjectId(T obj, Integer id) {
 		obj.setLnp_id(id);
 	}
+	
+	@Override
+	protected boolean deleteIfInvalid() {
+		return false;
+	}
 }
