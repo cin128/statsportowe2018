@@ -29,11 +29,7 @@ public class ImportLnpTeamLeagueClubLogic extends AbstractImportLnpLogic<TeamLea
 	public ImportLnpTeamLeagueClubLogic() {
 		super(TeamLeague.class);
 	}
-
-	@Override protected boolean deleteIfInvalid() {
-		return false;
-	}
-
+	
 	@Override protected ImportStatus process(Document doc, TeamLeague tl) {
 		try {
 			ImportStatus result;

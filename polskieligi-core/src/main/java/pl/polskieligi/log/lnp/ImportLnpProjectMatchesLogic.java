@@ -52,11 +52,6 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	public ImportLnpProjectMatchesLogic() {
 		super(Project.class);
 	}
-
-	@Override
-	protected boolean deleteIfInvalid() {
-		return false;
-	}
 	
 	public void processMainLeagues() {
 		process("ekstraklasa", 1, new Long(9730), false);	
