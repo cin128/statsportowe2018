@@ -231,5 +231,16 @@
 			</tasklet>
 		</step>
 	</job>
+	
+	<!-- Team League Player -->
+	<job id="lnpTlPlayerUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<step id="lnpTlPlayerUpdateStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="lnpTlPlayerUpdateReader" processor="lnpTlPlayerProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
     
 </beans>
