@@ -1,6 +1,6 @@
 package pl.polskieligi.log.lnp;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class LnpPlayerDTO {
 	private final Date birthDate;

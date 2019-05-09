@@ -220,24 +220,13 @@
 			</tasklet>
 		</step>
 	</job>
-
-	<!-- Team League Club -->
-	<job id="lnpTlClubUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="lnpTlClubUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="lnpTlClubUpdateReader" processor="lnpTlClubProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
 	
 	<!-- Team League Player -->
-	<job id="lnpTlPlayerUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+	<job id="lnpTlUpdateJob" xmlns="http://www.springframework.org/schema/batch"
 		 restartable="true">
-		<step id="lnpTlPlayerUpdateStep" allow-start-if-complete="true">
+		<step id="lnpTlUpdateStep" allow-start-if-complete="true">
 			<tasklet transaction-manager="transactionManager">
-				<chunk reader="lnpTlPlayerUpdateReader" processor="lnpTlPlayerProcessor"
+				<chunk reader="lnpTlUpdateReader" processor="lnpTlProcessor"
 					   writer="emptyWriter" commit-interval="1" />
 			</tasklet>
 		</step>

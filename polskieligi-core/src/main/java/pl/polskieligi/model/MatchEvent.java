@@ -8,8 +8,10 @@ public class MatchEvent implements Comparable{
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="leagueMatchplayer_id")
+	private Long leagueMatchplayer_id;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="leagueMatchplayer_id",  insertable =  false, updatable = false)
 	private LeagueMatchPlayer leagueMatchPlayer;
 
 	private Integer time;
@@ -22,6 +24,14 @@ public class MatchEvent implements Comparable{
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getLeagueMatchplayer_id() {
+		return leagueMatchplayer_id;
+	}
+
+	public void setLeagueMatchplayer_id(Long leagueMatchplayer_id) {
+		this.leagueMatchplayer_id = leagueMatchplayer_id;
 	}
 
 	public LeagueMatchPlayer getLeagueMatchPlayer() {

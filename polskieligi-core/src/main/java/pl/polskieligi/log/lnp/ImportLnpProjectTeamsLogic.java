@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import pl.polskieligi.dao.AbstractDAO;
-import pl.polskieligi.dao.ProjectDAO;
-import pl.polskieligi.dao.TeamDAO;
-import pl.polskieligi.dao.TeamLeagueDAO;
+import pl.polskieligi.dao.*;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.log.distance.Distance;
 import pl.polskieligi.model.Project;
@@ -24,6 +21,7 @@ import pl.polskieligi.model.TeamLeague;
 
 @Component
 @Transactional
+@Deprecated
 public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project> {
 	private static final Double AVG_DISTANCE_TRESHOLD = 1.1;
 
@@ -110,17 +108,12 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project> 
 	}
 
 	@Override
-	protected Project retrieveById(Integer id) {
-		return projectDAO.retrieveByLnp(id);
-	}
-
-	@Override
 	protected String getLink(Project p) {
 		return LnpUrlHelper.getProjectTeamsUrl(p.getLnpIdName(), p.getLnp_id());
 	}
 
 	@Override
-	protected AbstractDAO<Project> getDAO() {
+	protected AbstractLnpDAO<Project> getDAO() {
 		return projectDAO;
 	}
 }

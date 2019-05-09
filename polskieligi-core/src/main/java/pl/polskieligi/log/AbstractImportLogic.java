@@ -27,8 +27,7 @@ public abstract class AbstractImportLogic<T> implements ImportLogic<T> {
 
 		try {
 			T oldObj = retrieveById(id);
-			if (oldObj != null && getImportStatus(oldObj) != null
-					&& getImportStatus(oldObj) == ImportStatus.SUCCESS.getValue()) {
+			if (isAlreadyLoaded(oldObj)) {
 				log.info(getObjectName() + " alerady loaded id = " + id);
 				result = oldObj;
 			} else {
@@ -72,6 +71,11 @@ public abstract class AbstractImportLogic<T> implements ImportLogic<T> {
 		}
 
 		return result;
+	}
+
+	protected boolean isAlreadyLoaded(T oldObj){
+		return oldObj != null && getImportStatus(oldObj) != null
+				&& getImportStatus(oldObj) == ImportStatus.SUCCESS.getValue();
 	}
 
 	protected boolean deleteIfInvalid() {

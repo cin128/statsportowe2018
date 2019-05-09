@@ -113,12 +113,12 @@ public class TeamLeague implements LnpObject{
 		this.importLnpStatus = importLnpStatus;
 	}
 
-	public Long getClub__id() {
+	public Long getClub_id() {
 		return club_id;
 	}
 
-	public void setClub__id(Long club__id) {
-		this.club_id = club__id;
+	public void setClub_id(Long club_id) {
+		this.club_id = club_id;
 	}
 
 	public List<TeamLeaguePlayer> getTeamLeaguePlayers() {

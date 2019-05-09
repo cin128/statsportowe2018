@@ -1,18 +1,17 @@
 package pl.polskieligi.model;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_LM_PR_RO_MA", columnList = "project_id,round_id,matchpart1,matchpart2", unique = false) })
-public class LeagueMatch {
+public class LeagueMatch extends AbstractObject{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long match_id;
-	private Integer minut_id;
 	private Integer playground_id;
 	private Timestamp match_date;
 	
@@ -51,25 +50,18 @@ public class LeagueMatch {
 	private Referee referee;
 
 	private Long af_id;
-
-	private Integer importStatus;
 	
 	private String location;
-	private Integer lnp_id;
-	private String lnpIdName;
-	private Integer importLnpStatus;
 
 	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="leagueMatch_id")
-	private List<Substitution> substitutions = new ArrayList<Substitution>();
+	private Set<Substitution> substitutions = new HashSet<Substitution>();
 
 	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name="leagueMatch_id")
-	@OrderBy("number ASC")
-	private List<LeagueMatchPlayer> leagueMatchPlayers = new ArrayList<LeagueMatchPlayer>();
+	private Set<LeagueMatchPlayer> leagueMatchPlayers = new HashSet<LeagueMatchPlayer>();
 
 	public LeagueMatch() {
-		minut_id = 0;
 		playground_id = 0;
 		match_date = new Timestamp(0);
 		matchpart1_result = new Float(0);
@@ -89,14 +81,6 @@ public class LeagueMatch {
 
 	public void setMatch_id(Long match_id) {
 		this.match_id = match_id;
-	}
-
-	public Integer getMinut_id() {
-		return minut_id;
-	}
-
-	public void setMinut_id(Integer minut_id) {
-		this.minut_id = minut_id;
 	}
 
 	public Integer getPlayground_id() {
@@ -219,16 +203,8 @@ public class LeagueMatch {
 		this.referee = referee;
 	}
 
-	public Integer getImportStatus() {
-		return importStatus;
-	}
-
-	public void setImportStatus(Integer importStatus) {
-		this.importStatus = importStatus;
-	}
-
 	public List<Substitution> getSubstitutions() {
-		return substitutions;
+		return substitutions.stream().collect(Collectors.toList());
 	}
 
 	public void addSubstitutions(Substitution substitution) {
@@ -236,11 +212,34 @@ public class LeagueMatch {
 	}
 
 	public List<LeagueMatchPlayer> getLeagueMatchPlayers() {
-		return leagueMatchPlayers;
+		return leagueMatchPlayers.stream().sorted(Comparator.comparing(LeagueMatchPlayer::getNumber)).collect(Collectors.toList());
 	}
 
 	public void addLeagueMatchPlayers(LeagueMatchPlayer leagueMatchPlayer) {
-		this.leagueMatchPlayers.add(leagueMatchPlayer);
+		if(leagueMatchPlayers.contains(leagueMatchPlayer)) {
+			Optional<LeagueMatchPlayer> tlp = leagueMatchPlayers.stream().filter(p->p.equals(leagueMatchPlayer)).findFirst();
+			tlp.ifPresent(p->
+			{
+				if(p.getNumber()==null) {
+					p.setNumber(leagueMatchPlayer.getNumber());
+				}
+				if(p.getMinutIn()==0){
+					p.setMinutIn(leagueMatchPlayer.getMinutIn());
+				}
+				if(p.getMinutOut()==0){
+					p.setMinutOut(leagueMatchPlayer.getMinutOut());
+				}
+				if(!p.getFirstSquad()){
+					p.setFirstSquad(leagueMatchPlayer.getFirstSquad());
+				}
+				List<MatchEvent> me = p.getMatchEvents();
+				if(me.isEmpty()){
+					p.addMatchEvents(leagueMatchPlayer.getMatchEvents());
+				}
+			});
+		} else {
+			this.leagueMatchPlayers.add(leagueMatchPlayer);
+		}
 	}
 	
 
@@ -271,30 +270,6 @@ public class LeagueMatch {
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public Integer getLnp_id() {
-		return lnp_id;
-	}
-
-	public void setLnp_id(Integer lnp_id) {
-		this.lnp_id = lnp_id;
-	}
-
-	public String getLnpIdName() {
-		return lnpIdName;
-	}
-
-	public void setLnpIdName(String lnpIdName) {
-		this.lnpIdName = lnpIdName;
-	}
-
-	public Integer getImportLnpStatus() {
-		return importLnpStatus;
-	}
-
-	public void setImportLnpStatus(Integer importLnpStatus) {
-		this.importLnpStatus = importLnpStatus;
 	}
 
 	@Override public String toString() {

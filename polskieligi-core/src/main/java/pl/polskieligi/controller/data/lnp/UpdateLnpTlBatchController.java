@@ -10,11 +10,11 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.polskieligi.controller.data.AbstractImportController;
 
 @Controller
-public class UpdateLnpTlClubBatchController extends AbstractImportController {
+public class UpdateLnpTlBatchController extends AbstractImportController{
 	@Autowired
-	@Qualifier("lnpTlClubUpdateJob") Job job;
+	@Qualifier("lnpTlUpdateJob") Job job;
 
-	@RequestMapping("/updateLnpTlClubBatch")
+	@RequestMapping("/updateLnpTlBatch")
 	public ModelAndView updateLnpTlClubBatch() {
 		return importBatch(job);
 	}

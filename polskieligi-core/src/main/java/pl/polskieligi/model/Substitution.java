@@ -3,7 +3,8 @@ package pl.polskieligi.model;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity @Table(indexes = { @Index(name = "IDX_SU_LM", columnList = "leagueMatch_id", unique = false) })
+@Entity @Table(indexes = { @Index(name = "IDX_SU_LM", columnList = "leagueMatch_id", unique = false),
+							@Index(name = "IDX_SU_LM_PL", columnList = "leagueMatch_id,playerIn_id", unique = true)})
 public class Substitution implements Serializable {
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -89,5 +90,24 @@ public class Substitution implements Serializable {
 
 	public void setPlayerOut(Player playerOut) {
 		this.playerOut = playerOut;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+
+		if (!(obj instanceof Substitution))
+			return false;
+
+		if (obj == this)
+			return true;
+
+		return this.leagueMatch_id.equals(((Substitution) obj).leagueMatch_id)
+				&&this.playerIn_id.equals(((Substitution) obj).playerIn_id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Math.toIntExact(leagueMatch_id+playerIn_id);
 	}
 }

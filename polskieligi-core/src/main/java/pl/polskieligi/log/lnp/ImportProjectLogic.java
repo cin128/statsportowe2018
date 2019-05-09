@@ -131,10 +131,10 @@ public class ImportProjectLogic {
 							}
 							if (p != null) {
 								ok++;
-								p.setLnp_id(lnpId);
+/*								p.setLnp_id(lnpId);
 								p.setLnpIdName("nizsze-ligi");
 								p.setLnpName(e.getValue());
-								projectDAO.update(p);
+								projectDAO.update(p);*/
 								log.debug("Projects found: " + p.getName() + " --- " + p.getLnpName());
 							} else {
 								log.debug("Project not found: " + lt.getName() + " " + region.getName() + " "

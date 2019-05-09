@@ -5,7 +5,8 @@ import pl.polskieligi.log.DisplayUtils;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity @Table(indexes = {@Index(name = "IDX_PL_MINUT_ID", columnList = "minut_id", unique = false)})
+@Entity @Table(indexes = {@Index(name = "IDX_PL_MINUT_ID", columnList = "minut_id", unique = false),
+		@Index(name = "IDX_PL_LNP_ID", columnList = "lnp_id", unique = false)})
 public class Player extends Person {
 
 	private String pseudo;

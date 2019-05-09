@@ -55,8 +55,8 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	
 	public void processMainLeagues() {
 		process("ekstraklasa", 1, new Long(9730), false);	
-		process("trzecia-liga", 25879, new Long(9731), false);//I Liga
-		process("trzecia-liga", 25883, new Long(9732), false);//II Liga
+		process("trzecia-liga", 25879, new Long(9731), true);//I Liga
+		process("trzecia-liga", 25883, new Long(9732), true);//II Liga
 		process("trzecia-liga", 25885, new Long(9808), true);//I
 		process("trzecia-liga", 25884, new Long(9807), true);//II
 		process("trzecia-liga", 25886, new Long(9810), true);//III
@@ -257,17 +257,12 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	}
 
 	@Override
-	protected Project retrieveById(Integer id) {
-		return projectDAO.retrieveByLnp(id);
-	}
-
-	@Override
 	protected String getLink(Project p) {
 		return LnpUrlHelper.getProjectUrl(p.getLnpIdName(), p.getLnp_id());
 	}
 
 	@Override
-	protected AbstractDAO<Project> getDAO() {
+	protected AbstractLnpDAO<Project> getDAO() {
 		return projectDAO;
 	}
 

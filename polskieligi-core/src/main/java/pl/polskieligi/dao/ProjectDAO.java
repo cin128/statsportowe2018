@@ -8,9 +8,8 @@ import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Region;
 import pl.polskieligi.model.Season;
 
-public interface ProjectDAO extends AbstractDAO<Project>{
+public interface ProjectDAO extends AbstractLnpDAO<Project>{
 	public Project retrieveByMinut(Integer minutId);
-	public Project retrieveByLnp(Integer lnpId);
 	public Project getLastProjectForTeam(Integer teamId);
 	public Long getOpenProjectsCount();
 	public List<Project> findProjects(Long season, Integer leagueType, Integer region);

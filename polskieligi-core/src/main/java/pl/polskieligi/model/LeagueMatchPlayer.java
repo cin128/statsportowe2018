@@ -2,6 +2,7 @@ package pl.polskieligi.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -136,6 +137,10 @@ public class LeagueMatchPlayer{
 		this.matchEvents.add(matchEvent);
 	}
 
+	public void addMatchEvents(Collection<MatchEvent> matchEvents) {
+		this.matchEvents.addAll(matchEvents);
+	}
+
 	public Boolean getFirstSquad() {
 		return firstSquad;
 	}
@@ -160,7 +165,35 @@ public class LeagueMatchPlayer{
 		this.substitutionOut = substitutionOut;
 	}
 
+	public void addMatchEvent(MatchEventType type, Integer time){
+		MatchEvent me = new MatchEvent();
+		me.setType(type.getId());
+		me.setTime(time);
+		me.setLeagueMatchplayer_id(this.getId());
+		this.addMatchEvent(me);
+	}
+
 	@Override public String toString() {
 		return number+" "+minutIn+" "+minutOut;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+
+		if (!(obj instanceof LeagueMatchPlayer))
+			return false;
+
+		if (obj == this)
+			return true;
+
+		return this.player_id.equals(((LeagueMatchPlayer) obj).player_id)
+				&&this.team_id.equals(((LeagueMatchPlayer) obj).team_id)
+				&&this.leagueMatch_id.equals(((LeagueMatchPlayer) obj).leagueMatch_id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Math.toIntExact(player_id+team_id+leagueMatch_id);
 	}
 }

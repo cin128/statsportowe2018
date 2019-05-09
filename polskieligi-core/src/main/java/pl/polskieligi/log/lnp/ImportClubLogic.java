@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.polskieligi.dao.AbstractDAO;
+import pl.polskieligi.dao.AbstractLnpDAO;
 import pl.polskieligi.dao.ClubDAO;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.Club;
@@ -52,7 +53,7 @@ public class ImportClubLogic extends AbstractImportLnpLogic<Club>{
 		return LnpUrlHelper.getClubUrl(obj.getLnp_id());
 	}
 
-	@Override protected AbstractDAO<Club> getDAO() {
+	@Override protected AbstractLnpDAO<Club> getDAO() {
 		return clubDAO;
 	}
 }
