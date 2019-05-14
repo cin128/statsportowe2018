@@ -256,7 +256,13 @@ public class ImportLnpLeagueMatchLogic extends AbstractImportLnpLogic<LeagueMatc
 		if(tmp.contains("+")){
 			tmp = tmp.split("\\+")[0];
 		}
-		return Integer.parseInt(tmp);
+		Integer result = 0;
+		try{
+			result = Integer.parseInt(tmp);
+		} catch(NumberFormatException e){
+			log.error(e.getMessage());
+		}
+		return result;
 	}
 
 	private Substitution createSub(Long lmId, Long mId, Integer time){
