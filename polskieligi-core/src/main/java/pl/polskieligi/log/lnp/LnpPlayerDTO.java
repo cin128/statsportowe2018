@@ -53,6 +53,6 @@ public class LnpPlayerDTO {
 	
 	@Override
 	public int hashCode() {
-	    return playerId;
+	    return playerId.hashCode();
 	}
 }

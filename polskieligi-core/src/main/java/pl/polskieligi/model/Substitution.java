@@ -2,6 +2,7 @@ package pl.polskieligi.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity @Table(indexes = { @Index(name = "IDX_SU_LM", columnList = "leagueMatch_id", unique = false),
 							@Index(name = "IDX_SU_LM_PL", columnList = "leagueMatch_id,playerIn_id", unique = true)})
@@ -108,6 +109,6 @@ public class Substitution implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Math.toIntExact(leagueMatch_id+playerIn_id);
+		return Objects.hash(leagueMatch_id, playerIn_id);
 	}
 }

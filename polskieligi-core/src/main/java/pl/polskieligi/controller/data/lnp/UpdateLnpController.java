@@ -47,21 +47,21 @@ public class UpdateLnpController {
 		return new ModelAndView("views/importStatus");
 	}
 
-	@RequestMapping("/updateLnpProjects")
+	@RequestMapping("/updateLnpProjects")//przypisz id druzynom i meczom
 	public ModelAndView updateLnpProjects() {
 		log.info("updateLnpMainLeagues start");
-		importLnpProjectMatchesLogic.doImport(25873);
+		importLnpProjectMatchesLogic.doImport(25874);
 		return new ModelAndView("views/importStatus");
 	}
 	
-	@RequestMapping("/updateLnpPlayers")
+	@RequestMapping("/updateLnpPlayers")//przypisz id zawodnikom
 	public ModelAndView updateLnpPlayers() {
 		log.info("updateLnpPlayers start");
-		importLnpTeamLeagueLogic.doImport(257049);
+		importLnpTeamLeagueLogic.doImport(257003);
 		return new ModelAndView("views/importStatus");
 	}
 
-	@RequestMapping("/updateLnpMatch")
+	@RequestMapping("/updateLnpMatch")//parsuj mecz
 	public ModelAndView updateLnpMatch() {
 		log.info("updateLnpMatch start");
 		importLnpLeagueMatchLogic.doImport(2137483);

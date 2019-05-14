@@ -32,7 +32,7 @@ public class ImportLnpLeagueMatchLogic extends AbstractImportLnpLogic<LeagueMatc
 	}
 
 	@Override protected boolean isAlreadyLoaded(LeagueMatch oldObj) {
-		return !super.isAlreadyLoaded(oldObj) || ( oldObj != null && oldObj.getImportStatus() != null
+		return super.isAlreadyLoaded(oldObj) || ( oldObj != null && oldObj.getImportStatus() != null
 				&& oldObj.getImportStatus() == ImportStatus.SUCCESS.getValue());
 	}
 

@@ -231,5 +231,16 @@
 			</tasklet>
 		</step>
 	</job>
+
+	<!-- League Match -->
+	<job id="lnpLmUpdateJob" xmlns="http://www.springframework.org/schema/batch"
+		 restartable="true">
+		<step id="lnpLmUpdateStep" allow-start-if-complete="true">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="lnpLmUpdateReader" processor="lnpLmProcessor"
+					   writer="emptyWriter" commit-interval="1" />
+			</tasklet>
+		</step>
+	</job>
     
 </beans>

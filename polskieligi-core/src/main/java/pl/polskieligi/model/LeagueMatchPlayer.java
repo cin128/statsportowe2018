@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_LMP_PL_T_LM", columnList = "player_id,team_id,leagueMatch_id", unique = true) })
@@ -194,6 +195,6 @@ public class LeagueMatchPlayer{
 
 	@Override
 	public int hashCode() {
-		return Math.toIntExact(player_id+team_id+leagueMatch_id);
+		return Objects.hash(player_id,team_id, leagueMatch_id);
 	}
 }

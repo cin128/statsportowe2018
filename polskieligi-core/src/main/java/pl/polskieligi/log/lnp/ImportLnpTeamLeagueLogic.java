@@ -174,6 +174,13 @@ public class ImportLnpTeamLeagueLogic extends AbstractImportLnpLogic<TeamLeague>
 		Player player = playerDAO.retrieveByLnp(lnpPlayer.getPlayerId());
 		if(player==null){
 			player = playerDAO.find(lnpPlayer.getName(), lnpPlayer.getSurname(), lnpPlayer.getBirthDate());
+			if(player.getLnp_id()==null || player.getLnp_id()==0){
+				player.setLnp_id(lnpPlayer.getPlayerId());
+				playerDAO.update(player);
+			} else if(player.getLnp_id()!=lnpPlayer.getPlayerId()){
+				player=null;
+				log.error("Niejednoznaczne przypisanie: name:" + player.getName() + " surname:" + player.getSurname()+" id1: "+player.getLnp_id() +"id2: "+lnpPlayer.getPlayerId());
+			}
 		}
 		if(player==null){
 			player = new Player();

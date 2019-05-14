@@ -39,6 +39,6 @@ public class LnpTeamDTO {
 	
 	@Override
 	public int hashCode() {
-	    return lnpId;
+	    return lnpId.hashCode();
 	}
 }
