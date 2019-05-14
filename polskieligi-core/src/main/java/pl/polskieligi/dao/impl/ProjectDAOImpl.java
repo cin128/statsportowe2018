@@ -96,6 +96,14 @@ public class ProjectDAOImpl extends AbstractDAOImpl<Project> implements ProjectD
 		query.setParameter("region", region);
 		return query.getResultList();
 	}
+	
+	@Override
+	public List<Project> findProjects(Long season, Integer region) {
+		TypedQuery<Project> query = getEntityManager().createQuery("SELECT p FROM Project p JOIN p.season s JOIN p.league l WHERE s.id = :season and l.region = :region order by p.name", Project.class);
+		query.setParameter("season", season);
+		query.setParameter("region", region);
+		return query.getResultList();
+	}
 
 	@Override public List<Scorer> retrieveScorers(Long projectId) {
 		TypedQuery<Scorer> query = getEntityManager()

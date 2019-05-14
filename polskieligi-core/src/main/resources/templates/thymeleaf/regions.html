@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cssmapsplugin.com/5/jquery.cssmap.min.js"></script>
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/css/cssmap-poland.css}" media="screen" />
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+// CSSMap;
+$("#map-poland").CSSMap({
+  "size": 540,
+  "cities": true,
+  "tooltips": "floating-top-center",
+  "responsive": "auto",
+  "tapOnce": true,
+  "mobileSupport": true
+});
+// END OF THE CSSMap;
+
+});
+</script>
+</head>
+<body>
+	<div id="map-poland">
+		<ul class="poland">
+			<th:block th:each="r : ${T(pl.polskieligi.model.Region).values()}">
+				<li th:attr="class=${r.htmlClass}"><a th:href="@{/region(regionId=${r.id})}" th:text="${r.name}"></a></li>
+			</th:block>
+		</ul>
+	</div>
+</body>
+</html>

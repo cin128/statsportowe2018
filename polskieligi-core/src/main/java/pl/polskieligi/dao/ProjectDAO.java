@@ -13,6 +13,7 @@ public interface ProjectDAO extends AbstractLnpDAO<Project>{
 	public Project getLastProjectForTeam(Integer teamId);
 	public Long getOpenProjectsCount();
 	public List<Project> findProjects(Long season, Integer leagueType, Integer region);
+	public List<Project> findProjects(Long season, Integer region);
 	public List<Scorer> retrieveScorers(Long projectId);
 	public Project findProject(Season season, Region region, LeagueType lt, String groupName);
 }
