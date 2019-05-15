@@ -24,11 +24,11 @@
 						<th th:text="#{player.surname}"></th>					
 						<td th:text="${player.surname}"></td>
 					</tr>
-					<tr>
+					<tr th:if="${player.birthDate!=null}">
 						<th th:text="#{player.birthDate}"></th>					
 						<td th:text="${#dates.format(player.birthDate, 'dd.MM.yyyy')}"></td>
 					</tr>
-					<tr>
+					<tr th:if="${player.position!=null AND player.position!=''}">
 						<th th:text="#{player.position}"></th>					
 						<td th:text="${player.position}"></td>
 					</tr>
