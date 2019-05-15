@@ -46,9 +46,6 @@ public class ImportLeagueMatchLogic {
 	private TeamLeagueDAO teamLegueDAO;
 
 	@Autowired
-	private TeamLeaguePlayerDAO teamLeguePlayerDAO;
-	
-	@Autowired
 	ImportMinutPlayerLogic importMinutPlayerLogic;
 
 	@Autowired
@@ -145,7 +142,7 @@ public class ImportLeagueMatchLogic {
 										}
 										lm.addSubstitutions(sb);
 									}
-									lm.addLeagueMatchPlayers(lmp);
+									lm.addLeagueMatchPlayer(lmp);
 									
 									updateTeamLeaguePlayer(tl1, tl2, i, lmp.getPlayer_id());
 									
@@ -162,6 +159,8 @@ public class ImportLeagueMatchLogic {
 						lm.setReferee(ref);
 					}
 					parseGoals(doc, playersMap);
+					teamLegueDAO.update(tl1);
+					teamLegueDAO.update(tl2);
 
 					lm.setImportStatus(ImportStatus.SUCCESS.getValue());
 				} catch(SocketTimeoutException | NoRouteToHostException e){
@@ -182,18 +181,10 @@ public class ImportLeagueMatchLogic {
 	}
 	
 	private void updateTeamLeaguePlayer(TeamLeague tl1, TeamLeague tl2, int i, Long playerId) {
-
-		Long teamLeagueId = null;
 		if (i == 0 &&tl1!=null) {
-			teamLeagueId = tl1.getId();
+			tl1.addPlayer(playerId);
 		} else if(i == 1 && tl2!=null){
-			teamLeagueId = tl2.getId();
-		}
-		if(teamLeagueId!=null) {
-			TeamLeaguePlayer tlp = new TeamLeaguePlayer();	
-			tlp.setTeamLeague_id(teamLeagueId);
-			tlp.setPlayer_id(playerId);
-			teamLeguePlayerDAO.saveUpdate(tlp);
+			tl2.addPlayer(playerId);
 		}
 	}
 

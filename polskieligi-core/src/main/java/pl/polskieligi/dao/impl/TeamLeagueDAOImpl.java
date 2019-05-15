@@ -2,6 +2,8 @@ package pl.polskieligi.dao.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,10 +91,10 @@ public class TeamLeagueDAOImpl  extends AbstractDAOImpl<TeamLeague> implements T
 	}
 
 	@Override
-	public List<TeamLeague> getTeamLeagues(Long projectId) {
+	public Set<TeamLeague> getTeamLeagues(Long projectId) {
 		TypedQuery<TeamLeague> query = getEntityManager().createQuery("select tl from TeamLeague tl where tl.project_id = :project_id", TeamLeague.class);
 		query.setParameter("project_id", projectId);
 	
-		return  query.getResultList();
+		return  query.getResultStream().collect(Collectors.toSet());
 	}
 }

@@ -1,6 +1,7 @@
 package pl.polskieligi.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(indexes = { @Index(name = "IDX_TLP_PL_TL", columnList = "player_id,teamLeague_id", unique = true) })
@@ -59,5 +60,25 @@ public class TeamLeaguePlayer {
 
 	public void setTeamLeague(TeamLeague teamLeague) {
 		this.teamLeague = teamLeague;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+
+		if (!(obj instanceof TeamLeaguePlayer))
+			return false;
+
+		if (obj == this)
+			return true;
+
+		return this.player_id.equals(((TeamLeaguePlayer) obj).player_id)
+				&&this.teamLeague_id.equals(((TeamLeaguePlayer) obj).teamLeague_id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(player_id,teamLeague_id);
 	}
 }

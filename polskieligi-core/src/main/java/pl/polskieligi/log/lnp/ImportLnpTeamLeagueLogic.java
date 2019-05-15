@@ -64,7 +64,7 @@ public class ImportLnpTeamLeagueLogic extends AbstractImportLnpLogic<TeamLeague>
 				log.warn("No players found: " + tl.getId());
 				return ImportStatus.INVALID;
 			} else {
-				List<TeamLeaguePlayer> tlPlayers = tl.getTeamLeaguePlayers();
+				Set<TeamLeaguePlayer> tlPlayers = tl.getTeamLeaguePlayers();
 				if (tlPlayers.size() == 0) {
 					lnpPlayers.forEach(p->insertTLP(p, tl));
 					return ImportStatus.SUCCESS;

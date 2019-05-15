@@ -7,14 +7,19 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.polskieligi.dao.*;
+import pl.polskieligi.dao.AbstractLnpDAO;
+import pl.polskieligi.dao.LeagueMatchDAO;
+import pl.polskieligi.dao.PlayerDAO;
+import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.log.ImportStatus;
 import pl.polskieligi.model.*;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -27,12 +32,15 @@ public class ImportLnpLeagueMatchLogic extends AbstractImportLnpLogic<LeagueMatc
 	@Autowired
 	private LeagueMatchDAO matchDAO;
 
+	@Autowired
+	private TeamLeagueDAO teamLegueDAO;
+
 	public ImportLnpLeagueMatchLogic() {
 		super(LeagueMatch.class);
 	}
 
 	@Override protected boolean isAlreadyLoaded(LeagueMatch oldObj) {
-		return super.isAlreadyLoaded(oldObj) || ( oldObj != null && oldObj.getImportStatus() != null
+		return /* TODO super.isAlreadyLoaded(oldObj) || */( oldObj != null && oldObj.getImportStatus() != null
 				&& oldObj.getImportStatus() == ImportStatus.SUCCESS.getValue());
 	}
 
@@ -44,9 +52,29 @@ public class ImportLnpLeagueMatchLogic extends AbstractImportLnpLogic<LeagueMatc
 				Collectors.toMap(x->x.getPlayer().getLnp_id(), x->x));
 		parseGoals(doc, lm, playersMap);
 		parseMatchEvents(doc, lm, playersMap);
-		playersMap.values().forEach(t->t.setLeagueMatch_id(lm.getMatch_id()));
-		playersMap.values().forEach(t->lm.addLeagueMatchPlayers(t));
+		updatePlayerAssignments(lm, playersMap.values());
 		return ImportStatus.SUCCESS;
+	}
+
+	private void updatePlayerAssignments(LeagueMatch lm, Collection<LeagueMatchPlayer> players){
+		updateLeagueMatchPlayers(lm, players);
+		updateTeamLeaguePlayers(lm, players);
+	}
+
+	private void updateLeagueMatchPlayers(LeagueMatch lm, Collection<LeagueMatchPlayer> players){
+		players.forEach(t->t.setLeagueMatch_id(lm.getMatch_id()));
+		players.forEach(t->lm.addLeagueMatchPlayer(t));
+	}
+
+	private void updateTeamLeaguePlayers(LeagueMatch lm, Collection<LeagueMatchPlayer> players){
+		TeamLeague tl1 = teamLegueDAO.findByProjectAndTeam(lm.getProject_id(), lm.getMatchpart1().getId());
+		TeamLeague tl2 = teamLegueDAO.findByProjectAndTeam(lm.getProject_id(), lm.getMatchpart2().getId());
+		players.stream().filter(p->p.getTeam_id().equals(tl1.getTeam_id()))
+				.forEach(p->tl1.addPlayer(p.getPlayer_id()));
+		players.stream().filter(p->p.getTeam_id().equals(tl2.getTeam_id()))
+				.forEach(p->tl2.addPlayer(p.getPlayer_id()));
+		teamLegueDAO.update(tl1);
+		teamLegueDAO.update(tl2);
 	}
 
 	private List<LeagueMatchPlayer> parseSquads(Elements teams, LeagueMatch obj){

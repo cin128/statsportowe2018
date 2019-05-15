@@ -12,7 +12,7 @@ public abstract class DistanceLogic<W, P> {
 	protected abstract Integer getWebId(W w);
 	protected abstract Long getPersId(P p);
 	
-	public List<Distance<W, P>> findMatchings(Set<W> webObjects, List<P> persObjects) {
+	public List<Distance<W, P>> findMatchings(Set<W> webObjects, Set<P> persObjects) {
 		List<Distance<W, P>> distances = calculateDistances(webObjects, persObjects);
 		Set<Long> processedTeams = new HashSet<Long>();
 		Set<Integer> processedLnpTeams = new HashSet<Integer>();
@@ -51,7 +51,7 @@ public abstract class DistanceLogic<W, P> {
 		return result;
 	}
 
-	private List<Distance<W, P>> calculateDistances(Set<W> lnpTeams, List<P> teamLeagueList){
+	private List<Distance<W, P>> calculateDistances(Set<W> lnpTeams, Set<P> teamLeagueList){
 		List<Distance<W, P>> distances = new ArrayList<Distance<W, P>>();
 		for(P tl: teamLeagueList) {
 			for(W lt: lnpTeams) {

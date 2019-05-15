@@ -215,7 +215,7 @@ public class LeagueMatch extends AbstractObject{
 		return leagueMatchPlayers.stream().sorted(Comparator.comparing(LeagueMatchPlayer::getNumber)).collect(Collectors.toList());
 	}
 
-	public void addLeagueMatchPlayers(LeagueMatchPlayer leagueMatchPlayer) {
+	public void addLeagueMatchPlayer(LeagueMatchPlayer leagueMatchPlayer) {
 		if(leagueMatchPlayers.contains(leagueMatchPlayer)) {
 			Optional<LeagueMatchPlayer> tlp = leagueMatchPlayers.stream().filter(p->p.equals(leagueMatchPlayer)).findFirst();
 			tlp.ifPresent(p->
@@ -241,12 +241,10 @@ public class LeagueMatch extends AbstractObject{
 			this.leagueMatchPlayers.add(leagueMatchPlayer);
 		}
 	}
-	
 
 	public Project getProject() {
 		return project;
 	}
-	
 
 	public Long getMatchpart1_id() {
 		return matchpart1_id;

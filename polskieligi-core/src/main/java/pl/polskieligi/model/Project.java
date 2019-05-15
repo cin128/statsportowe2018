@@ -2,6 +2,7 @@ package pl.polskieligi.model;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -29,7 +30,7 @@ public class Project extends AbstractObject{
 	private String lnpName;
 	
 	@OneToMany(mappedBy="project")
-	private List<TeamLeague> teamLeagues;
+	private Set<TeamLeague> teamLeagues;
 
 	public Project() {
 		name = "";
@@ -103,7 +104,7 @@ public class Project extends AbstractObject{
 		this.type = type;
 	}
 	
-	public  List<TeamLeague> getTeamLeagues(){
+	public Set<TeamLeague> getTeamLeagues(){
 		return teamLeagues;
 	}
 

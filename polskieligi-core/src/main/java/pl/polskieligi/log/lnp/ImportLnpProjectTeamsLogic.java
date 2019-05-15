@@ -46,7 +46,7 @@ public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project> 
 	protected ImportStatus process(Document doc, Project project) {
 		ImportStatus result;
 		Elements teams = doc.select("section>div[class=league-teams-list grid]>div[class=row]>a");
-		List<TeamLeague> teamLeagueList = teamLeagueDAO.getTeamLeagues(project.getId());
+		Set<TeamLeague> teamLeagueList = project.getTeamLeagues();
 		if (teams.size() == 0 || teamLeagueList.size() == 0) {
 			log.error("Invalid number of teams: count: " + teamLeagueList.size() + " lnp count:" + teams.size());
 			return ImportStatus.INVALID;

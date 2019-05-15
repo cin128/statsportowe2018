@@ -2,6 +2,7 @@ package pl.polskieligi.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Team;
@@ -11,7 +12,7 @@ public interface TeamLeagueDAO extends AbstractLnpDAO<TeamLeague>{
 	void updateTeams(Long projectId,
 			Collection<Long> teamIds);
 	List<Team> getTeams(Long projectId);
-	List<TeamLeague> getTeamLeagues(Long projectId);
+	Set<TeamLeague> getTeamLeagues(Long projectId);
 	
 	TeamLeague findByProjectAndTeam(Long projectId, Long teamId);
 }

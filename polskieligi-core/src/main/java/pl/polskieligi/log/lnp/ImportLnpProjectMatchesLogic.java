@@ -84,7 +84,7 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 			List<LnpMatch> lnpMatches = parseMatches(doc);
 			Set<LnpTeamDTO> lnpTeams = getLnpTeams(lnpMatches);
 
-			List<TeamLeague> teamLeagueList = teamLeagueDAO.getTeamLeagues(project.getId());
+			Set<TeamLeague> teamLeagueList = teamLeagueDAO.getTeamLeagues(project.getId());
 			if (lnpTeams.size() == 0 || teamLeagueList.size() == 0) {
 				log.error("Invalid number of teams: count: " + teamLeagueList.size() + " lnp count:" + lnpTeams.size());
 				return ImportStatus.INVALID;

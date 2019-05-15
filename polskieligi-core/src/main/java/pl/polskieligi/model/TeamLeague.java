@@ -1,7 +1,6 @@
 package pl.polskieligi.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -33,9 +32,9 @@ public class TeamLeague implements LnpObject{
 	
 	private Integer startPoints;
 	
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "teamLeague_id")
-	private List<TeamLeaguePlayer> teamLeaguePlayers = new ArrayList<>();
+	private Set<TeamLeaguePlayer> teamLeaguePlayers = new HashSet<>();
 
 	public TeamLeague() {
 		startPoints=0;
@@ -121,7 +120,33 @@ public class TeamLeague implements LnpObject{
 		this.club_id = club_id;
 	}
 
-	public List<TeamLeaguePlayer> getTeamLeaguePlayers() {
+	public Set<TeamLeaguePlayer> getTeamLeaguePlayers() {
 		return teamLeaguePlayers;
+	}
+
+	public void addPlayer(Long playerId) {
+		TeamLeaguePlayer teamLeaguePlayer = new TeamLeaguePlayer();
+		teamLeaguePlayer.setPlayer_id(playerId);
+		teamLeaguePlayer.setTeamLeague_id(getId());
+		this.teamLeaguePlayers.add(teamLeaguePlayer);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+
+		if (!(obj instanceof TeamLeague))
+			return false;
+
+		if (obj == this)
+			return true;
+
+		return this.project_id.equals(((TeamLeague) obj).project_id)
+				&&this.team_id.equals(((TeamLeague) obj).team_id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(project_id,team_id);
 	}
 }
