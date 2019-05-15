@@ -12,6 +12,7 @@
 				<li><a href="#tabs-teamLeagues" th:text="#{team.competitions}"></a></li>
 				<li th:if="${leagueMatches!=null AND #lists.size(leagueMatches)&gt;0}"><a href="#tabs-teamLeagueMatches" th:text="#{team.results}"></a></li>
 				<li th:if="${players!=null AND #lists.size(players)&gt;0}"><a href="#tabs-teamLeaguePlayers" th:text="#{team.players}"></a></li>
+				<li  th:if="${leagueMatches!=null AND #lists.size(leagueMatches)&gt;0}"><a href="#tabs-teamLeagueStats" th:text="#{team.stats}"></a></li>
 			</ul>
 		</div>
 		<div id="tabs-teamLeagues">
@@ -22,6 +23,9 @@
 		</div>
 		<div th:if="${players!=null AND #lists.size(players)&gt;0}" id="tabs-teamLeaguePlayers">
 			<div th:replace="thymeleaf/fragments/teamLeaguePlayers :: teamLeaguePlayers"></div>
+		</div>
+		<div th:if="${leagueMatches!=null AND #lists.size(leagueMatches)&gt;0}" id="tabs-teamLeagueStats">
+			<div th:replace="thymeleaf/fragments/teamLeagueStats :: teamLeagueStats"></div>
 		</div>
 	</div>
 	

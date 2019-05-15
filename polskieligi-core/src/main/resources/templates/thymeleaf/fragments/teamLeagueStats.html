@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+</head>
+
+<body>
+	<div th:fragment="teamLeagueStats">
+		<table>
+			<thead>
+				<tr>
+					<th></th>
+					<th th:text="#{table.total}"></th>
+					<th th:text="#{table.home}"></th>
+					<th th:text="#{table.away}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td th:text="#{table.mp.tooltip}"></td>
+					<td th:text="${teamStats.games}"></td>
+					<td th:text="${teamStats.gamesHome}"></td>
+					<td th:text="${teamStats.gamesAway}"></td>
+				</tr>
+				<tr>
+					<td th:text="#{table.g.tooltip}"></td>
+					<td th:text="${teamStats.goals}"></td>
+					<td th:text="${teamStats.goalsHome}"></td>
+					<td th:text="${teamStats.goalsAway}"></td>
+				</tr>
+				<tr>
+					<td th:text="#{table.w.tooltip}"></td>
+					<td th:text="${teamStats.wins}"></td>
+					<td th:text="${teamStats.winsHome}"></td>
+					<td th:text="${teamStats.winsAway}"></td>
+				</tr>
+				<tr>
+					<td th:text="#{table.d.tooltip}"></td>
+					<td th:text="${teamStats.draws}"></td>
+					<td th:text="${teamStats.drawsHome}"></td>
+					<td th:text="${teamStats.drawsAway}"></td>
+				</tr>
+				<tr>
+					<td th:text="#{table.l.tooltip}"></td>
+					<td th:text="${teamStats.losses}"></td>
+					<td th:text="${teamStats.lossesHome}"></td>
+					<td th:text="${teamStats.lossesAway}"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
