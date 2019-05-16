@@ -128,6 +128,7 @@ public class ImportLeagueMatchLogic {
 										lmp.setFirstSquad(false);
 										Integer time = getSubstitutionTime(p);
 										Substitution sb = new Substitution();
+										sb.setLeagueMatch_id(lm.getMatch_id());
 										sb.setTeam_id(lmp.getTeam_id());
 										sb.setPlayerIn_id(lmp.getPlayer_id());
 										if(lastPlayer!=null) {

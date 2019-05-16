@@ -32,7 +32,7 @@ public abstract class AbstractDAOImpl<T> implements AbstractDAO<T> {
 		for (T t : objs) {
 			oldObj = t;
 			if (updateData(obj, oldObj)) {
-				getEntityManager().merge(oldObj);
+				getEntityManager().persist(oldObj);
 			}
 			obj = oldObj;
 		}

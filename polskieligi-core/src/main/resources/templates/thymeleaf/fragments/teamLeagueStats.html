@@ -30,6 +30,12 @@
 					<td th:text="${teamStats.goalsAway}"></td>
 				</tr>
 				<tr>
+					<td th:text="#{team.goals.against}"></td>
+					<td th:text="${teamStats.goalsAgainst}"></td>
+					<td th:text="${teamStats.goalsAgainstHome}"></td>
+					<td th:text="${teamStats.goalsAgainstAway}"></td>
+				</tr>
+				<tr>
 					<td th:text="#{table.w.tooltip}"></td>
 					<td th:text="${teamStats.wins}"></td>
 					<td th:text="${teamStats.winsHome}"></td>
@@ -46,6 +52,18 @@
 					<td th:text="${teamStats.losses}"></td>
 					<td th:text="${teamStats.lossesHome}"></td>
 					<td th:text="${teamStats.lossesAway}"></td>
+				</tr>
+				<tr>
+					<td th:text="#{team.clean.sheets}"></td>
+					<td th:text="${teamStats.cleanSheets}"></td>
+					<td th:text="${teamStats.cleanSheetsHome}"></td>
+					<td th:text="${teamStats.cleanSheetsAway}"></td>
+				</tr>
+				<tr>
+					<td th:text="#{team.noscore}"></td>
+					<td th:text="${teamStats.failedToScore}"></td>
+					<td th:text="${teamStats.failedToScoreHome}"></td>
+					<td th:text="${teamStats.failedToScoreAway}"></td>
 				</tr>
 			</tbody>
 		</table>
