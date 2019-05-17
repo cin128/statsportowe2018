@@ -1,5 +1,8 @@
 package pl.polskieligi.controller.data;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -41,7 +44,10 @@ public class ImportStatusController {
 					row.setProgress(getProgress(jobExecution));
 					Date endTime = jobExecution.getEndTime();
 					if(endTime!=null) {
-						row.setProcessingTime(endTime.getTime()-jobExecution.getStartTime().getTime());
+						Duration d = Duration.ofMillis(endTime.getTime()-jobExecution.getStartTime().getTime());
+						String sd = LocalTime.MIDNIGHT.plus(d).format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+						long days = d.toDays();
+						row.setProcessingTime(days+"d "+sd);
 					}
 					rows.add(row);
 				}

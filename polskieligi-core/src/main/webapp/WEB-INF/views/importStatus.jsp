@@ -28,25 +28,34 @@
 					<th><abbr title="Status">Status</abbr></th>
 					<th><abbr title="End status">End status</abbr></th>
 					<th><abbr title="Job name">Job name</abbr></th>
+                    <th><abbr title="Step name">Step name</abbr></th>
 					<th><abbr title="Count">Count</abbr></th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:set var="count" value="0" scope="page" />
 				<c:forEach var="row" items="${rows}">
-					<c:set var="count" value="${count + 1}" scope="page" />
+					<c:set var="count" value="${count + 1}" scope="page"/>
 					<tr>
 						<th>${count}</th>
 						<td><b>${row.jobExecution.id}</b></td>
 						<td>${row.progress}</td>
 						<td>${row.processingTime}</td>
-						<td><b>${row.jobExecution.startTime}</b></td>
-						<td><b>${row.jobExecution.endTime}</b></td>
 						<td><b>${row.jobExecution.status}</b></td>
 						<td><b>${row.jobExecution.exitStatus.exitCode}</b></td>
 						<td><b>${row.jobExecution.jobInstance.jobName}</b></td>
-						<td><b>${row.jobExecution.stepExecutions[0].readCount}</b></td>
-
+						<td colspan="4">
+						<table>
+							<c:forEach var="step" items="${row.jobExecution.stepExecutions}">
+								<tr>
+									<td><b>${step.startTime}</b></td>
+									<td><b>${step.endTime}</b></td>
+									<td><b>${step.stepName}</b></td>
+									<td><b>${step.readCount}</b></td>
+								</tr>
+							</c:forEach>
+						</table>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

@@ -13,8 +13,7 @@ public class DefaultItemReader<T>  implements ItemReader<T> {
 	
 	private final static int DEFAULT_TRESHOLD = 5;
 
-	@Autowired
-	private ConfigDAO configDAO;
+	private final ConfigDAO configDAO;
 
 	private Integer index;
 
@@ -28,17 +27,18 @@ public class DefaultItemReader<T>  implements ItemReader<T> {
 
 	private final BiConsumer<T, Integer> setObjectId;
 
-	public DefaultItemReader(String propertyName, Integer defaultStartValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz){		
-		this(propertyName, defaultStartValue, null, setObjectId, clazz);
+	public DefaultItemReader(String propertyName, Integer defaultStartValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz, ConfigDAO configDAO){
+		this(propertyName, defaultStartValue, null, setObjectId, clazz, configDAO);
 
 	}
 	
-	public DefaultItemReader(String propertyName, Integer defaultStartValue, Integer defaultEndValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz){
+	public DefaultItemReader(String propertyName, Integer defaultStartValue, Integer defaultEndValue, BiConsumer<T, Integer> setObjectId, Class<T> clazz, ConfigDAO configDAO){
 		this.propertyName = propertyName;
 		this.defaultStartValue = defaultStartValue;
 		this.setObjectId = setObjectId;
 		this.clazz = clazz;
 		this.defaultEndValue = defaultEndValue;
+		this.configDAO = configDAO;
 	}
 
 	public void initService(){

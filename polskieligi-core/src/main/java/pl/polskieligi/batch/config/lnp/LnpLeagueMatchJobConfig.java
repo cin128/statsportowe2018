@@ -18,7 +18,7 @@ public class LnpLeagueMatchJobConfig extends AbstractJobConfig<LeagueMatch> {
 
 	@Bean
 	public JpaPagingItemReader<LeagueMatch> lnpLmUpdateReader(EntityManagerFactory entityManagerFactory){
-		return  getUpdateReader(entityManagerFactory);
+		return  getUpdateReader();
 	}
 
 	@Bean public DefaultItemProcessor<LeagueMatch> lnpLmProcessor(
@@ -27,6 +27,6 @@ public class LnpLeagueMatchJobConfig extends AbstractJobConfig<LeagueMatch> {
 	}
 
 	protected String getUpdateQueryWhereClause() {
-		return " where minut_id=0 AND lnp_id IS NOT NULL AND lnpIdName IS NOT NULL AND (importLnpStatus IS NULL OR importLnpStatus = 1)";
+		return " where minut_id=0 AND lnp_id IS NOT NULL AND lnpIdName IS NOT NULL ";//TODO AND (importLnpStatus IS NULL OR importLnpStatus = 1)";
 	}
 }

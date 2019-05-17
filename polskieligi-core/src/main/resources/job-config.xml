@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans	
 	http://www.springframework.org/schema/beans/spring-beans.xsd 	
     http://www.springframework.org/schema/beans 
@@ -10,37 +8,11 @@
     http://www.springframework.org/schema/batch 
     http://www.springframework.org/schema/batch/spring-batch.xsd
     http://www.springframework.org/schema/context 
-    http://www.springframework.org/schema/context/spring-context.xsd 			
-    http://www.springframework.org/schema/jdbc 
-	http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-	http://www.springframework.org/schema/task
-	http://www.springframework.org/schema/task/spring-task.xsd">
+    http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<context:component-scan base-package="pl.polskieligi.batch" />
 
-	<bean id="jobRepository"
-		class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="databaseType" value="${batch.databaseType}" />
-	</bean>
-
-	<bean id="jobRegistry"
-		  class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
-
-	<bean id="jobExplorer"
-		  class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
-
-
-	<bean id="jobLauncher"
-		  class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
-		<property name="jobRepository" ref="jobRepository" />
-		<property name="taskExecutor" ref="taskExecutor" />
-	</bean>
 
 	<bean id="emptyWriter" class="pl.polskieligi.batch.EmptyWriter" />
 
@@ -75,83 +47,6 @@
 	</job>
 
 	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.project.ProjectUpdateJobExecutionListener" />
-
-    <!--Player-->
-
-    <job id="playerImportJob" xmlns="http://www.springframework.org/schema/batch"
-         restartable="true">
-		<listeners>
-			<listener ref="playerImportJobExecutionListener" />
-		</listeners>
-        <step id="playerImportStep" allow-start-if-complete="true">
-            <tasklet transaction-manager="transactionManager">
-                <chunk reader="playerImportReader" processor="playerProcessor"
-                       writer="emptyWriter" commit-interval="1" />
-            </tasklet>
-        </step>
-    </job>
-
-	<job id="playerUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="playerUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="playerUpdateReader" processor="playerProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-        
-    <!--Team-->
-
-    <job id="teamImportJob" xmlns="http://www.springframework.org/schema/batch"
-         restartable="true">
-		<listeners>
-			<listener ref="teamImportJobExecutionListener" />
-		</listeners>
-        <step id="teamImportStep" allow-start-if-complete="true">
-            <tasklet transaction-manager="transactionManager">
-                <chunk reader="teamImportReader" processor="teamProcessor"
-                       writer="emptyWriter" commit-interval="1" />
-            </tasklet>
-        </step>
-    </job>
-    
-    
-     <job id="teamUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-         restartable="true">
-        <step id="teamUpdateStep" allow-start-if-complete="true">
-            <tasklet transaction-manager="transactionManager">
-                <chunk reader="teamUpdateReader" processor="teamProcessor"
-                       writer="emptyWriter" commit-interval="1" />
-            </tasklet>
-        </step>
-    </job>
-
-	<!--Referee-->
-
-	<job id="refereeImportJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<listeners>
-			<listener ref="refereeImportJobExecutionListener" />
-		</listeners>
-		<step id="refereeImportStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="refereeImportReader" processor="refereeProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-
-	<job id="refereeUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="refereeUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="refereeUpdateReader" processor="refereeProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-	
 	
 	<!-- LMP -->
 	

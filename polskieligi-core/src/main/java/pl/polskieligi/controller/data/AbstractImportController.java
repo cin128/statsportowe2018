@@ -44,7 +44,6 @@ public abstract class AbstractImportController {
 		ImportJob pij = new ImportJob();
 		pij.setJobExecution(execution);
 		pij.setProgress(Long.valueOf(0));
-		pij.setProcessingTime(Long.valueOf(0));
 		rows.add(pij);
 		ModelAndView mv = new ModelAndView("views/importStatus", "rows", rows);
 		return mv;

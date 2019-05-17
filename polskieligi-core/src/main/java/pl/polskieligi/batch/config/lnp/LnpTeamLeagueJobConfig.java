@@ -19,7 +19,7 @@ public class LnpTeamLeagueJobConfig extends AbstractJobConfig<TeamLeague> {
 
 	@Bean
 	public JpaPagingItemReader<TeamLeague> lnpTlUpdateReader(EntityManagerFactory entityManagerFactory){
-		return  getUpdateReader(entityManagerFactory);
+		return  getUpdateReader();
 	}
 
 	@Bean public DefaultItemProcessor<TeamLeague> lnpTlProcessor(

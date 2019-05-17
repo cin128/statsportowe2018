@@ -40,7 +40,7 @@ public class LnpClubJobConfig extends AbstractJobConfig<Club> {
 
 	@Bean
 	public JpaPagingItemReader<Club> clubUpdateReader(EntityManagerFactory entityManagerFactory){
-		return  getUpdateReader(entityManagerFactory);
+		return  getUpdateReader();
 	}
 
 	protected String getUpdateQuery(){

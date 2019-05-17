@@ -5,7 +5,7 @@ import org.springframework.batch.core.JobExecution;
 public class ImportJob {
 	JobExecution jobExecution;
 	Long progress;
-	Long processingTime;
+	String processingTime;
 
 	public JobExecution getJobExecution() {
 		return jobExecution;
@@ -23,11 +23,11 @@ public class ImportJob {
 		this.progress = progress;
 	}
 
-	public Long getProcessingTime() {
+	public String getProcessingTime() {
 		return processingTime;
 	}
 
-	public void setProcessingTime(Long processingTime) {
+	public void setProcessingTime(String processingTime) {
 		this.processingTime = processingTime;
 	}
 }

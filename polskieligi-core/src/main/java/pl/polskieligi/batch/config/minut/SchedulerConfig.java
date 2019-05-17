@@ -14,9 +14,6 @@ public class SchedulerConfig {
 	DefaultScheduler playerImportScheduler;
 
 	@Autowired
-	DefaultScheduler playerUpdateScheduler;
-
-	@Autowired
 	DefaultScheduler projectImportScheduler;
 
 	@Autowired
@@ -26,21 +23,11 @@ public class SchedulerConfig {
 	DefaultScheduler refereeImportScheduler;
 
 	@Autowired
-	DefaultScheduler refereeUpdateScheduler;
-
-	@Autowired
 	DefaultScheduler teamImportScheduler;
-
-	@Autowired
-	DefaultScheduler teamUpdateScheduler;
 
 	@Scheduled(cron = "0 0 1 ? * WED")
 	public void playerImportScheduler() {
 		playerImportScheduler.run();
-	}
-	@Scheduled(cron = "0 0 3 ? * WED")
-	public void playerUpdateScheduler() {
-		playerUpdateScheduler.run();
 	}
 	@Scheduled(cron = "0 0 1 ? * TUE")
 	public void projectImportScheduler() {
@@ -54,16 +41,8 @@ public class SchedulerConfig {
 	public void refereeImportScheduler() {
 		refereeImportScheduler.run();
 	}
-	@Scheduled(cron = "0 0 3 ? * THU")
-	public void refereeUpdateScheduler() {
-		refereeUpdateScheduler.run();
-	}
 	@Scheduled(cron = "0 0 1 ? * FRI")
 	public void teamImportScheduler() {
 		teamImportScheduler.run();
-	}
-	@Scheduled(cron = "0 0 3 ? * FRI")
-	public void teamUpdateScheduler() {
-		teamUpdateScheduler.run();
 	}
 }

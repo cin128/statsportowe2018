@@ -21,7 +21,7 @@ public class LnpProjectJobConfig extends AbstractJobConfig<Project> {
 	
 	@Bean
 	public JpaPagingItemReader<Project> lnpProjectUpdateReader(EntityManagerFactory entityManagerFactory){
-		return  getUpdateReader(entityManagerFactory);
+		return  getUpdateReader();
 	}
 	
 	@Bean public DefaultItemProcessor<Project> lnpProjectUpdateProcessor(ImportLnpProjectMatchesLogic importLnpProjectMatchesLogic) {
