@@ -65,11 +65,13 @@ public class ImportStatusController {
 			ExecutionContext ec = jobExecution.getExecutionContext();
 			if (ec != null &&  ec.containsKey("jobComplete")) {
 				double jobComplete = (Double) ec.get("jobComplete");
-				double reads = 0;
-				for (StepExecution step : jobExecution.getStepExecutions()) {						
-					reads = reads + step.getReadCount();
-				}							
-				result = Math.round(reads / jobComplete * 100);
+				if(jobComplete>0) {
+					double reads = 0;
+					for (StepExecution step : jobExecution.getStepExecutions()) {
+						reads = reads + step.getReadCount();
+					}
+					result = Math.round(reads / jobComplete * 100);
+				}
 			} 
 		} 
 		return result;

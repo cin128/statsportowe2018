@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import pl.polskieligi.dto.ProjectInfo;
 import pl.polskieligi.log.minut.ImportMinutProjectLogic;
+import pl.polskieligi.model.Project;
 
 @Controller
 public class ImportProjectController {
@@ -19,8 +20,13 @@ public class ImportProjectController {
 	@RequestMapping("/importProject")
 	public ModelAndView importProject(String projectId) {
 		log.info("importProject start. ProjectId = "+projectId);
-		ProjectInfo result = importProjectLogic.doImport(Integer.parseInt(projectId));
-		ModelAndView mv = new ModelAndView("views/importProject", "result", result.toHtml());
+		String html = null;
+		Project p  =importProjectLogic.doImport(Integer.parseInt(projectId));
+		if(p!=null) {
+			ProjectInfo result = p.getProjectInfo();
+			html = result.toHtml();
+		}
+		ModelAndView mv = new ModelAndView("views/importProject", "result", html);
 		return mv;		
 	}
 }

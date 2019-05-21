@@ -1,5 +1,6 @@
 package pl.polskieligi.batch.config.lnp;
 
+import org.springframework.batch.core.Job;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,19 +12,14 @@ import pl.polskieligi.model.LeagueMatch;
 import javax.persistence.EntityManagerFactory;
 
 @Configuration
-public class LnpLeagueMatchJobConfig extends AbstractJobConfig<LeagueMatch> {
+public class LnpLeagueMatchJobConfig extends AbstractLnpJobConfig<LeagueMatch> {
 	@Override protected Class<LeagueMatch> getClazz() {
 		return LeagueMatch.class;
 	}
 
 	@Bean
-	public JpaPagingItemReader<LeagueMatch> lnpLmUpdateReader(EntityManagerFactory entityManagerFactory){
-		return  getUpdateReader();
-	}
-
-	@Bean public DefaultItemProcessor<LeagueMatch> lnpLmProcessor(
-			ImportLnpLeagueMatchLogic importLnpLeagueMatchPlayersLogic) {
-		return getProcessor(importLnpLeagueMatchPlayersLogic, LeagueMatch::getLnp_id, LeagueMatch::getImportLnpStatus);
+	public Job lnpLmUpdateJob() {
+		return getJob();
 	}
 
 	protected String getUpdateQueryWhereClause() {

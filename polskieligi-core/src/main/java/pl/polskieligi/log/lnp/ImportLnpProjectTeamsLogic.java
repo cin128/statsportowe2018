@@ -19,8 +19,6 @@ import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Team;
 import pl.polskieligi.model.TeamLeague;
 
-@Component
-@Transactional
 @Deprecated
 public class ImportLnpProjectTeamsLogic extends AbstractImportLnpLogic<Project> {
 	private static final Double AVG_DISTANCE_TRESHOLD = 1.1;

@@ -15,7 +15,7 @@ public class ImportProjectsBatchController extends AbstractImportController {
 	final static Logger log = Logger.getLogger(ImportProjectsBatchController.class);
 
 	@Autowired
-	@Qualifier("projectImportJob")
+	@Qualifier("minutProjectImportJob")
 	Job job;
 
 	@RequestMapping("/importProjectsBatch")

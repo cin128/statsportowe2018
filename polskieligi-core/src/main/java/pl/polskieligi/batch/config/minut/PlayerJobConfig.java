@@ -27,12 +27,12 @@ public class PlayerJobConfig extends AbstractMinutJobConfig<Player> {
 	}
 
 	@Bean
-	public Job playerImportJob(@Value("${minut.player.end}")Integer defaultMaxValue) {
+	public Job minutPlayerImportJob(@Value("${minut.player.end}")Integer defaultMaxValue) {
 		return getJob(defaultMaxValue);
 	}
 
 	@Bean
-	public DefaultScheduler playerImportScheduler(@Qualifier("playerImportJob")Job job){
+	public DefaultScheduler minutPlayerImportScheduler(@Qualifier("minutPlayerImportJob")Job job){
 		return getScheduler(job);
 	}
 }

@@ -17,12 +17,14 @@ public abstract class AbstractMinutJobConfig<T extends MinutObject> extends Abst
 	private AbstractImportMinutLogic<T> importMinutLogic;
 
 	protected Job getJob(Integer defaultMaxValue) {
-		DefaultItemReader<T> importReader = getImportReader(defaultMaxValue, T::setMinut_id);
-		JpaPagingItemReader<T> updateReader = getUpdateReader();
-		DefaultItemProcessor<T> processor = getProcessor(importMinutLogic, T::getMinut_id, T::getImportStatus);
-		Step importStep = getStep(getImportStepName(), importReader, processor);
-		Step updateStep = getStep(getUpdateStepName(), updateReader, processor);
-		DefaultJobExecutionListener refereeImportJobExecutionListener = getImportJobExecutionListener(importReader);
-		return getJob(getJobName(), refereeImportJobExecutionListener, importStep, updateStep);
+		return getJob(defaultMaxValue, importMinutLogic, T::setMinut_id, T::getMinut_id, T::getImportStatus);
+	}
+
+	protected String getUpdateQueryWhereClause() {
+		return " where importStatus = 1";
+	}
+
+	@Override protected String getPrefix() {
+		return "minut";
 	}
 }

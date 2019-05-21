@@ -12,7 +12,7 @@ import pl.polskieligi.controller.data.AbstractImportController;
 @Controller
 public class ImportClubsBatchController extends AbstractImportController {
 	@Autowired
-	@Qualifier("clubImportJob") Job job;
+	@Qualifier("lnpClubImportJob") Job job;
 
 	@RequestMapping("/importClubsBatch")
 	public ModelAndView importClubsBatch() {

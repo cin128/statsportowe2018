@@ -52,11 +52,12 @@ public class ImportProjectLogic {
 			season.setId(new Long(49));
 			season.setName("2018/2019");
 			if (season.getId() > 37) {// 37=2006/2007 
-				for (Region r : Region.values()) {
+		/*		for (Region r : Region.values()) {
 					if (r != Region.UNDEFINED) {
 						assignLnpIdToProjects(season, r);
 					}
-				}
+				}*/
+				assignLnpIdToProjects(season, Region.WIE);
 			}
 		//}
 	}
@@ -121,6 +122,9 @@ public class ImportProjectLogic {
 								regionName2 = uProjectName.replaceAll("[^A-ZŻŹĆĄŚĘŁÓŃ ]+", "");
 							}
 							Project p = findProject(season, region, lt, groupId, regionName);
+							if(p==null && lt==LeagueType.LIGA_OKR){
+								p = findProject(season, region, LeagueType.LIGA_MOKR, groupId, regionName);
+							}
 							if (p == null && !StringUtils.isEmpty(regionName2)) {
 								for (String rn : regionName2.split(" ")) {
 									p = findProject(season, region, lt, groupId, rn);
@@ -135,10 +139,10 @@ public class ImportProjectLogic {
 								p.setLnpIdName("nizsze-ligi");
 								p.setLnpName(e.getValue());
 								projectDAO.update(p);*/
-								log.debug("Projects found: " + p.getName() + " --- " + p.getLnpName());
+								log.info("Projects found: " + p.getName() + " --- " + p.getLnpName());
 							} else {
 								log.debug("Project not found: " + lt.getName() + " " + region.getName() + " "
-										+ projectName + "'" + regionName2 + "'");
+										+ projectName + " '" + regionName + "'  '" + regionName2 + "'");
 								blad++;
 							}
 						}

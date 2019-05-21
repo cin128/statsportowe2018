@@ -23,14 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import pl.polskieligi.dao.LeagueDAO;
-import pl.polskieligi.dao.LeagueMatchDAO;
-import pl.polskieligi.dao.ProjectDAO;
-import pl.polskieligi.dao.RoundDAO;
-import pl.polskieligi.dao.SeasonDAO;
-import pl.polskieligi.dao.TableDAO;
-import pl.polskieligi.dao.TeamDAO;
-import pl.polskieligi.dao.TeamLeagueDAO;
+import pl.polskieligi.dao.*;
 import pl.polskieligi.dto.ProjectInfo;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.log.ImportStatus;
@@ -38,7 +31,7 @@ import pl.polskieligi.model.*;
 
 @Component
 @Transactional
-public class ImportMinutProjectLogic {
+public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 	private static final String TEAM_ID = "id_klub=";
 	private static final String AMP = "&amp;";
 
@@ -74,91 +67,63 @@ public class ImportMinutProjectLogic {
 	@Autowired
 	ImportLeagueMatchLogic importLeagueMatchLogic;
 
-	public ProjectInfo doImport(Integer projectMinutId) {
-		log.info("Importing project id = " + projectMinutId);
+	public ImportMinutProjectLogic() {
+		super(Project.class);
+	}
+
+	@Override protected boolean isAlreadyLoaded(Project oldObj) {
 		ProjectInfo pi = new ProjectInfo();
-		java.util.Date startDate = new java.util.Date();
-
-		try {
-			Project leagueProject = projectDAO.retrieveByMinut(projectMinutId);
-			if (leagueProject != null && (leagueProject.getArchive() && leagueProject.getPublished()
-					|| leagueProject.getType() == Project.OTHER)) {
-				log.info("Project alerady loaded id = " + projectMinutId);
-				pi.setProject(leagueProject);
-				pi.setSkipped(true);
-			} else {
-				log.debug("Start parsing... id = " + projectMinutId);
-
-				if(leagueProject==null) {
-					leagueProject = new Project();
-					leagueProject.setMinut_id(projectMinutId);
-				}
-				
-				pi.setProject(leagueProject);
-				try {
-					Document doc = Jsoup.connect(MinutUrlHelper.getProjectUrl(projectMinutId)).get();
-					Integer year = parseProjectHeader(doc, projectMinutId, pi);
-					leagueProject = pi.getProject();
-					if (leagueProject == null || leagueProject.getId() == null) {
-						throw new IllegalStateException("projecId==null!!!");
-					}
-
-					log.info("Processing project: " + leagueProject.getName());
-
-					Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
-					Map<String, Team> leagueTeams = new HashMap<String, Team>();
-					Map<Long, TeamLeague> teamLeagues = new HashMap<Long, TeamLeague>();
-					for (Entry<String, Pair<Team, TeamLeague>> e : leagueTeamsPair.entrySet()) {
-						leagueTeams.put(e.getKey(), e.getValue().getFirst());
-						TeamLeague tl = e.getValue().getSecond();
-						teamLeagues.put(tl.getTeam_id(), tl);
-					}
-
-					int teams_count = leagueTeams.size();
-					pi.setTeams_count(teams_count);
-					if (teams_count == 0) {
-						leagueProject.setType(Project.OTHER);
-					} else {
-						leagueProject.setType(Project.REGULAR_LEAGUE);
-					}
-					List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, teamLeagues, year, pi);
-					if (teams_count == 0 && missingTeams.size() > 0) {
-						updateTeamLeagues(missingTeams, leagueProject);
-					}
-					leagueProject = projectDAO.saveUpdate(leagueProject);
-					updateStartPoints(leagueProject, teamLeagues);
-
-					leagueProject.setImportStatus(ImportStatus.SUCCESS.getValue());
-
-				} catch(SocketTimeoutException | NoRouteToHostException e){
-					log.warn("Time out for: "+projectMinutId+" "+ e.getMessage());
-					leagueProject.setImportStatus(ImportStatus.TIME_OUT.getValue());
-				}
-				if(leagueProject.getImportStatus()!=null && 
-						(leagueProject.getImportStatus()==ImportStatus.SUCCESS.getValue() 
-						|| leagueProject.getImportStatus()==ImportStatus.TIME_OUT.getValue())){
-					projectDAO.update(leagueProject);
-				} else {
-					log.warn("Deleting: "+projectMinutId);
-					projectDAO.delete(leagueProject);
-				}
-
-				pi.setProject(leagueProject);
-			}
-			java.util.Date endDate = new java.util.Date();
-			long diff = endDate.getTime() - startDate.getTime();
-			pi.setProcessingTime(diff);
-			log.info("End processing id = " + projectMinutId + " time = " + (diff / 1000) + " sec");
-		} catch (org.jsoup.HttpStatusException e) {
-			pi.addMessage(e.getMessage() + " " + e.getUrl());
-		} catch (SocketTimeoutException e) {
-			pi.addMessage(e.getMessage());
-			log.error(e.getMessage());
-		} catch (Exception e) {
-			pi.addMessage(e.getMessage());
-			log.error(e.getMessage(), e);
+		boolean result = super.isAlreadyLoaded(oldObj) && (oldObj.getArchive() && oldObj.getPublished()
+				|| oldObj.getType() == Project.OTHER);
+		if(result){
+			pi.setSkipped(true);
 		}
-		return pi;
+		if(oldObj!=null){
+			oldObj.setProjectInfo(pi);
+			pi.setProject(oldObj);
+		}
+		return result;
+	}
+
+	@Override protected ImportStatus process(Document doc, Project leagueProject) {
+		ProjectInfo pi =leagueProject.getProjectInfo();
+		if(pi==null) {
+			pi = new ProjectInfo();
+			pi.setProject(leagueProject);
+			leagueProject.setProjectInfo(pi);
+		}
+		Integer year = parseProjectHeader(doc, leagueProject.getMinut_id(), pi);
+		leagueProject = pi.getProject();
+		if (leagueProject == null || leagueProject.getId() == null) {
+			throw new IllegalStateException("projecId==null!!!");
+		}
+
+		log.info("Processing project: " + leagueProject.getName());
+
+		Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
+		Map<String, Team> leagueTeams = new HashMap<String, Team>();
+		Map<Long, TeamLeague> teamLeagues = new HashMap<Long, TeamLeague>();
+		for (Entry<String, Pair<Team, TeamLeague>> e : leagueTeamsPair.entrySet()) {
+			leagueTeams.put(e.getKey(), e.getValue().getFirst());
+			TeamLeague tl = e.getValue().getSecond();
+			teamLeagues.put(tl.getTeam_id(), tl);
+		}
+
+		int teams_count = leagueTeams.size();
+		pi.setTeams_count(teams_count);
+		if (teams_count == 0) {
+			leagueProject.setType(Project.OTHER);
+		} else {
+			leagueProject.setType(Project.REGULAR_LEAGUE);
+		}
+		List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, teamLeagues, year, pi);
+		if (teams_count == 0 && missingTeams.size() > 0) {
+			updateTeamLeagues(missingTeams, leagueProject);
+		}
+		leagueProject = projectDAO.saveUpdate(leagueProject);
+		updateStartPoints(leagueProject, teamLeagues);
+
+		return ImportStatus.SUCCESS;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -452,6 +417,21 @@ public class ImportMinutProjectLogic {
 			}
 		}
 
+	}
+
+	@Override
+	protected String getLink(Project p) {
+		return MinutUrlHelper.getProjectUrl(p.getMinut_id());
+	}
+
+	@Override
+	protected Project retrieveById(Integer minutId) {
+		return projectDAO.retrieveByMinut(minutId.intValue());
+	}
+
+	@Override
+	protected AbstractDAO<Project> getDAO() {
+		return projectDAO;
 	}
 
 	public void setProjectDAO(ProjectDAO projectDAO) {

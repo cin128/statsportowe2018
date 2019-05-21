@@ -15,7 +15,7 @@ public class ImportRefereesBatchController extends AbstractImportController {
 	final static Logger log = Logger.getLogger(ImportRefereesBatchController.class);
 
 	@Autowired
-	@Qualifier("refereeImportJob") Job job;
+	@Qualifier("minutRefereeImportJob") Job job;
 
 	@RequestMapping("/importRefereesBatch")
 	public ModelAndView importPlayersBatch() {

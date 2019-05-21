@@ -38,6 +38,8 @@ public class ReportGenerator {
 				report.append(nl + "liczba kolejek = " + pi.getRounds_count());
 				if (pi.getRounds_count() >= (pi.getTeams_count() - 1) * 2 &&
 						pi.getMatches_count() == pi.getTeams_count() * pi.getTeams_count() - pi.getTeams_count()) {
+					report.append(nl + "Ilo�� dru�yn/mecz�w jest poprawna");
+				} else {
 					report.append(nl + "Ilo�� dru�yn/mecz�w jest niepoprawna");
 				}
 				report.append(nl + "czas trwania = " + pi.getProcessingTime() / 1000 + " sec");

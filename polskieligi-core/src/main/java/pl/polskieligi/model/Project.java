@@ -1,5 +1,7 @@
 package pl.polskieligi.model;
 
+import pl.polskieligi.dto.ProjectInfo;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +33,9 @@ public class Project extends AbstractObject{
 	
 	@OneToMany(mappedBy="project")
 	private Set<TeamLeague> teamLeagues;
+
+	@Transient
+	private ProjectInfo projectInfo;
 
 	public Project() {
 		name = "";
@@ -115,7 +120,15 @@ public class Project extends AbstractObject{
 	public void setLnpName(String lnpName) {
 		this.lnpName = lnpName;
 	}
-	
+
+	public ProjectInfo getProjectInfo() {
+		return projectInfo;
+	}
+
+	public void setProjectInfo(ProjectInfo projectInfo) {
+		this.projectInfo = projectInfo;
+	}
+
 	@Override
 	public String toString() {
 		return name;

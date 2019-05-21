@@ -17,9 +17,6 @@ public class UpdateLnpController {
 	ImportProjectLogic projectLogic;
 	
 	@Autowired
-	ImportLnpProjectTeamsLogic importLnpProjectTeamsLogic;
-	
-	@Autowired
 	ImportLnpProjectMatchesLogic importLnpProjectMatchesLogic;
 	
 	@Autowired ImportLnpTeamLeagueLogic importLnpTeamLeagueLogic;
@@ -30,13 +27,6 @@ public class UpdateLnpController {
 	public ModelAndView updateLnp() {
 		log.info("updateLnp start");
 		projectLogic.assignLnpIdToProjects();
-		return new ModelAndView("views/importStatus");
-	}
-	
-	@RequestMapping("/updateLnpTeams")
-	public ModelAndView updateLnpTeams() {
-		log.info("updateLnpTeams start");
-		importLnpProjectTeamsLogic.doImport(25929);
 		return new ModelAndView("views/importStatus");
 	}
 	
@@ -64,7 +54,7 @@ public class UpdateLnpController {
 	@RequestMapping("/updateLnpMatch")//parsuj mecz
 	public ModelAndView updateLnpMatch() {
 		log.info("updateLnpMatch start");
-		importLnpLeagueMatchLogic.doImport(2137483);
+		importLnpLeagueMatchLogic.doImport(1966861);
 		return new ModelAndView("views/importStatus");
 	}
 }

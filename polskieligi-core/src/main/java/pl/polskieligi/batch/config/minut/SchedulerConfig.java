@@ -11,38 +11,31 @@ import pl.polskieligi.batch.DefaultScheduler;
 public class SchedulerConfig {
 
 	@Autowired
-	DefaultScheduler playerImportScheduler;
+	DefaultScheduler minutPlayerImportScheduler;
 
 	@Autowired
-	DefaultScheduler projectImportScheduler;
+	DefaultScheduler minutProjectImportScheduler;
 
 	@Autowired
-	DefaultScheduler projectUpdateScheduler;
+	DefaultScheduler minutRefereeImportScheduler;
 
 	@Autowired
-	DefaultScheduler refereeImportScheduler;
-
-	@Autowired
-	DefaultScheduler teamImportScheduler;
+	DefaultScheduler minutTeamImportScheduler;
 
 	@Scheduled(cron = "0 0 1 ? * WED")
 	public void playerImportScheduler() {
-		playerImportScheduler.run();
+		minutPlayerImportScheduler.run();
 	}
 	@Scheduled(cron = "0 0 1 ? * TUE")
 	public void projectImportScheduler() {
-		projectImportScheduler.run();
-	}
-	@Scheduled(cron = "0 0 3 ? * TUE")
-	public void projectUpdateScheduler() {
-		projectUpdateScheduler.run();
+		minutProjectImportScheduler.run();
 	}
 	@Scheduled(cron = "0 0 1 ? * THU")
 	public void refereeImportScheduler() {
-		refereeImportScheduler.run();
+		minutRefereeImportScheduler.run();
 	}
 	@Scheduled(cron = "0 0 1 ? * FRI")
 	public void teamImportScheduler() {
-		teamImportScheduler.run();
+		minutTeamImportScheduler.run();
 	}
 }

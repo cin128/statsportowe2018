@@ -16,7 +16,7 @@ public class ImportTeamsBatchController extends AbstractImportController {
 	final static Logger log = Logger.getLogger(ImportTeamsBatchController.class);
 
 	@Autowired
-	@Qualifier("teamImportJob") Job job;
+	@Qualifier("minutTeamImportJob") Job job;
 
 	@RequestMapping("/importTeamsBatch")
 	public ModelAndView importPlayersBatch() {

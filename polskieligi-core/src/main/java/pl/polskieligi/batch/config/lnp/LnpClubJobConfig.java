@@ -1,5 +1,6 @@
 package pl.polskieligi.batch.config.lnp;
 
+import org.springframework.batch.core.Job;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +17,7 @@ import pl.polskieligi.model.Config;
 import javax.persistence.EntityManagerFactory;
 
 @Configuration
-public class LnpClubJobConfig extends AbstractJobConfig<Club> {
+public class LnpClubJobConfig extends AbstractLnpJobConfig<Club> {
 
 	@Override protected String getMaxPropertyName() {
 		return Config.LNP_CLUB_MAX;
@@ -26,24 +27,12 @@ public class LnpClubJobConfig extends AbstractJobConfig<Club> {
 		return Club.class;
 	}
 
-	@Bean public DefaultItemProcessor<Club> clubProcessor(ImportClubLogic importClubLogic) {
-		return getProcessor(importClubLogic, Club::getLnp_id, Club::getImportLnpStatus);
-	}
-
-	@Bean public DefaultItemReader<Club> clubImportReader( @Value("${lnp.club.start}")Integer defaultStartValue, @Value("${lnp.club.end}")Integer defaultEndValue) {
-		return getImportReader(defaultStartValue, defaultEndValue, Club::setLnp_id);
-	}
-
-	@Bean public DefaultJobExecutionListener clubImportJobExecutionListener(@Qualifier("clubImportReader") DefaultItemReader<Club> clubImportReader) {
-		return getImportJobExecutionListener(clubImportReader);
-	}
-
 	@Bean
-	public JpaPagingItemReader<Club> clubUpdateReader(EntityManagerFactory entityManagerFactory){
-		return  getUpdateReader();
+	public Job lnpClubImportJob(@Value("${lnp.club.start}")Integer defaultStartValue) {
+		return getJob(defaultStartValue);
 	}
 
-	protected String getUpdateQuery(){
-		return super.getUpdateQuery()+" OR (name IS NULL)";
+	protected String getUpdateQueryWhereClause(){
+		return super.getUpdateQueryWhereClause()+" OR (name IS NULL)";
 	}
 }

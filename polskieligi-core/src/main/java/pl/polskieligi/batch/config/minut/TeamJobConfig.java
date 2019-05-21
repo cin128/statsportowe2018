@@ -26,12 +26,12 @@ public class TeamJobConfig extends AbstractMinutJobConfig<Team> {
 	}
 
 	@Bean
-	public Job teamImportJob(@Value("${minut.team.end}")Integer defaultMaxValue) {
+	public Job minutTeamImportJob(@Value("${minut.team.end}")Integer defaultMaxValue) {
 		return getJob(defaultMaxValue);
 	}
 
 	@Bean
-	public DefaultScheduler teamImportScheduler(@Qualifier("teamImportJob")Job job){
+	public DefaultScheduler minutTeamImportScheduler(@Qualifier("minutTeamImportJob")Job job){
 		return getScheduler(job);
 	}
 }

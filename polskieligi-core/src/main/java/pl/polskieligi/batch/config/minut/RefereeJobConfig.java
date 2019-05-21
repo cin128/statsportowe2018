@@ -27,12 +27,12 @@ public class RefereeJobConfig extends AbstractMinutJobConfig<Referee> {
 	}
 
 	@Bean
-	public Job refereeImportJob(@Value("${minut.referee.end}")Integer defaultMaxValue) {
+	public Job minutRefereeImportJob(@Value("${minut.referee.end}")Integer defaultMaxValue) {
 		return getJob(defaultMaxValue);
 	}
 
 	@Bean
-	public DefaultScheduler refereeImportScheduler(@Qualifier("refereeImportJob")Job job){
+	public DefaultScheduler minutRefereeImportScheduler(@Qualifier("minutRefereeImportJob")Job job){
 		return getScheduler(job);
 	}
 }

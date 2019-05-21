@@ -1,10 +1,10 @@
 package pl.polskieligi.batch.config;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.SimpleJobBuilder;
+import org.springframework.batch.core.step.builder.SimpleStepBuilder;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,22 +34,48 @@ public abstract class AbstractJobConfig<T> {
 	@Autowired
 	private EntityManagerFactory entityManagerFactory;
 
+	protected Job getJob(Integer defaultMaxValue, ImportLogic<T> importLogic,  BiConsumer<T, Integer> setObjectId, Function<T, Integer> getObjectId, Function<T, Integer> getImportStatus) {
+		DefaultItemReader<T> importReader = getImportReader(defaultMaxValue, setObjectId);
+		JpaPagingItemReader<T> updateReader = getUpdateReader();
+		DefaultItemProcessor<T> processor = getProcessor(importLogic, getObjectId, getImportStatus);
+		Step importStep = getImportStep(getImportStepName(), importReader, processor);
+		Step updateStep = getUpdateStep(getUpdateStepName(), updateReader, processor);
+		DefaultJobExecutionListener importJobExecutionListener = getImportJobExecutionListener(importReader);
+		return getJob(getJobName(), importJobExecutionListener, importStep, updateStep);
+	}
+
+
 	protected Job getJob(String jobName, DefaultJobExecutionListener jobExecutionListener, Step... steps) {
 		SimpleJobBuilder sjb = this.jobBuilderFactory.get(jobName).start(steps[0]);
 		for(int i=1; i<steps.length; i++){
 			sjb = sjb.next(steps[i]);
 		}
-		return sjb.listener(jobExecutionListener)
-				.build();
+		if(jobExecutionListener!=null) {
+			return sjb.listener(jobExecutionListener).build();
+		} else {
+			return  sjb.build();
+		}
 	}
 
-	protected Step getStep(String stepName, ItemReader<T> importReader, DefaultItemProcessor<T> processor) {
-		return this.stepBuilderFactory.get(stepName)
+	protected Step getImportStep(String stepName, ItemReader<T> importReader, DefaultItemProcessor<T> processor) {
+		return getStep(stepName, importReader, processor, false);
+	}
+
+	protected Step getUpdateStep(String stepName, ItemReader<T> importReader, DefaultItemProcessor<T> processor) {
+		return getStep(stepName, importReader, processor, true);
+	}
+
+	private Step getStep(String stepName, ItemReader<T> importReader, DefaultItemProcessor<T> processor, boolean addStepListener) {
+		SimpleStepBuilder<T, Object> sb = this.stepBuilderFactory.get(stepName)
 				.<T, Object>chunk(1)
 				.reader(importReader)
 				.processor(processor)
-				.writer(new EmptyWriter())
-				.build();
+				.writer(new EmptyWriter());
+		if(addStepListener) {
+			return sb.listener(new DefaultStepExecutionListener(getUpdateCountQuery(), genericDao)).build();
+		} else {
+			return sb.build();
+		}
 	}
 
 
@@ -87,24 +113,28 @@ public abstract class AbstractJobConfig<T> {
 
 	protected abstract Class<T> getClazz();
 
+	protected abstract String getUpdateQueryWhereClause();
+
 	protected String getUpdateQuery(){
 		return "FROM "+getClazz().getSimpleName() +getUpdateQueryWhereClause();
 	}
-	
-	protected String getUpdateQueryWhereClause() {
-		return " where importStatus = 1";
+
+	protected String getUpdateCountQuery(){
+		return "SELECT COUNT(*) "+getUpdateQuery();
 	}
 
+	protected abstract String getPrefix();
+
 	protected String getJobName() {
-		return getClazz().getSimpleName().toLowerCase()+"ImportJob";
+		return getPrefix()+getClazz().getSimpleName()+"ImportJob";
 	}
 
 	protected String getImportStepName() {
-		return getClazz().getSimpleName().toLowerCase()+"ImportStep";
+		return getPrefix()+getClazz().getSimpleName()+"ImportStep";
 	}
 
 	protected String getUpdateStepName() {
-		return getClazz().getSimpleName().toLowerCase()+"UpdateStep";
+		return getPrefix()+getClazz().getSimpleName()+"UpdateStep";
 	}
 
 }

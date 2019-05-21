@@ -14,40 +14,6 @@
 
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
 
-	<bean id="emptyWriter" class="pl.polskieligi.batch.EmptyWriter" />
-
-	<!--Project-->
-
-	<bean id="projectProcessor" class="pl.polskieligi.batch.project.ProjectProcessor" />
-
-	<job id="projectImportJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<listeners>
-			<listener ref="projectImportJobExecutionListener" />
-		</listeners>
-		<step id="projectImportStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="projectImportReader" processor="projectProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-
-	<job id="projectUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		restartable="true">
-		<listeners>
-			<listener ref="projectUpdateJobExecutionListener" />
-		</listeners>
-		<step id="projectUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="projectUpdateReader" processor="projectProcessor"
-					writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-
-	<bean id="projectUpdateJobExecutionListener" class="pl.polskieligi.batch.project.ProjectUpdateJobExecutionListener" />
-	
 	<!-- LMP -->
 	
 	<bean id="LMPProcessor" class="pl.polskieligi.batch.lmp.LMPProcessor" />
@@ -78,64 +44,5 @@
 		</property>
 		<property name="pageSize" value="1000"/>
 	</bean>
-    
-    
-   	<!-- LNP -->
-   	<job id="lnpProjectUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="lnpProjectUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="lnpProjectUpdateReader" processor="lnpProjectUpdateProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-
-	<!--Club-->
-
-	<job id="clubImportJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<listeners>
-			<listener ref="clubImportJobExecutionListener" />
-		</listeners>
-		<step id="clubImportStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="clubImportReader" processor="clubProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-
-	<job id="clubUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="clubUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="clubUpdateReader" processor="clubProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-	
-	<!-- Team League Player -->
-	<job id="lnpTlUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="lnpTlUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="lnpTlUpdateReader" processor="lnpTlProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
-
-	<!-- League Match -->
-	<job id="lnpLmUpdateJob" xmlns="http://www.springframework.org/schema/batch"
-		 restartable="true">
-		<step id="lnpLmUpdateStep" allow-start-if-complete="true">
-			<tasklet transaction-manager="transactionManager">
-				<chunk reader="lnpLmUpdateReader" processor="lnpLmProcessor"
-					   writer="emptyWriter" commit-interval="1" />
-			</tasklet>
-		</step>
-	</job>
     
 </beans>
