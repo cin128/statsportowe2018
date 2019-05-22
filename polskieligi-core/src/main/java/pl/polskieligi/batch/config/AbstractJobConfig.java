@@ -80,7 +80,7 @@ public abstract class AbstractJobConfig<T> {
 
 
 	protected DefaultItemProcessor<T> getProcessor(ImportLogic<T> importLogic, Function<T, Integer> getObjectId, Function<T, Integer> getImportStatus) {
-		return new DefaultItemProcessor<T>(getMaxPropertyName(), importLogic, getObjectId, getImportStatus);
+		return new DefaultItemProcessor<T>(getMaxPropertyName(), importLogic, getObjectId, getImportStatus, configDAO);
 	}
 
 	protected DefaultItemReader<T> getImportReader(Integer defaultStartValue, BiConsumer<T, Integer> setObjectId) {
