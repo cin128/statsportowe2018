@@ -1,10 +1,9 @@
 package pl.polskieligi.log.minut;
 
-import java.net.NoRouteToHostException;
-import java.net.SocketTimeoutException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,11 +21,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import pl.polskieligi.dao.*;
+import pl.polskieligi.dao.AbstractDAO;
+import pl.polskieligi.dao.LeagueDAO;
+import pl.polskieligi.dao.LeagueMatchDAO;
+import pl.polskieligi.dao.ProjectDAO;
+import pl.polskieligi.dao.RoundDAO;
+import pl.polskieligi.dao.SeasonDAO;
+import pl.polskieligi.dao.TableDAO;
+import pl.polskieligi.dao.TeamDAO;
+import pl.polskieligi.dao.TeamLeagueDAO;
 import pl.polskieligi.dto.ProjectInfo;
 import pl.polskieligi.dto.TableRow;
 import pl.polskieligi.log.ImportStatus;
-import pl.polskieligi.model.*;
+import pl.polskieligi.model.League;
+import pl.polskieligi.model.LeagueMatch;
+import pl.polskieligi.model.LeagueType;
+import pl.polskieligi.model.Project;
+import pl.polskieligi.model.Region;
+import pl.polskieligi.model.Round;
+import pl.polskieligi.model.Season;
+import pl.polskieligi.model.Team;
+import pl.polskieligi.model.TeamLeague;
 
 @Component
 @Transactional
@@ -92,13 +106,20 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 			pi.setProject(leagueProject);
 			leagueProject.setProjectInfo(pi);
 		}
-		Integer year = parseProjectHeader(doc, leagueProject.getMinut_id(), pi);
-		leagueProject = pi.getProject();
-		if (leagueProject == null || leagueProject.getId() == null) {
-			throw new IllegalStateException("projecId==null!!!");
+		
+		String title = getTitle(doc);
+		if(StringUtils.isEmpty(title)) {
+			return ImportStatus.INVALID;
 		}
-
-		log.info("Processing project: " + leagueProject.getName());
+		log.info("Processing project: " + title);
+		leagueProject.setName(title);
+		Season season = parseSeason(title);
+		leagueProject.setSeason(season);
+		League league = parseLeague(title, season);
+		leagueProject.setLeague(league);
+		Date startDate = getStartDate(season);
+		leagueProject.setStart_date(startDate);
+		leagueProject.setArchive(isArchive(startDate));
 
 		Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
 		Map<String, Team> leagueTeams = new HashMap<String, Team>();
@@ -116,7 +137,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		} else {
 			leagueProject.setType(Project.REGULAR_LEAGUE);
 		}
-		List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, teamLeagues, year, pi);
+		List<Team> missingTeams = parseGames(doc, leagueProject, leagueTeams, teamLeagues);
 		if (teams_count == 0 && missingTeams.size() > 0) {
 			updateTeamLeagues(missingTeams, leagueProject);
 		}
@@ -125,61 +146,79 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 
 		return ImportStatus.SUCCESS;
 	}
-
-	@SuppressWarnings("deprecation")
-	private Integer parseProjectHeader(Document doc, Integer projectMinutId, ProjectInfo pi) {
-		Integer year = null;
-		java.util.Date startDate = new java.util.Date();
-		Elements titles = doc.select("title");
-		Project leagueProject = null;
-		for (Element title : titles) {
-			String tmp = title.text();
-			leagueProject = pi.getProject();
-			leagueProject.setName(tmp);
-			int index = tmp.indexOf("/");
-			if (index < 5 || tmp.length() < 12) {
-				pi.addMessage("Wrong title: " + tmp);
-			} else {
-				String sezon = tmp.substring(index - 4, index + 5);
-				year = Integer.parseInt(sezon.split("/")[0]);
-				String leagueName = tmp.replaceAll(" " + sezon, "");
-				League league = new League();
-				league.setName(leagueName);
-				league.setLeagueType(LeagueType.getByLeagueName(leagueName).getId());
-				league.setRegion(Region.getRegionByProjectName(leagueName).getId());
-				if(leagueName.contains("grupa: ")){
-					league.setGroupName(leagueName.split("grupa: ")[1]);
-				}
-				league = leagueDAO.saveUpdate(league);
-				log.debug("League " + leagueName + " saved id = " + league.getId());
-				Season season = new Season();
-				season.setName(sezon);
-				season = seasonDAO.saveUpdate(season);
-				log.debug("Season " + sezon   + " saved id = " + season.getId());
-				leagueProject.setLeague(league);
-				leagueProject.setSeason(season);
-				GregorianCalendar cal = new GregorianCalendar(year, 6,
-						1);
-				Date start_date = new Date(cal.getTimeInMillis());
-				leagueProject.setStart_date(start_date);
-				boolean archive = false;
-
-				if (startDate.getYear() > start_date.getYear()) {
-					if (startDate.getYear() == start_date.getYear() + 1) {
-						if (startDate.getMonth() > 8) {
-							archive = true;
-						}
-					} else {
-						archive = true;
-					}
-				}
-				leagueProject.setArchive(archive);
-			}
-			leagueProject = projectDAO.saveUpdate(leagueProject);
-			log.info("Project saved " + leagueProject.getId());
-			pi.setProject(leagueProject);
+	
+	private String getTitle(Document doc) {
+		String result = doc.select("title").text();
+		if ("404 Not Found".equals(result)) {
+			result = null;
 		}
-		return year;
+		return result;
+	}
+	
+	private Season parseSeason(String title) {
+		String sezon = null;
+		int index = title.indexOf("/");
+		if (index < 5 || title.length() < 12) {
+			if(title.length() > 4) {
+				String tmp = title.substring(title.length()-4, title.length());
+				if(tmp.matches("^\\d+$")) {
+					sezon = tmp;
+				}
+			}
+		} else {
+			 sezon = title.substring(index - 4, index + 5);
+		}
+		if(sezon!=null) {
+			Season season = new Season();
+			season.setName(sezon);
+			season = seasonDAO.saveUpdate(season);
+			log.debug("Season " + sezon   + " saved id = " + season.getId());
+			return season;
+		}
+		return null;
+	}
+	
+	private League parseLeague(String title, Season season) {
+		String leagueName = title;
+		if(season!=null) {
+			leagueName = leagueName.replaceAll(" " + season.getName(), "");
+		}
+		League league = new League();
+		league.setName(leagueName);
+		league.setLeagueType(LeagueType.getByLeagueName(leagueName).getId());
+		league.setRegion(Region.getRegionByProjectName(leagueName).getId());
+		if(leagueName.contains("grupa: ")){
+			league.setGroupName(leagueName.split("grupa: ")[1]);
+		}
+		league = leagueDAO.saveUpdate(league);
+		log.debug("League " + leagueName + " saved id = " + league.getId());
+		return league;
+	}
+	
+	private Date getStartDate(Season season) {
+		if(season == null) {
+			return null;
+		}
+		GregorianCalendar cal;
+		if(season.getName().contains("/")) {
+			Integer year =Integer.parseInt(season.getName().split("/")[0]);
+			 cal = new GregorianCalendar(year, 6,
+						1);
+		} else {
+			Integer year = Integer.parseInt(season.getName());
+			 cal = new GregorianCalendar(year, 0,
+						1);
+		}
+		return new Date(cal.getTimeInMillis());
+	}
+	
+	private Boolean isArchive(Date date) {
+		if(date==null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1);
+		return cal.getTimeInMillis()>date.getTime();
 	}
 
 	private Map<String, Pair<Team, TeamLeague>> parseTeams(Document doc, Project leagueProject) {
@@ -222,7 +261,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		}
 	}
 	
-	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Team> leagueTeams, Map<Long, TeamLeague> teamLeagues, Integer year, ProjectInfo pi) {
+	private List<Team> parseGames(Document doc, Project leagueProject, Map<String, Team> leagueTeams, Map<Long, TeamLeague> teamLeagues) {
 		List<Team> missingTeams = new ArrayList<Team>();
 		int teams_count = leagueTeams.size();
 		int matches_count = 0;
@@ -297,7 +336,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 																" ",
 																""));
 									} else if (index > 0) {
-										ts = TimestampParser.parseTimestamp(year,
+										ts = TimestampParser.parseTimestamp(leagueProject.getStart_date(),
 												tmp.substring(0,
 														index - 1));
 										crowd = Integer
@@ -309,7 +348,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 																" ",
 																""));
 									} else {
-										ts = TimestampParser.parseTimestamp(year,
+										ts = TimestampParser.parseTimestamp(leagueProject.getStart_date(),
 												tmp);
 									}
 									if (ts != null) {
@@ -354,14 +393,14 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 					String roundName = tmp;
 					if (i > 0 && tmp.length() - i > 2) {
 						roundName = tmp.substring(0, i - 1);
-						Date roundStart = TimestampParser.getRoundStart(year,
+						Date roundStart = TimestampParser.getRoundStart(leagueProject.getStart_date(),
 								tmp.substring(i + 2));
 						if (roundStart != null) {
 							matchDate = new Timestamp(
 									roundStart.getTime());
 						}
 						round.setRound_date_first(roundStart);
-						round.setRound_date_last(TimestampParser.getRoundEnd(year,
+						round.setRound_date_last(TimestampParser.getRoundEnd(leagueProject.getStart_date(),
 								tmp.substring(i + 2)));
 					}
 					round.setName(roundName.trim());
@@ -378,8 +417,8 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 						- teams_count) {
 			leagueProject.setPublished(true);
 		}
-		pi.setMatches_count(matches_count);
-		pi.setRounds_count(rounds_count);
+		leagueProject.getProjectInfo().setMatches_count(matches_count);
+		leagueProject.getProjectInfo().setRounds_count(rounds_count);
 		return missingTeams;
 	}
 	

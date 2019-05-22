@@ -1,13 +1,13 @@
 package pl.polskieligi.log.minut;
 
-import org.springframework.util.StringUtils;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.util.StringUtils;
 
 public class TimestampParser {
 
@@ -32,8 +32,8 @@ public class TimestampParser {
 	/*
 	 * "21 lipca, 18:00"
 	 */
-	public static Timestamp parseTimestamp(Integer year, String substring) {
-		if(year==null || substring==null){
+	public static Timestamp parseTimestamp(Date startDate, String substring) {
+		if(startDate==null || substring==null){
 			return null;
 		}
 		if (substring.trim().isEmpty()) {
@@ -52,19 +52,19 @@ public class TimestampParser {
 		GregorianCalendar cal = null;
 		if(tmp.length==2){
 			Integer month = months.get(tmp[1]);
-			cal = new GregorianCalendar(month > 5 ? year : year + 1, month, day);
+			cal = new GregorianCalendar(getYear(startDate, month), month, day);
 		} else if (tmp.length == 3 && tmp[2].contains(":")) {
 			Integer month = months
 					.get(tmp[1].substring(0, tmp[1].length() - 1));
 			String[] time = tmp[2].split(":");
 			Integer hour = Integer.parseInt(time[0]);
 			Integer minute = Integer.parseInt(time[1]);
-			cal = new GregorianCalendar(month > 5 ? year : year + 1, month,
+			cal = new GregorianCalendar(getYear(startDate, month), month,
 					day, hour, minute);
 		} else if(tmp.length == 3&& tmp[1].contains("-")){
 			String[] tmp2 = tmp[1].split("-");
 			Integer month = months.get(tmp2[0]);
-			cal = new GregorianCalendar(month > 5 ? year : year + 1, month, day);
+			cal = new GregorianCalendar(getYear(startDate, month), month, day);
 		} else {
 			return null;
 		}
@@ -74,8 +74,8 @@ public class TimestampParser {
 	/*
 	 * "22-23 marca" "30 listopada-1 grudnia"
 	 */
-	public static Date getRoundEnd(Integer year, String substring) {
-		if(year==null || substring==null){
+	public static Date getRoundEnd(Date startDate, String substring) {
+		if(startDate==null || substring==null){
 			return null;
 		}
 
@@ -102,13 +102,12 @@ public class TimestampParser {
 			day = Integer.parseInt(tmp[0]);
 			month = months.get(tmp[1]);
 		}
-		GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
-				: year + 1, month, day);
+		GregorianCalendar cal = new GregorianCalendar(getYear(startDate, month), month, day);
 		return new Date(cal.getTimeInMillis());
 	}
 
-	public static Date getRoundStart(Integer year, String substring) {
-		if(year==null || substring==null){
+	public static Date getRoundStart(Date startDate, String substring) {
+		if(startDate==null || substring==null){
 			return null;
 		}
 
@@ -140,8 +139,7 @@ public class TimestampParser {
 				month = months.get(tmp[1]);
 			}
 		}
-		GregorianCalendar cal = new GregorianCalendar(month > 5 ? year
-				: year + 1, month, day);
+		GregorianCalendar cal = new GregorianCalendar(getYear(startDate, month), month, day);
 		return new Date(cal.getTimeInMillis());
 	}
 
@@ -159,5 +157,16 @@ public class TimestampParser {
 			result = new Date(cal.getTimeInMillis());
 		}
 		return result;
+	}
+	
+	@SuppressWarnings("deprecation")
+	private static Integer getYear(Date startDate, int month) {
+		if(startDate.getMonth()==0) {
+			return startDate.getYear()+1900;
+		} else {
+			return startDate.getMonth() > 5 ? startDate.getYear()
+					: startDate.getYear() + 1901;
+		}
+		
 	}
 }
