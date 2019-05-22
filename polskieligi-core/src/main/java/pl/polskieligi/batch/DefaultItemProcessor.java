@@ -16,7 +16,6 @@ import pl.polskieligi.model.MinutObject;
 public class DefaultItemProcessor<T> implements ItemProcessor<T, Object> {
 	final static Logger log = Logger.getLogger(DefaultItemProcessor.class);
 
-	@Autowired
 	private ConfigDAO configDAO;
 
 	private final String propertyName;
@@ -27,11 +26,12 @@ public class DefaultItemProcessor<T> implements ItemProcessor<T, Object> {
 
 	private final Function<T, Integer> getImportStatus;
 
-	public DefaultItemProcessor(String propertyName, ImportLogic<T> importLogic, Function<T, Integer> getObjectId, Function<T, Integer> getImportStatus) {
+	public DefaultItemProcessor(String propertyName, ImportLogic<T> importLogic, Function<T, Integer> getObjectId, Function<T, Integer> getImportStatus, ConfigDAO configDAO) {
 		this.propertyName = propertyName;
 		this.importLogic = importLogic;
 		this.getObjectId = getObjectId;
 		this.getImportStatus = getImportStatus;
+		this.configDAO = configDAO;
 	}
 
 	@Override
@@ -54,7 +54,6 @@ public class DefaultItemProcessor<T> implements ItemProcessor<T, Object> {
 		}
 		return result;
 	}
-
 
 	private T processInternal(T obj) {
 		log.info("Process: " + getObjectId.apply(obj));
