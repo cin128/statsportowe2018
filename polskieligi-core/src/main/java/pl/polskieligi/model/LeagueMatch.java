@@ -31,6 +31,11 @@ public class LeagueMatch extends AbstractObject{
 	private Float matchpart1_result;
 	private Float matchpart2_result;
 	private Long project_id;
+
+	private Boolean extra_time;
+	private Boolean panelties;
+	private Integer matchpart1_panelties_result;
+	private Integer matchpart2_panelties_result;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="project_id", insertable =  false, updatable = false)
@@ -268,6 +273,38 @@ public class LeagueMatch extends AbstractObject{
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public Boolean getExtra_time() {
+		return extra_time;
+	}
+
+	public void setExtra_time(Boolean extra_time) {
+		this.extra_time = extra_time;
+	}
+
+	public Boolean getPanelties() {
+		return panelties;
+	}
+
+	public void setPanelties(Boolean panelties) {
+		this.panelties = panelties;
+	}
+
+	public Integer getMatchpart1_panelties_result() {
+		return matchpart1_panelties_result;
+	}
+
+	public void setMatchpart1_panelties_result(Integer matchpart1_panelties_result) {
+		this.matchpart1_panelties_result = matchpart1_panelties_result;
+	}
+
+	public Integer getMatchpart2_panelties_result() {
+		return matchpart2_panelties_result;
+	}
+
+	public void setMatchpart2_panelties_result(Integer matchpart2_panelties_result) {
+		this.matchpart2_panelties_result = matchpart2_panelties_result;
 	}
 
 	@Override public String toString() {

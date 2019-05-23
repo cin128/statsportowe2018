@@ -88,7 +88,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 	@Override protected boolean isAlreadyLoaded(Project oldObj) {
 		ProjectInfo pi = new ProjectInfo();
 		boolean result = super.isAlreadyLoaded(oldObj) && (oldObj.getArchive() && oldObj.getPublished()
-				|| oldObj.getType() == Project.OTHER);
+				|| oldObj.getType() == Project.OTHER)&& false;
 		if(result){
 			pi.setSkipped(true);
 		}
@@ -114,6 +114,9 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		log.info("Processing project: " + title);
 		leagueProject.setName(title);
 		Season season = parseSeason(title);
+		if(season==null){
+			season = parseSeasonFromLink(doc);
+		}
 		leagueProject.setSeason(season);
 		League league = parseLeague(title, season);
 		leagueProject.setLeague(league);
@@ -174,6 +177,18 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 			season = seasonDAO.saveUpdate(season);
 			log.debug("Season " + sezon   + " saved id = " + season.getId());
 			return season;
+		}
+		return null;
+	}
+
+	private Season parseSeasonFromLink(Document doc) {
+		Elements links = doc.select("table[class=main][width=600][border=0][cellspacing=0][cellpadding][align=center]>tbody>tr>td>a[class=main][href]");
+		for(Element link: links){
+			String title = link.text();
+			Season season = parseSeason(title);
+			if(season!=null){
+				return season;
+			}
 		}
 		return null;
 	}
@@ -281,8 +296,6 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 							.select("td[nowrap][valign=top][width=180]");
 					Elements result = match
 							.select("td[nowrap][valign=top][align=center][width=50]");
-					Elements date = match
-							.select("td[valign=top][nowrap][align=left][width=190]");								
 					if (teams.size() == 2 && result.size() == 1) {
 						String t1 = teams.get(0).text();
 						String t2 = teams.get(1).text();
@@ -317,49 +330,11 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 											.setMatchpart1_result(parseFloat(results[0]));
 									roundMatch
 											.setMatchpart2_result(parseFloat(results[1]));
+
+									parseExtraTime(match, roundMatch);
 								}
 							}
-							if (date.size() == 1) {
-								String tmp = date.get(0).text();
-								if (tmp != null
-										&& !tmp.trim().isEmpty()) {
-									Timestamp ts = null;
-									Integer crowd = 0;
-									int index = tmp.indexOf("(");
-									if (index == 0) {
-										crowd = Integer
-												.parseInt(tmp
-														.substring(
-																1,
-																tmp.length() - 1)
-														.replaceAll(
-																" ",
-																""));
-									} else if (index > 0) {
-										ts = TimestampParser.parseTimestamp(leagueProject.getStart_date(),
-												tmp.substring(0,
-														index - 1));
-										crowd = Integer
-												.parseInt(tmp
-														.substring(
-																index + 1,
-																tmp.length() - 1)
-														.replaceAll(
-																" ",
-																""));
-									} else {
-										ts = TimestampParser.parseTimestamp(leagueProject.getStart_date(),
-												tmp);
-									}
-									if (ts != null) {
-										roundMatch
-												.setMatch_date(ts);
-									}
-									if (crowd > 0) {
-										roundMatch.setCrowd(crowd);
-									}
-								}
-							}
+							parseMatchDetails(match, roundMatch, leagueProject.getStart_date());
 							roundMatches.add(roundMatch);
 							log.debug("Match: " + roundMatch.getMatchpart1() + " " + roundMatch.getMatchpart2());
 						} 
@@ -421,6 +396,55 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		leagueProject.getProjectInfo().setRounds_count(rounds_count);
 		return missingTeams;
 	}
+
+	private void parseMatchDetails(Element match, LeagueMatch roundMatch, Date projectStartDate){
+		Elements date = match
+				.select("td[valign=top][nowrap][align=left][width=190]");
+		if (date.size() == 1) {
+			String tmp = date.get(0).text();
+			if (tmp != null && !tmp.trim().isEmpty()) {
+				Timestamp ts = null;
+				Integer crowd = 0;
+				int index = tmp.indexOf("(");
+				if (index == 0) {
+					crowd = Integer.parseInt(tmp.substring(1, tmp.length() - 1).replaceAll(" ", ""));
+				} else if (index > 0) {
+					ts = TimestampParser.parseTimestamp(projectStartDate, tmp.substring(0, index - 1));
+					crowd = Integer.parseInt(tmp.substring(index + 1, tmp.length() - 1).replaceAll(" ", ""));
+				} else {
+					ts = TimestampParser.parseTimestamp(projectStartDate, tmp);
+				}
+				if (ts != null) {
+					roundMatch.setMatch_date(ts);
+				}
+				if (crowd > 0) {
+					roundMatch.setCrowd(crowd);
+				}
+			}
+		}
+	}
+
+	private void parseExtraTime(Element match, LeagueMatch roundMatch){
+		Element next = match.nextElementSibling();
+		if(next!=null){
+			String text = next.select("td[align=center][colspan=3]").text();
+			if(!StringUtils.isEmpty(text)){
+				if(text.contains("pd. ")){
+					roundMatch.setExtra_time(true);
+				}
+				if(text.contains("k. ")){
+					roundMatch.setPanelties(true);
+					String res = text.split("k\\. ")[1];
+					String[] results = res
+							.split("-");
+					if (results.length == 2) {
+						roundMatch.setMatchpart1_panelties_result(parseInt(results[0]));
+						roundMatch.setMatchpart2_panelties_result(parseInt(results[1]));
+					}
+				}
+			}
+		}
+	}
 	
 	private void checkTeam(String teamName, Map<String, Team> leagueTeams, List<Team> missingTeams) {
 		if(!StringUtils.isEmpty(teamName) && !leagueTeams.containsKey(teamName)) {
@@ -437,6 +461,15 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 	private Float parseFloat(String value) {
 		try {
 			return Float.valueOf(value);
+		} catch (NumberFormatException e) {
+			log.warn("Value: " + value + " is not a number!!!");
+		}
+		return null;
+	}
+
+	private Integer parseInt(String value) {
+		try {
+			return Integer.valueOf(value);
 		} catch (NumberFormatException e) {
 			log.warn("Value: " + value + " is not a number!!!");
 		}
