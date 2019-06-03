@@ -164,7 +164,7 @@ public class TimestampParser {
 		if(startDate.getMonth()==0) {
 			return startDate.getYear()+1900;
 		} else {
-			return startDate.getMonth() > 5 ? startDate.getYear()
+			return month > 5 ? startDate.getYear()
 					: startDate.getYear() + 1901;
 		}
 		
