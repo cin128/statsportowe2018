@@ -4,7 +4,7 @@ import org.springframework.batch.core.JobExecution;
 
 public class ImportJob {
 	JobExecution jobExecution;
-	Long progress;
+	Long total;
 	String processingTime;
 
 	public JobExecution getJobExecution() {
@@ -15,12 +15,12 @@ public class ImportJob {
 		this.jobExecution = jobExecution;
 	}
 
-	public Long getProgress() {
-		return progress;
+	public Long getTotal() {
+		return total;
 	}
 
-	public void setProgress(Long progress) {
-		this.progress = progress;
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 
 	public String getProcessingTime() {

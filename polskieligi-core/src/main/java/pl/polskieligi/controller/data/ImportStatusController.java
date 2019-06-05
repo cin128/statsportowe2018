@@ -38,10 +38,15 @@ public class ImportStatusController {
 			for (JobInstance jobInstance : list) {
 				List<JobExecution> jobExecutions = jobExplorer.getJobExecutions(jobInstance);
 				for (JobExecution jobExecution : jobExecutions) {
-
 					ImportJob row = new ImportJob();
 					row.setJobExecution(jobExecution);
-					row.setProgress(getProgress(jobExecution));
+					for(StepExecution se: jobExecution.getStepExecutions()){
+						Long total = getTotal(se);
+						if(total!=null){
+							row.setTotal(total);
+						}
+					}
+
 					Date endTime = jobExecution.getEndTime();
 					if(endTime!=null) {
 						Duration d = Duration.ofMillis(endTime.getTime()-jobExecution.getStartTime().getTime());
@@ -59,21 +64,13 @@ public class ImportStatusController {
 		return mv;
 	}
 	
-	private Long getProgress(JobExecution jobExecution) {
-		Long result = Long.valueOf(0);
-		if (jobExecution != null) {
-			ExecutionContext ec = jobExecution.getExecutionContext();
+	private Long getTotal(StepExecution stepExecution) {
+		if (stepExecution != null) {
+			ExecutionContext ec = stepExecution.getExecutionContext();
 			if (ec != null &&  ec.containsKey("jobComplete")) {
-				double jobComplete = (Double) ec.get("jobComplete");
-				if(jobComplete>0) {
-					double reads = 0;
-					for (StepExecution step : jobExecution.getStepExecutions()) {
-						reads = reads + step.getReadCount();
-					}
-					result = Math.round(reads / jobComplete * 100);
-				}
+				return (Long)ec.get("jobComplete");
 			} 
 		} 
-		return result;
+		return null;
 	}
 }

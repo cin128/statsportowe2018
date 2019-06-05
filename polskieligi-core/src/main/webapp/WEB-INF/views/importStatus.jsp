@@ -21,7 +21,7 @@
 				<tr>
 					<th><abbr title="Pozycja">l.p.</abbr></th>
 					<th>Job ID</th>
-					<th><abbr title="Progress">Progress</abbr></th>
+					<th><abbr title="Progress">Total</abbr></th>
 					<th><abbr title="Processing time">Processing time</abbr></th>
 					<th><abbr title="Srart">Start</abbr></th>
 					<th><abbr title="End">End</abbr></th>
@@ -39,7 +39,7 @@
 					<tr>
 						<th>${count}</th>
 						<td><b>${row.jobExecution.id}</b></td>
-						<td>${row.progress}</td>
+						<td>${row.total}</td>
 						<td>${row.processingTime}</td>
 						<td><b>${row.jobExecution.status}</b></td>
 						<td><b>${row.jobExecution.exitStatus.exitCode}</b></td>
