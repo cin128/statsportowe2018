@@ -66,7 +66,7 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 
 	public List<LeagueMatch> getMatchesByProjectId(Long projectId) {
 		TypedQuery<LeagueMatch> query = getEntityManager().createQuery(
-				"SELECT lm from LeagueMatch lm JOIN FETCH lm.round r where lm.project_id = :project_id and lm.published = :published order by r.matchcode desc, lm.match_date desc",
+				"SELECT lm from LeagueMatch lm JOIN FETCH lm.round r JOIN FETCH lm.matchpart1 t1 JOIN FETCH lm.matchpart2 t2 where lm.project_id = :project_id and lm.published = :published order by r.matchcode desc, lm.match_date desc",
 				LeagueMatch.class);
 		query.setParameter("project_id", projectId);
 		query.setParameter("published", true);

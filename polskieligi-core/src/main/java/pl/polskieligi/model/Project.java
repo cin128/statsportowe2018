@@ -43,6 +43,9 @@ public class Project extends AbstractObject{
 	@OneToMany(mappedBy="project")
 	private Set<TeamLeague> teamLeagues;
 
+	@OneToMany(mappedBy="project")
+	private Set<LeagueMatch> leagueMatches;
+
 	@Transient
 	private ProjectInfo projectInfo;
 
