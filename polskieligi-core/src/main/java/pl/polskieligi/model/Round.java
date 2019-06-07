@@ -16,6 +16,10 @@ public class Round {
 	  private Date round_date_first;
 	  private Date round_date_last;
 	  private Long project_id;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="project_id", insertable =  false, updatable = false)
+	private Project project;
 /*	  private Integer checked_out;
 	  private Timestamp checked_out_time;*/
 	  public Round(){
@@ -76,5 +80,11 @@ public class Round {
 	public void setChecked_out_time(Timestamp checked_out_time) {
 		this.checked_out_time = checked_out_time;
 	}*/
-	
+
+	public Project getProject() {
+		return project;
+	}
+	public void setProject(Project project) {
+		this.project = project;
+	}
 }

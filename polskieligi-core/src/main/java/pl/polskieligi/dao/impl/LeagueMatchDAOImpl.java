@@ -1,6 +1,7 @@
 package pl.polskieligi.dao.impl;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,25 +39,16 @@ public class LeagueMatchDAOImpl extends AbstractDAOImpl<LeagueMatch> implements 
 
 	@Override
 	protected boolean updateData(LeagueMatch match, LeagueMatch oldMatch) {
-		boolean updated = false;
-		if (match.getCrowd() > 0) {
+		boolean updated = !Arrays.asList(match.getCrowd(), match.getMatch_date(), match.getCount_result(), match.getPublished(), match.getMatchpart1_result(), match.getMatchpart2_result(), match.getMinut_id())
+				.equals(Arrays.asList(oldMatch.getCrowd(), oldMatch.getMatch_date(), oldMatch.getCount_result(), oldMatch.getPublished(), oldMatch.getMatchpart1_result(), oldMatch.getMatchpart2_result(), oldMatch.getMinut_id()));
+		if(updated){
 			oldMatch.setCrowd(match.getCrowd());
-			updated = true;
-		}
-		if (match.getMatch_date() != null) {
 			oldMatch.setMatch_date(match.getMatch_date());
-			updated = true;
-		}
-		if (match.getCount_result()) {
 			oldMatch.setCount_result(match.getCount_result());
 			oldMatch.setPublished(match.getPublished());
 			oldMatch.setMatchpart1_result(match.getMatchpart1_result());
 			oldMatch.setMatchpart2_result(match.getMatchpart2_result());
-			updated = true;
-		}
-		if (match.getMinut_id() > 0) {
 			oldMatch.setMinut_id(match.getMinut_id());
-			updated = true;
 		}
 		if (updated) {
 			oldMatch.setModified(new Timestamp((new Date()).getTime()));

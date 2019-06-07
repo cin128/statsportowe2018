@@ -2,14 +2,11 @@ package pl.polskieligi.log.minut;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.log4j.Logger;
 import org.jsoup.helper.StringUtil;
 import org.jsoup.nodes.Document;
@@ -124,13 +121,15 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		leagueProject.setStart_date(startDate);
 		leagueProject.setArchive(isArchive(startDate));
 
-		Map<String, Pair<Team, TeamLeague>> leagueTeamsPair = parseTeams(doc, leagueProject);
+		Map<String, Triple<Team, TeamLeague, Integer>> leagueTeamsPair = parseTeams(doc, leagueProject);
 		Map<String, Team> leagueTeams = new HashMap<String, Team>();
 		Map<Long, TeamLeague> teamLeagues = new HashMap<Long, TeamLeague>();
-		for (Entry<String, Pair<Team, TeamLeague>> e : leagueTeamsPair.entrySet()) {
-			leagueTeams.put(e.getKey(), e.getValue().getFirst());
-			TeamLeague tl = e.getValue().getSecond();
+		Map<Long, Integer> points = new HashMap<Long, Integer>();
+		for (Entry<String, Triple<Team, TeamLeague, Integer>> e : leagueTeamsPair.entrySet()) {
+			leagueTeams.put(e.getKey(), e.getValue().getLeft());
+			TeamLeague tl = e.getValue().getMiddle();
 			teamLeagues.put(tl.getTeam_id(), tl);
+			points.put(tl.getTeam_id(), e.getValue().getRight());
 		}
 
 		int teams_count = leagueTeams.size();
@@ -145,7 +144,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 			updateTeamLeagues(missingTeams, leagueProject);
 		}
 		leagueProject = projectDAO.saveUpdate(leagueProject);
-		updateStartPoints(leagueProject, teamLeagues);
+		updateStartPoints(leagueProject, teamLeagues, points);
 
 		return ImportStatus.SUCCESS;
 	}
@@ -236,8 +235,11 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		return cal.getTimeInMillis()>date.getTime();
 	}
 
-	private Map<String, Pair<Team, TeamLeague>> parseTeams(Document doc, Project leagueProject) {
-		Map<String, Pair<Team, TeamLeague>> leagueTeams = new HashMap<String, Pair<Team, TeamLeague>>();
+	private Map<String, Triple<Team, TeamLeague, Integer>> parseTeams(Document doc, Project leagueProject) {
+		Map<String, Triple<Team, TeamLeague, Integer>> leagueTeams = new HashMap<String, Triple<Team, TeamLeague, Integer>>();
+		Map<TeamLeague, TeamLeague> teamLeagueMap = leagueProject.getTeamLeagues().stream().collect(
+				Collectors.toMap(x -> x,
+						x -> x));
 		Elements druzyny = doc.select("a[href~=/skarb.php\\?id_klub=*]");
 		for (Element druzyna : druzyny) {
 			String tmp = druzyna.toString();
@@ -257,10 +259,15 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 			TeamLeague tl = new TeamLeague();
 			tl.setProject_id(leagueProject.getId());
 			tl.setTeam_id(t.getId());
-			tl.setStartPoints(Integer.parseInt(pkt));
-			tl = teamLeagueDAO.saveUpdate(tl);
+
+			TeamLeague pers = teamLeagueMap.get(tl);
+			if(pers==null) {
+				tl = teamLeagueDAO.saveUpdate(tl);
+			} else {
+				tl = pers;
+			}
 			//importTeamLeaguePlayerLogic.doImport(tl.getId(), leagueProject.getSeason().getMinut_id(), t.getMinut_id());
-			leagueTeams.put(t.getName(), Pair.of(t, tl));
+			leagueTeams.put(t.getName(), Triple.of(t, tl, Integer.parseInt(pkt)));
 			log.debug("TeamLeague saved " + tl.getId());
 		}
 		return leagueTeams;
@@ -476,15 +483,18 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 		return null;
 	}
 
-	private void updateStartPoints(Project leagueProject, Map<Long, TeamLeague> teamLeagues) {
+	private void updateStartPoints(Project leagueProject, Map<Long, TeamLeague> teamLeagues, Map<Long, Integer> points) {
 		if (leagueProject.getType() == Project.REGULAR_LEAGUE) {
 			for (TableRow row : tableDAO.getTableRowsSimple(leagueProject.getId())) {
 				TeamLeague tl = teamLeagues.get(row.getTeam_id());
+				Integer pts = 0;
 				if(tl==null){//drużyna wycofana z rozgrywek w trakcie sezonu
 					tl = teamLeagueDAO.findByProjectAndTeam(leagueProject.getId(), row.getTeam_id());
+				} else {
+					pts = points.get(row.getTeam_id());
 				}
 
-				tl.setStartPoints(tl.getStartPoints() - row.getPoints());
+				tl.setStartPoints(pts - row.getPoints());
 				teamLeagueDAO.update(tl);
 			}
 		}

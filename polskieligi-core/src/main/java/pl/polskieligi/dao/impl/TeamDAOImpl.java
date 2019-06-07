@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.util.StringUtils;
 import pl.polskieligi.dao.TeamDAO;
 import pl.polskieligi.model.Project;
 import pl.polskieligi.model.Team;
@@ -25,7 +26,7 @@ public class TeamDAOImpl extends AbstractDAOImpl<Team> implements TeamDAO {
 	}
 	@Override
 	protected boolean updateData(Team source, Team target) {
-		if (source.getName() != null && !source.getName().isEmpty()) {
+		if (!StringUtils.isEmpty(source.getName()) && !source.getName().equals(target.getName())) {
 			target.setName(source.getName());
 			return true;
 		}
