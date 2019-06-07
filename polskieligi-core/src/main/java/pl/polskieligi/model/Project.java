@@ -1,6 +1,7 @@
 package pl.polskieligi.model;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -41,10 +42,10 @@ public class Project extends AbstractObject{
 	private String lnpName;
 	
 	@OneToMany(mappedBy="project")
-	private Set<TeamLeague> teamLeagues;
+	private Set<TeamLeague> teamLeagues = new HashSet<TeamLeague>();
 
 	@OneToMany(mappedBy="project")
-	private Set<LeagueMatch> leagueMatches;
+	private Set<LeagueMatch> leagueMatches = new HashSet<LeagueMatch>();
 
 	@Transient
 	private ProjectInfo projectInfo;

@@ -211,7 +211,7 @@ public class ImportMinutProjectLogic extends AbstractImportMinutLogic<Project>{
 	
 	private Date getStartDate(Season season) {
 		if(season == null) {
-			return null;
+			return new Date(0);
 		}
 		GregorianCalendar cal;
 		if(season.getName().contains("/")) {
