@@ -54,7 +54,8 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 	}
 	
 	protected boolean isAlreadyLoaded(Project p){
-		return super.isAlreadyLoaded(p) && !p.getArchive();
+		return  super.isAlreadyLoaded(p) && (p.getArchive() && p.getPublished()
+				|| p.getType() == Project.OTHER);
 	}
 	
 	public void processMainLeagues() {
