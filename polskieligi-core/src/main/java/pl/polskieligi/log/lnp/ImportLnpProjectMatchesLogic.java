@@ -53,6 +53,10 @@ public class ImportLnpProjectMatchesLogic extends AbstractImportLnpLogic<Project
 		super(Project.class);
 	}
 	
+	protected boolean isAlreadyLoaded(Project p){
+		return super.isAlreadyLoaded(p) && !p.getArchive();
+	}
+	
 	public void processMainLeagues() {
 		process("ekstraklasa", 1, new Long(9730), false);	
 		process("trzecia-liga", 25879, new Long(9731), true);//I Liga
